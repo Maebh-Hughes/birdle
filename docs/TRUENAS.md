@@ -23,6 +23,11 @@ TrueNAS app "birdle"
 GitHub builds the BIRDLE image for you every time you push, and TrueNAS downloads it from the GitHub
 Container Registry as `ghcr.io/maebh-hughes/birdle`.
 
+Already running **Nginx Proxy Manager** (or another reverse proxy) with ports 80 and 443 forwarded? Then you
+don't need Cloudflare at all: the proxy provides the HTTPS address ([option C](#option-c-you-already-run-a-reverse-proxy)),
+and you can install BIRDLE with TrueNAS's ordinary **Custom App** form instead of YAML
+([Install with the Custom App form](#install-with-the-custom-app-form-no-yaml)).
+
 **Contents**
 
 - [Before you start](#before-you-start)
@@ -31,7 +36,8 @@ Container Registry as `ghcr.io/maebh-hughes/birdle`.
 - Step 3: [Create the Discord application](#3-create-the-discord-application)
 - Step 4: [Create a dataset for BIRDLE's data](#4-create-a-dataset-for-birdles-data)
 - Step 5: [Get a public HTTPS address](#5-get-a-public-https-address)
-- Step 6: [Install the app on TrueNAS](#6-install-the-app-on-truenas)
+- Step 6: [Install the app on TrueNAS](#6-install-the-app-on-truenas) (with YAML, or with the
+  [Custom App form](#install-with-the-custom-app-form-no-yaml))
 - Step 7: [Point Discord at your server](#7-point-discord-at-your-server)
 - Step 8: [Launch it](#8-launch-it)
 - [Updating BIRDLE](#updating-birdle)
@@ -54,10 +60,13 @@ You need:
   `.github/workflows/docker-publish.yml`.
 - **A Discord account** with Developer Mode on: **User Settings → Advanced → Developer Mode** on desktop or
   web, or **User Settings → Appearance → Developer Mode** on mobile.
-- **For the recommended public address:** a free Cloudflare account and a domain name that uses Cloudflare
-  for its DNS. Any cheap domain works; buying one through Cloudflare's own registrar is the easiest,
-  because it's set up automatically. No domain? See [option B](#option-b-no-domain-a-quick-tunnel-testing-only)
-  for a test-only alternative.
+- **A public HTTPS address**, one of:
+  - a reverse proxy you already run, such as Nginx Proxy Manager, with ports 80 and 443 forwarded to it and
+    a hostname whose DNS points at your home IP ([option C](#option-c-you-already-run-a-reverse-proxy)); or
+  - a free Cloudflare account and a domain name that uses Cloudflare for its DNS
+    ([option A](#option-a-recommended-cloudflare-tunnel-with-your-own-domain)). Buying one through
+    Cloudflare's own registrar is the easiest, because it's set up automatically. No domain? See
+    [option B](#option-b-no-domain-a-quick-tunnel-testing-only) for a test-only alternative.
 
 TrueNAS SCALE runs on x86-64 hardware, and that's the only kind of image the GitHub workflow builds.
 
@@ -80,11 +89,11 @@ Throughout this guide, replace:
    The first run takes about five minutes. Wait until it shows a green tick. If there's a red cross, click
    it to see which step failed.
    - If the Actions tab says workflows are disabled, enable them under **Settings → Actions → General**.
-   - Because the repository is private, these runs use your account's free GitHub Actions minutes (2,000 a
-     month on the Free plan), which is plenty.
+   - GitHub Actions is free for public repositories. (A private repository would use your account's free
+     monthly minutes instead, which is still plenty.)
 3. The image now appears on your GitHub profile under **Packages** as **birdle**, and in the repository's
    sidebar. Its full name is `ghcr.io/maebh-hughes/birdle`. It's all lowercase, because image names must be.
-   Like the repository, it starts out **private**: step 2 deals with that.
+   It starts out **private**, even though the repository is public: step 2 deals with that.
 
 You don't need to add any secrets to the repository. The workflow publishes with GitHub's built-in token,
 and your Discord and Cloudflare settings only ever go into TrueNAS. A pull request to `main` runs the tests
@@ -102,11 +111,26 @@ You can also start a build by hand: **Actions → Docker image → Run workflow*
 
 ## 2. Let TrueNAS download the image
 
-Your repository is private, and GitHub makes the image private too, so right now only you can download it.
-TrueNAS needs to be able to download it as well. There are two ways to allow that. The first keeps
-everything private, so it's the one to pick unless you want to share BIRDLE with the world.
+GitHub publishes a new image as **private**, even when the repository is public, so right now only you can
+download it. TrueNAS needs to be able to download it as well. There are two ways to allow that.
 
-### Recommended: keep the image private and give TrueNAS a read-only key
+### Recommended for a public repository: make the image public
+
+This takes one minute, and TrueNAS then needs no key at all. Because the repository is already public, the
+image reveals nothing new: it contains the same source code and answer list that anyone can read on GitHub.
+What stays secret is the *order* of the daily answers, which depends on your `PUZZLE_SEED`, and your
+Discord and Cloudflare secrets. None of those are ever in the image.
+
+1. On GitHub, click your profile picture → **Your profile** → the **Packages** tab → **birdle**. (It's also
+   linked from the repository's sidebar, under **Packages**.)
+2. Click **Package settings** (right side), scroll to the **Danger Zone**, click **Change visibility**, choose
+   **Public**, type `birdle` to confirm, and click **I understand the consequences, change package
+   visibility**.
+
+GitHub doesn't let you make a public package private again; you would have to delete it. That's no problem
+while the repository itself is public.
+
+### Alternative: keep the image private and give TrueNAS a read-only key
 
 This takes about five minutes.
 
@@ -132,20 +156,8 @@ This takes about five minutes.
 When the token expires, make a new one the same way, then edit the **GitHub** entry on the **Docker
 Registries** screen and paste in the new token.
 
-### Alternative: make the image public
-
-Only do this if you're happy for anyone on the internet to download the image. Be aware that:
-
-- **It contains BIRDLE's complete source code and the full answer list, including every hint and fact.**
-  That's exactly what your private repository keeps private. What stays secret is the *order* of the daily
-  answers, because it depends on your `PUZZLE_SEED`, which is never in the image. Your Discord and
-  Cloudflare secrets aren't in it either.
-- **It can't be undone.** GitHub doesn't let you make a public package private again. You'd have to delete
-  it.
-
-If that's fine with you: on GitHub, open your profile → **Packages** → **birdle** → **Package settings**
-(right side) → **Danger Zone** → **Change visibility** → **Public**. Type `birdle` to confirm. TrueNAS then
-needs no key.
+Use this route if you ever make the repository private again, since a public image would then expose the
+source code and the full answer list, including every hint and fact.
 
 ## 3. Create the Discord application
 
@@ -244,11 +256,35 @@ with `TUNNEL_TOKEN`. After installing, find the address in the **cloudflared** c
 
 ### Option C: you already run a reverse proxy
 
-If you already publish services with a reverse proxy (Nginx Proxy Manager, Caddy, Traefik and so on) that
-has a real certificate and port 443 forwarded, use **`deploy/truenas/birdle.yaml`**. It serves BIRDLE on
-`http://TRUENAS-IP:30180`. Point a new HTTPS host, such as `birdle.example.com`, at that address. BIRDLE
-needs nothing special: no WebSockets and no extra headers. Don't put a login page in front of it, because
-Discord can't get past one.
+If you already publish services with a reverse proxy (Nginx Proxy Manager, Caddy, Traefik and so on), BIRDLE
+only needs to be reachable on your home network, and the proxy gives it its public HTTPS address. Install
+BIRDLE with **`deploy/truenas/birdle.yaml`** or with the
+[Custom App form](#install-with-the-custom-app-form-no-yaml); either way it serves
+`http://TRUENAS-IP:30180`. BIRDLE needs nothing special from the proxy: no WebSockets and no extra headers.
+Don't put a login page in front of it, because Discord can't get past one.
+
+**With Nginx Proxy Manager** (do this after step 6, once BIRDLE answers on `http://TRUENAS-IP:30180/api/health`):
+
+1. **DNS:** where your domain's DNS is managed (your registrar, for example Hostinger), add an **A record**
+   for the subdomain, such as `birdle`, pointing to your home's public IP address. Skip this if it already
+   exists.
+2. **Router:** port **80** and port **443** from the internet must both be forwarded to Nginx Proxy
+   Manager's HTTP and HTTPS ports. On TrueNAS, the Nginx Proxy Manager app shows which host ports those are
+   under **Apps → Installed → nginx-proxy-manager → Edit → Network Configuration**. Port 80 alone isn't
+   enough: Let's Encrypt uses port 80 to issue the certificate, but Discord connects on 443. Don't forward
+   port 30180.
+3. In Nginx Proxy Manager, go to **Hosts → Proxy Hosts → Add Proxy Host**. On the **Details** tab:
+   - **Domain Names:** `birdle.example.com`
+   - **Scheme:** `http`
+   - **Forward Hostname / IP:** `TRUENAS-IP` (your TrueNAS server's LAN address, not `localhost`)
+   - **Forward Port:** `30180`
+   - Turn on **Block Common Exploits**. **Websockets Support** can be on or off. Leave **Cache Assets** off.
+   - Leave **Access List** as **Publicly Accessible**: Discord can't sign in to an access list.
+4. On the **SSL** tab: **SSL Certificate** → **Request a new SSL Certificate**, then turn on **Force SSL**
+   and **HTTP/2 Support**. Enter your email address, agree to the Let's Encrypt terms, and click **Save**.
+   Nginx Proxy Manager fetches the certificate, which takes a few seconds.
+5. Check it from outside your home network (for example on your phone with Wi-Fi off):
+   `https://birdle.example.com/api/health` should show `{"ok":true}` with a valid padlock.
 
 ## 6. Install the app on TrueNAS
 
@@ -269,6 +305,9 @@ Copy the 48-character result. On a Windows PC you can use PowerShell instead:
 `-join ((1..2) | ForEach-Object { [guid]::NewGuid().ToString('N') })`.
 
 ### Fill in the YAML
+
+Using a reverse proxy (step 5, option C) and would rather fill in a form than edit YAML? Skip to
+[Install with the Custom App form](#install-with-the-custom-app-form-no-yaml).
 
 1. Open the YAML file for your option from the repository in a text editor. On GitHub, open the file and
    click **Raw** to copy it:
@@ -311,6 +350,48 @@ Also in the file:
 4. TrueNAS downloads the image and starts the app. In **Apps → Installed**, **birdle** goes from
    **Deploying** to **Running** within a minute or two.
 
+### Install with the Custom App form (no YAML)
+
+This is the same app, entered through TrueNAS's ordinary form. It installs a single container, so use it
+with a reverse proxy (step 5, option C). For a Cloudflare tunnel you'd either use the YAML above, or install
+the **Cloudflared** app from **Discover Apps** separately and give its route the service URL
+`http://TRUENAS-IP:30180`.
+
+Go to **Apps → Discover Apps** and click **Custom App** (top right). Fill in the sections below and leave
+everything that isn't mentioned at its default. The panel on the right jumps between sections.
+
+| Section | Field | Value |
+|---|---|---|
+| **Application Name** | Application Name | `birdle` |
+| **Image Configuration** | Repository | `ghcr.io/maebh-hughes/birdle` |
+| | Tag | `latest` |
+| | Pull Policy | **Only pull image if not present on host** (the default; updates come through TrueNAS's update badge, see [Updating BIRDLE](#updating-birdle)) |
+| **Container Configuration** | Entrypoint, Command | leave empty (the image knows how to start) |
+| | Environment Variables | click **Add** three times and fill in the three rows below |
+| | → Name `DISCORD_CLIENT_ID` | Value: the Client ID from step 3 (only digits) |
+| | → Name `DISCORD_CLIENT_SECRET` | Value: the Client Secret from step 3 |
+| | → Name `PUZZLE_SEED` | Value: the random value from [Make a puzzle seed](#make-a-puzzle-seed) |
+| | Restart Policy | **Unless Stopped** |
+| | Disable Builtin Healthcheck | leave **unticked** (TrueNAS then shows whether BIRDLE is healthy) |
+| **Security Context Configuration** | Privileged | leave **unticked** |
+| | Custom User | **tick it**, then User ID `568` and Group ID `568` (the TrueNAS `apps` user) |
+| **Network Configuration** | Host Network | leave **unticked** |
+| | Ports | click **Add**: Container Port `3001`, Host Port `30180`, Protocol **TCP** |
+| **Portal Configuration** | | skip it (opening BIRDLE outside Discord only shows a sign-in error) |
+| **Storage Configuration** | Storage | click **Add**, then Type **Host Path** |
+| | Mount Path | `/data` |
+| | Host Path | `/mnt/POOL/apps/birdle` (the dataset from step 4; you can browse to it) |
+| | Read Only, Enable ACL | leave **unticked** (the dataset's **Apps** preset already lets BIRDLE write) |
+| **Resources Configuration** | | optional: tick **Enable Resource Limits** and set, for example, 1 CPU and 512 MB. BIRDLE normally uses well under 150 MB. |
+
+Click **Install**. TrueNAS downloads the image and starts the app. In **Apps → Installed**, **birdle** goes
+from **Deploying** to **Running** within a minute or two. If it stops again right away, see
+[The app won't start](#the-app-wont-start-or-keeps-restarting): a typo in an environment variable name, or a
+`CHANGE_ME`-style placeholder, is the usual cause.
+
+A form install doesn't get the YAML's extra lockdown (read-only root filesystem, no capabilities). BIRDLE
+still runs as the unprivileged `apps` user and writes only to `/data`, which is the part that matters most.
+
 ### Check that it works
 
 1. Open the app's logs (see [Where are the logs?](#where-are-the-logs)). On its first start, the **birdle**
@@ -318,7 +399,7 @@ Also in the file:
 
    ```text
    No database at /data/birdle-db.json yet; starting with an empty one.
-   BIRDLE server (production) on http://localhost:3001 with 640 answers (336 daily), ...; mock auth off; data in /data/birdle-db.json
+   BIRDLE server (production) on http://localhost:3001 with 825 answers (348 daily), ...; mock auth off; data in /data/birdle-db.json
    ```
 
    The first line is normal until someone has played. What matters is `mock auth off` and no lines
@@ -383,8 +464,9 @@ restarts BIRDLE, which takes a few seconds.
 
    GitHub then builds `ghcr.io/maebh-hughes/birdle:1.0.0`.
 2. In TrueNAS, go to **Apps → Installed**, select **birdle** and click **Edit** on its **Application Info**
-   panel. The **Edit App YAML** screen opens. Change the image line to
-   `image: ghcr.io/maebh-hughes/birdle:1.0.0` and click **Save**.
+   panel. If you installed with YAML, the **Edit App YAML** screen opens: change the image line to
+   `image: ghcr.io/maebh-hughes/birdle:1.0.0` and click **Save**. If you installed with the Custom App form,
+   the same form opens: change **Tag** to `1.0.0` and click **Update**.
 3. To go back, edit the tag again. Older versions and every `sha-...` tag stay available.
 
 Updating never touches your data, which lives in the dataset. BIRDLE saves everything before it stops.
@@ -526,13 +608,15 @@ BIRDLE shows an error screen with a title, a short message and sometimes a detai
 - **Leave `BIRDLE_ALLOW_MOCK_AUTH` unset.** It exists for local development. If it's on, anyone can play,
   and change stats, as any player without signing in. The image runs in production mode, where it's off.
   Also leave `NODE_ENV` alone.
-- **The container is locked down:** it runs as the unprivileged `apps` user (568), with a read-only root
-  filesystem, `no-new-privileges` and every Linux capability dropped. It can write only to its dataset
-  (and to a small in-memory `/tmp`).
-- **Keep the image private** unless you've decided otherwise (step 2). A public image lets anyone
-  download the source code and the answer list, though never your seed or any secret.
-- **Only the tunnel should be public.** Don't forward port 30180 (or any port) on your router for BIRDLE.
-  If you don't need LAN access, remove the `ports` lines.
+- **The container is locked down:** it runs as the unprivileged `apps` user (568). The YAML install also
+  gives it a read-only root filesystem, `no-new-privileges` and drops every Linux capability. Either way it
+  writes only to its dataset (and, with YAML, a small in-memory `/tmp`).
+- **The image's visibility should match the repository's** (step 2). A public image lets anyone download
+  the source code and the answer list, though never your seed or any secret; with a public repository those
+  are public anyway.
+- **Only the tunnel or your reverse proxy should be public.** Don't forward port 30180 on your router for
+  BIRDLE: with Nginx Proxy Manager, forward only ports 80 and 443 to the proxy. With a tunnel, if you don't
+  need LAN access, remove the `ports` lines.
 - **Run a single copy.** BIRDLE keeps its data in one file and doesn't support two copies sharing it.
 - **Keep things updated:** TrueNAS itself, the BIRDLE image (rebuilds pick up Node.js security fixes), and
   cloudflared (`latest` is updated whenever the app is updated).
