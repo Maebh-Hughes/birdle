@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BirdleDataError, checkBirdData, parseDictionary } from '../src/birdData.ts';
-import { DAILY_MAX_OBSCURITY } from '../src/constants.ts';
+import { BIRD_KINDS, DAILY_MAX_OBSCURITY_BY_KIND, PRACTICE_CATEGORIES, isDailyEligible, isInPracticeCategory } from '../src/kinds.ts';
 
 const [birdsArg, guessesArg] = process.argv.slice(2);
 const invokedFrom = process.env.INIT_CWD ?? process.cwd();
@@ -92,14 +92,26 @@ function tally(list, key) {
     .join(', ');
 }
 
-const entries = /** @type {{ word: string; kind: string; obscurity: number }[]} */ (birds);
-const daily = entries.filter((b) => b.obscurity <= DAILY_MAX_OBSCURITY);
+const entries = /** @type {import('../src/types.ts').BirdEntry[]} */ (birds);
+const daily = entries.filter(isDailyEligible);
 const outsideDictionary = entries.filter((b) => !dictionary.has(b.word.toLowerCase())).length;
+const dailyRule = BIRD_KINDS.map((kind) => `${kind} <= ${DAILY_MAX_OBSCURITY_BY_KIND[kind]}`).join(', ');
+const categories = PRACTICE_CATEGORIES.map(
+  (category) => `${category}: ${entries.filter((b) => isInPracticeCategory(b.kind, category)).length}`,
+).join(', ');
 
 console.log('check:words OK');
-console.log(`  ${birdsName}: ${entries.length} entries (${tally(entries, (b) => b.kind)})`);
+console.log(`  ${birdsName}: ${entries.length} entries`);
+console.log(`    by kind:      ${tally(entries, (b) => b.kind)}`);
+for (const kind of BIRD_KINDS) {
+  const ofKind = entries.filter((b) => b.kind === kind);
+  console.log(`      ${`${kind}:`.padEnd(12)}${ofKind.length} (by obscurity ${ofKind.length ? tally(ofKind, (b) => b.obscurity) : '-'})`);
+}
 console.log(`    by length:    ${tally(entries, (b) => b.word.length)}`);
 console.log(`    by obscurity: ${tally(entries, (b) => b.obscurity)}`);
-console.log(`    daily pool (obscurity <= ${DAILY_MAX_OBSCURITY}): ${daily.length} (by length ${tally(daily, (b) => b.word.length)})`);
+console.log(`    daily pool (obscurity ${dailyRule}): ${daily.length}`);
+console.log(`      by kind:    ${daily.length ? tally(daily, (b) => b.kind) : '-'}`);
+console.log(`      by length:  ${daily.length ? tally(daily, (b) => b.word.length) : '-'}`);
+console.log(`    Free Flight categories: ${categories}`);
 console.log(`  ${guessesName}: ${dictionary.size.toLocaleString('en-US')} words`);
 console.log(`  ${outsideDictionary} bird words are not in ${guessesName} (still valid guesses via ${birdsName})`);

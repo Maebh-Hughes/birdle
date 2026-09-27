@@ -12,20 +12,36 @@ export type GameStatus = 'playing' | 'won' | 'lost';
 
 export type GameMode = 'daily' | 'practice';
 
-export type BirdKind = 'bird' | 'term';
+/**
+ * 'bird' = a real bird, 'term' = bird vocabulary (TALON, PREEN); the others are
+ * fictional birds: 'pokemon', 'game' (video games) and 'literature' (books, myths, films).
+ */
+export type BirdKind = 'bird' | 'term' | 'pokemon' | 'game' | 'literature';
 
-/** 1 = well known, 2 = fairly known (both can be daily answers), 3 = practice only. */
+/**
+ * Obscurity 1 = well known, 2 = fairly known, 3 = rare (practice only). Daily
+ * answers are real birds and bird words up to 2, fictional birds only at 1.
+ */
 export type Obscurity = 1 | 2 | 3;
+
+/** Free Flight answer pools: 'birds' = bird + term, 'fiction' = game + literature. */
+export type PracticeCategory = 'all' | 'birds' | 'pokemon' | 'fiction';
 
 /** One entry of shared/data/birds.json. Server-only data: never send hint/fact before the game ends. */
 export interface BirdEntry {
+  /** The answer: 4-11 letters A-Z, the letters-only form of the name ("Farfetch'd" -> FARFETCHD). */
   word: string;
+  /** Display name; may contain spaces, punctuation and accents ("Ho-Oh", "Kākāpō"). */
   name: string;
   kind: BirdKind;
+  /** Where a fictional bird comes from ("Pokémon Red & Blue"). Required for pokemon/game/literature, absent otherwise. */
+  source?: string;
   hint: string;
   fact: string;
-  /** Wikipedia article title (e.g. "Kākāpō" or "Talon_(anatomy)"). */
-  wiki: string;
+  /** English Wikipedia article title, optionally with a #Section ("Kākāpō", "Talon_(anatomy)"). Exactly one of wiki / link. */
+  wiki?: string;
+  /** Full https URL of a non-Wikipedia page (e.g. Bulbapedia). Exactly one of wiki / link. */
+  link?: string;
   obscurity: Obscurity;
 }
 
@@ -34,8 +50,13 @@ export interface BirdReveal {
   word: string;
   name: string;
   kind: BirdKind;
+  /** Where a fictional bird comes from; null for real birds and bird words. */
+  source: string | null;
   fact: string;
-  wikiUrl: string;
+  /** The "Learn more" page. */
+  infoUrl: string;
+  /** Friendly name of the infoUrl site: "Wikipedia", "Bulbapedia", "Fandom", ... */
+  infoSite: string;
 }
 
 export interface GameView {
@@ -44,6 +65,8 @@ export interface GameView {
   puzzleNumber: number | null;
   /** Daily puzzle date (YYYY-MM-DD); null in practice mode. */
   date: string | null;
+  /** The Free Flight category the answer was drawn from; null in daily mode. */
+  category: PracticeCategory | null;
   /** Length of the answer (4-11); the board is this wide. */
   wordLength: number;
   guesses: GuessRow[];
@@ -116,6 +139,12 @@ export interface HealthResponse {
   ok: true;
 }
 
+/** GET /api/config (public, no auth): settings the client needs before it can sign in. */
+export interface ConfigResponse {
+  /** The Discord application (client) id, or null when the server has none configured. */
+  discordClientId: string | null;
+}
+
 /** POST /api/token */
 export interface TokenRequest {
   code: string;
@@ -149,6 +178,12 @@ export interface DailyGuessResponse {
 /** POST /api/daily/hint */
 export interface DailyHintRequest {
   date: string;
+}
+
+/** POST /api/practice/new */
+export interface PracticeNewRequest {
+  /** Default 'all'. */
+  category?: PracticeCategory;
 }
 
 /** GET /api/practice */

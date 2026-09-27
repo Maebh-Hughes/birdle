@@ -3,7 +3,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { checkBirdData } from '../src/birdData';
-import { DAILY_MAX_OBSCURITY, MAX_WORD_LENGTH, MIN_WORD_LENGTH } from '../src/constants';
+import { MAX_WORD_LENGTH, MIN_WORD_LENGTH } from '../src/constants';
+import { PRACTICE_CATEGORIES, isDailyEligible, isInPracticeCategory } from '../src/kinds';
 import {
   BIRDS,
   BIRDS_PATH,
@@ -31,9 +32,17 @@ describe('shared/data/birds.json', () => {
     expect(words).toEqual([...words].sort());
   });
 
-  it('has a daily pool of the obscurity 1-2 entries only', () => {
+  it('has a daily pool of the daily-eligible entries only', () => {
     expect(DAILY_POOL.length).toBeGreaterThan(0);
-    expect(DAILY_POOL).toEqual(BIRDS.filter((b) => b.obscurity <= DAILY_MAX_OBSCURITY));
+    expect(DAILY_POOL).toEqual(BIRDS.filter(isDailyEligible));
+  });
+
+  it('has a practice pool for every category (some may still be empty)', () => {
+    expect(wordCatalog.practicePool('all')).toEqual(BIRDS);
+    expect(wordCatalog.practicePool('birds').length).toBeGreaterThan(0);
+    for (const category of PRACTICE_CATEGORIES) {
+      expect(wordCatalog.practicePool(category)).toEqual(BIRDS.filter((b) => isInPracticeCategory(b.kind, category)));
+    }
   });
 
   it('makes every bird word a valid guess and findable', () => {
@@ -44,11 +53,18 @@ describe('shared/data/birds.json', () => {
     }
   });
 
-  it('builds a bird card with a Wikipedia URL for every entry', () => {
+  it('builds a bird card with a "Learn more" link for every entry', () => {
     for (const entry of BIRDS) {
       const reveal = toBirdReveal(entry);
-      expect(reveal.wikiUrl).toMatch(/^https:\/\/en\.wikipedia\.org\/wiki\/[^\s/]+$/);
-      expect(Object.keys(reveal).sort()).toEqual(['fact', 'kind', 'name', 'wikiUrl', 'word']);
+      expect(Object.keys(reveal).sort()).toEqual(['fact', 'infoSite', 'infoUrl', 'kind', 'name', 'source', 'word']);
+      if (entry.wiki !== undefined) {
+        expect(reveal.infoUrl).toMatch(/^https:\/\/en\.wikipedia\.org\/wiki\/[^\s/#]+(#\S+)?$/);
+        expect(reveal.infoSite).toBe('Wikipedia');
+      } else {
+        expect(reveal.infoUrl).toBe(entry.link);
+        expect(reveal.infoSite).not.toBe('');
+      }
+      expect(reveal.source).toBe(entry.source ?? null);
     }
   });
 

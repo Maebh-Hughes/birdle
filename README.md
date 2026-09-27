@@ -3,11 +3,12 @@
 **BIRDLE** is a Wordle-style daily word game about birds that runs as a **Discord Activity**. You launch it from a
 voice channel or the App Launcher, the same way as Discord's own Wordle activity, and everyone in the call plays the
 same puzzle. Every answer is a bird word from 4 to 11 letters long: bird names like WREN, ROBIN, PELICAN and
-HUMMINGBIRD, plus bird vocabulary like TALON, PREEN and NESTLING.
+HUMMINGBIRD, bird vocabulary like TALON, PREEN and NESTLING, and fictional birds: Pokémon, video game birds and
+birds from books.
 
 It also runs in a normal browser, with no Discord account needed, which is how you develop and test it.
 
-- [How to play](#how-to-play)
+- [The game](#the-game)
 - [Quick start (browser, no Discord needed)](#quick-start-browser-no-discord-needed)
 - [Running it inside Discord](#running-it-inside-discord)
 - [Production deployment](#production-deployment)
@@ -22,14 +23,15 @@ Architecture, the API reference and the security model are in [docs/ARCHITECTURE
 
 ---
 
-## How to play
+## The game
 
 - **One bird a day.** Everyone gets the same daily puzzle, numbered from #1 (26 September 2026). It changes at
   your local midnight. If you're still on yesterday's board then, you can finish it first: a *Play today's* button
   (on the board, in Stats and on the bird card) takes you to the new puzzle.
 - **Six guesses, any length.** The board is as wide as the day's answer, anywhere from 4 to 11 letters ("Today's bird
   has 7 letters"). You always get six guesses.
-- **Real words only.** Each guess has to be a real word of the right length. BIRDLE accepts about 140,000 words.
+- **Real words only.** Each guess has to be a real word of the right length. BIRDLE accepts about 140,000 words, and
+  every answer in its list counts as a word too.
 - **Colour clues.** After each guess the tiles flip:
   - 🟩 **green**: the letter is in the right spot.
   - 🟨 **gold**: the letter is in the word, but in another spot.
@@ -39,10 +41,25 @@ Architecture, the API reference and the security model are in [docs/ARCHITECTURE
 - **Hint 🪶.** After three guesses you can reveal a one-line hint. Your shared result will show that you used it.
 - **Hard mode.** Every revealed hint has to be used in later guesses: green letters stay in place and gold letters
   must be reused. You set it before your first guess, and it is locked for the rest of that game.
-- **Bird card.** When a game ends, win or lose, you get a card with the bird's name, a fun fact and a *Learn more*
-  link to Wikipedia.
+- **Real and fictional birds.** Most answers are real birds and bird words. Pokémon, video game birds and birds from
+  books are answers too, but only the best-known ones can be the daily bird; Free Flight has them all.
+- **Bird card.** When a game ends, win or lose, you get a card with the bird's name, what kind of bird it is (Bird,
+  Bird word, Pokémon, Video game bird or Literary bird), where a fictional bird comes from ("from Pokémon Red &
+  Blue"), a fun fact and a *Learn more on …* button. It opens the bird's page: Wikipedia for real birds, or a fan wiki
+  such as Bulbapedia for characters.
 - **Free Flight.** Unlimited practice games with random birds, including rarer ones. These don't count toward your
-  stats and aren't shown in the Flock.
+  stats and aren't shown in the Flock. A category picker above the board (and on the bird card, next to *New bird*)
+  chooses where the birds come from:
+  - **All**: every bird;
+  - **Real birds**: real birds and bird words only;
+  - **Pokémon**: bird Pokémon;
+  - **Games & books**: birds from video games and books.
+
+  BIRDLE remembers your choice. A fresh round you haven't guessed in yet switches to the new category straight away;
+  a round you've started keeps its bird, and the new category applies from the next one. If a category has no birds
+  in the word list yet, BIRDLE says so and you can pick another. If a fresh round can't switch (say, the connection
+  dropped), a "Couldn't switch" note with a *Try again* button appears under the picker; BIRDLE doesn't keep retrying
+  by itself.
 - **The Flock.** Players in the same Activity see each other's progress on today's puzzle as coloured squares only,
   never letters.
 - **Stats and sharing.** BIRDLE tracks games played, win %, current and best streak, and a guess distribution. Share
@@ -111,9 +128,13 @@ minutes the first time.
    ```
 
    ```ini
-   VITE_DISCORD_CLIENT_ID=123456789012345678   # your Client ID
-   DISCORD_CLIENT_SECRET=...                   # your Client Secret; never commit it
+   DISCORD_CLIENT_ID=123456789012345678   # your Client ID
+   DISCORD_CLIENT_SECRET=...              # your Client Secret; never commit it
    ```
+
+   Only the server reads them. When BIRDLE starts inside Discord, the client asks the server for the Client ID
+   (`GET /api/config`) before it talks to Discord. Setups that used `VITE_DISCORD_CLIENT_ID` keep working (see
+   [Configuration](#configuration)).
 
 ### 3. Start the dev servers and a tunnel
 
@@ -181,8 +202,12 @@ the Vite config.
 BIRDLE runs as **one Node process** that serves the built client and the `/api` routes on one port. That's why a
 single Discord URL mapping (`/` → your host) is enough.
 
+Self-hosting on TrueNAS SCALE: see [docs/TRUENAS.md](docs/TRUENAS.md). It runs the published Docker image
+(`ghcr.io/maebh-hughes/birdle`) as a TrueNAS app, step by step. The steps below are for running BIRDLE from a
+checkout of this repo.
+
 1. On the server, put a `.env` in the repo root (or set real environment variables) with at least
-   `VITE_DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `PORT` and a persistent `DATA_FILE` (see below).
+   `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `PUZZLE_SEED`, `PORT` and a persistent `DATA_FILE` (see below).
 2. Install and build:
 
    ```sh
@@ -190,8 +215,10 @@ single Discord URL mapping (`/` → your host) is enough.
    npm run build     # vite build -> client/dist, then the bundle safety check
    ```
 
-   `VITE_DISCORD_CLIENT_ID` is compiled into the client bundle. It must be set **when you build**, and you need to
-   rebuild if it changes.
+   The build doesn't depend on your Discord application. The client reads the Client ID from the server when it
+   starts (`GET /api/config`), so one build, or one Docker image, works for any Discord app, and changing
+   `DISCORD_CLIENT_ID` only needs a restart. (If `VITE_DISCORD_CLIENT_ID` is set when you build, that ID is compiled
+   into the client and used instead; then you must rebuild when it changes.)
 3. Start the server:
 
    ```sh
@@ -200,9 +227,12 @@ single Discord URL mapping (`/` → your host) is enough.
 
    `npm start` sets `NODE_ENV=production` for you, so you don't need to set it yourself. In production, the server:
    - serves `client/dist` with an SPA fallback;
-   - refuses to start without the Discord credentials;
+   - refuses to start without the Discord credentials (`DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET`);
    - rejects `mock:` tokens (unless you explicitly set `BIRDLE_ALLOW_MOCK_AUTH=true`, which you shouldn't);
-   - warns at startup if `PUZZLE_SEED` is still the public default.
+   - warns at startup, but still starts, if `PUZZLE_SEED` is unset, blank or the public default.
+
+   In any mode, the server also refuses to start while `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET` or
+   `PUZZLE_SEED` still contains the `CHANGE_ME` placeholder from the deploy templates.
 4. Put it behind **HTTPS**, since Discord's proxy only talks to HTTPS targets. Use your platform's TLS or a reverse
    proxy such as Caddy or nginx in front of `PORT`.
 5. In the Developer Portal, change **Activities → URL Mappings** so that `/` points at your production host (for
@@ -210,7 +240,8 @@ single Discord URL mapping (`/` → your host) is enough.
 
 Things to know for production:
 
-- **Data lives in one JSON file** (`DATA_FILE`). Put it on a **persistent disk or volume**, for example
+- **Data lives in one JSON file** (`DATA_FILE`): profiles, stats, games, and the answer of each daily puzzle already
+  served (see [pinned answers](#adding-and-editing-birds)). Put it on a **persistent disk or volume**, for example
   `DATA_FILE=/var/lib/birdle/birdle-db.json`, and back it up. Writes are atomic (a temp file flushed to disk, then a
   rename) and batched every 250 ms.
 - **Run exactly one instance.** The JSON store isn't shared between processes.
@@ -219,9 +250,11 @@ Things to know for production:
   exits. Any process manager works (systemd, pm2, Docker, a PaaS).
 - **Choose a private, random `PUZZLE_SEED`** before the first puzzle is played, and keep it. The daily answers are
   worked out from the seed and the word list, so with the public default (`birdle`) anyone who has the word list can
-  compute every answer in advance. Changing the seed later reshuffles every future daily answer.
-- The server prunes old data every hour: Flock memberships idle for more than 24 h, and daily games more than 3
-  puzzles old (only puzzles within a day of today can be played or shown). Stats are kept forever.
+  compute every answer in advance. Changing the seed later reshuffles the daily answers that haven't been served yet;
+  puzzles already served keep their pinned answer.
+- The server prunes old data every hour: Flock memberships idle for more than 24 h, and daily games and pinned daily
+  answers more than 3 puzzles old (only puzzles within a day of today can be played or shown). Stats are kept
+  forever.
 - **Discord calls are rationed.** Discord bans an IP from its API for a while after 10,000 rejected requests in 10
   minutes, and anyone can make the server ask Discord about a made-up token or sign-in code. So rejected tokens are
   remembered for a minute, and when too many unknown tokens or sign-ins arrive at once the server answers `429` for a
@@ -235,7 +268,8 @@ documented in [`.env.example`](.env.example).
 
 | Variable | Used by | Default | Description |
 |---|---|---|---|
-| `VITE_DISCORD_CLIENT_ID` | client + server | — | The Discord application (client) ID, numeric. Needed inside Discord and in production. Compiled into the client at build time. |
+| `DISCORD_CLIENT_ID` | server | — | The Discord application (client) ID, numeric. Needed inside Discord and in production. Read at runtime: the client gets it from the server's public `GET /api/config` when it starts inside Discord, so no rebuild is needed when it changes. |
+| `VITE_DISCORD_CLIENT_ID` | server, client build | — | Optional older alias of `DISCORD_CLIENT_ID`. The server uses it when `DISCORD_CLIENT_ID` is unset (both set with different values is a startup error). If it is set when the client is built, Vite compiles it in and the client uses it instead of asking `/api/config`. |
 | `DISCORD_CLIENT_SECRET` | server | — | The OAuth2 client secret, used for the `/api/token` code exchange. Server-only; never commit it. Required in production. |
 | `PORT` | server, Vite proxy | `3001` | The API server port (in production, the only port). Vite proxies `/api` to it in development. |
 | `DATA_FILE` | server | `./server/data/birdle-db.json` | The JSON database. Relative paths resolve against the repo root. Use a persistent location in production. |
@@ -247,32 +281,53 @@ documented in [`.env.example`](.env.example).
 
 ## Adding and editing birds
 
-All answers live in **[`shared/data/birds.json`](shared/data/birds.json)**, an array of entries like this:
+All answers live in **[`shared/data/birds.json`](shared/data/birds.json)**, an array of entries like these:
 
 ```json
-{
-  "word": "WREN",
-  "name": "Wren",
-  "kind": "bird",
-  "hint": "Tiny brown songbird that often cocks its short tail upright; very loud for its size",
-  "fact": "Despite being tiny, the Eurasian wren has a remarkably loud song. A wren was pictured on the British farthing coin from 1937 until the coin was withdrawn.",
-  "wiki": "Wren",
-  "obscurity": 1
-}
+[
+  {
+    "word": "WREN",
+    "name": "Wren",
+    "kind": "bird",
+    "hint": "Tiny brown songbird that often cocks its short tail upright; very loud for its size",
+    "fact": "Despite being tiny, the Eurasian wren has a remarkably loud song. A wren was pictured on the British farthing coin from 1937 until the coin was withdrawn.",
+    "wiki": "Wren",
+    "obscurity": 1
+  },
+  {
+    "word": "FARFETCHD",
+    "name": "Farfetch'd",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Wild duck Pokémon that is never seen without the leek stalk it carries",
+    "fact": "Its Galarian form can evolve into Sirfetch'd, which wields its leek like a lance.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Farfetch%27d_(Pok%C3%A9mon)",
+    "obscurity": 1
+  }
+]
 ```
 
 | Field | Rules |
 |---|---|
-| `word` | 4–11 uppercase letters A–Z with no spaces or hyphens (`HUMMINGBIRD`, not `HUMMING-BIRD`). Must be unique. |
-| `name` | The display name on the bird card (for example `"Kākāpō"` or `"Great tit"`). |
-| `kind` | `"bird"` for a bird name, or `"term"` for bird vocabulary (TALON, PREEN, NESTLING). A lost game says "The bird was…" or "The word was…" to match. |
-| `hint` | One line, shown after 3 guesses if the player asks for it. At most 110 characters, and it must not contain the word. |
+| `word` | 4–11 uppercase letters A–Z: the letters-only form of the name, with no spaces, hyphens or apostrophes (`HUMMINGBIRD`, `FARFETCHD` for "Farfetch'd", `HOOH` for "Ho-Oh"). Must be unique. |
+| `name` | The display name on the bird card. It may contain spaces, punctuation and accents (`"Kākāpō"`, `"Great tit"`, `"Farfetch'd"`). |
+| `kind` | `"bird"` (a real bird), `"term"` (bird vocabulary: TALON, PREEN, NESTLING), `"pokemon"`, `"game"` (a video game bird) or `"literature"` (a bird from a book). The card labels them Bird, Bird word, Pokémon, Video game bird and Literary bird. A lost game says "The word was…" for a term and "The bird was…" otherwise. |
+| `source` | Where a fictional bird comes from, shown on the card as "from …" (for example `"Pokémon Red & Blue"`, `"The Legend of Zelda"`, `"Harry Potter"`). **Required** for `pokemon`, `game` and `literature`, at most 60 characters. Leave it out for `bird` and `term`. |
+| `hint` | One line, shown after 3 guesses if the player asks for it. At most 110 characters, and it must not contain the word or the name (ignoring case, accents and punctuation, so "Farfetchd" and "farfetch'd" both count). |
 | `fact` | The fun fact on the bird card, at most 220 characters. |
-| `wiki` | The English Wikipedia article title, as it appears in the URL (for example `Talon_(anatomy)`). The card links to `https://en.wikipedia.org/wiki/<wiki>`. |
-| `obscurity` | `1` = well known, `2` = fairly known, `3` = rare. Only entries with `1` or `2` can be **daily** answers. Everything appears in Free Flight. |
+| `wiki` | The English Wikipedia article title, as it appears in the URL, optionally with a `#Section` (for example `Talon_(anatomy)`). The card's button, *Learn more on Wikipedia*, opens `https://en.wikipedia.org/wiki/<wiki>`. |
+| `link` | A full `https://` URL for a page that isn't on Wikipedia, such as a Bulbapedia or fan-wiki page. The button names the site: *Learn more on Bulbapedia*, *Fandom* (any `*.fandom.com` wiki), *Zelda Wiki*, or otherwise the host name. Each entry has **exactly one** of `wiki` and `link`. |
+| `obscurity` | `1` = well known, `2` = fairly known, `3` = rare. **Daily** answers are real birds and bird words (`bird`, `term`) with `1` or `2`, plus Pokémon, video game and literary birds with `1` only. Everything appears in Free Flight. |
 
-After editing, validate the data. The check covers word format and length, duplicates, required fields, hint and fact
-length, and hints that give away the word:
+**Free Flight categories** draw from these kinds: *All* (every entry), *Real birds* (`bird` and `term`), *Pokémon*
+(`pokemon`) and *Games & books* (`game` and `literature`).
+
+Don't add images: BIRDLE shows no official artwork, only names and short original text.
+
+After editing, validate the data. The check covers word format and length, duplicates, required fields (including
+`source` and exactly one of `wiki`/`link`), hint, fact and source length, and hints that give away the word or name.
+Its summary counts the entries by kind, length and obscurity, and shows the daily pool and each Free Flight
+category:
 
 ```sh
 npm run check:words
@@ -286,11 +341,15 @@ Good to know:
 
 - Every bird word is automatically a valid guess, even if it isn't in the dictionary (`shared/data/guesses.txt`), so
   you don't need to edit the dictionary.
-- **Adding or removing a daily-eligible entry (obscurity 1–2) reshuffles the daily order from then on.** The next
-  day's answer changes, and so can today's for players who haven't started it. Games already in progress keep their
-  answer. So it's best to edit the list rarely, or just before midnight.
-- `npm run build` also checks that no hint, fact, dictionary or answer list ended up in the client bundle
-  (`npm run check:bundle`).
+- **Daily answers are pinned once served.** The first time a daily puzzle is served, the server saves its answer in
+  the data file and uses that word from then on. Adding or removing daily-eligible entries reshuffles the order of
+  puzzles nobody has been served yet, but never changes today's answer or an earlier one. If you remove a word that
+  was already a daily answer, that puzzle still works; its bird card just shows the word, without a fact, and links to
+  a Wikipedia search.
+- A Free Flight category with no entries (for example no `pokemon` entries yet) can't start a round: the game says
+  so, and the player can pick another category.
+- `npm run build` also checks that no hint, fact, "Learn more" link, dictionary or answer list (words or names) ended
+  up in the client bundle (`npm run check:bundle`).
 
 ## Scripts
 
@@ -304,8 +363,8 @@ Run these from the repo root.
 | `npm start` | Runs the production server (`NODE_ENV=production`), which serves `client/dist` and `/api` on `PORT`. |
 | `npm test` | Runs the Vitest suites in `shared`, `server` and `client`. |
 | `npm run typecheck` | Runs `tsc --noEmit` in every workspace. |
-| `npm run check:words` | Validates `shared/data/birds.json` and `guesses.txt`, and prints a summary. |
-| `npm run check:bundle` | Scans `client/dist` for leaked hints, facts, the dictionary, the answer list or the client secret. |
+| `npm run check:words` | Validates `shared/data/birds.json` and `guesses.txt`, and prints a summary (by kind, length and obscurity, the daily pool and the Free Flight categories). |
+| `npm run check:bundle` | Scans `client/dist` for leaked hints, facts, "Learn more" links, the dictionary, the answer list (words or names) or the client secret. |
 | `npm run preview -w client` | Serves the built client with `vite preview` (port 4173, `/api` proxied), for a quick look at a build. |
 
 ## Project structure
@@ -316,11 +375,14 @@ BIRDLE/
 ├─ .env.example            every setting, documented (copy to .env)
 ├─ scripts/check-bundle.mjs  fails the build if server-only data leaks into client/dist
 ├─ docs/ARCHITECTURE.md    architecture, API reference, security model
+├─ docs/TRUENAS.md         self-hosting on TrueNAS SCALE with the Docker image
+├─ Dockerfile, deploy/, .github/workflows/  the Docker image, TrueNAS app files, image publishing
 ├─ shared/                 @birdle/shared: rules + types used by both sides (TypeScript source, no build)
 │  ├─ data/                birds.json (answers), guesses.txt (ENABLE2K dictionary), SOURCE.md
 │  ├─ scripts/check-words.mjs
 │  └─ src/
 │     ├─ index.ts          client-safe exports: types, evaluate, hard mode, dates, share text, stats…
+│     ├─ kinds.ts          bird kinds and labels, the daily pool rule, Free Flight categories
 │     └─ server.ts         SERVER-ONLY: loads birds.json + dictionary (answers, hints, facts)
 ├─ server/                 @birdle/server: Express 5 API, run with tsx
 │  ├─ src/
@@ -333,19 +395,20 @@ BIRDLE/
 │  │  ├─ shutdown.ts       graceful shutdown: finish requests, then save
 │  │  ├─ game.ts           daily/practice games, hints, stats (per-user lock)
 │  │  ├─ flock.ts          Activity-instance membership + colours-only progress
-│  │  ├─ store.ts          Store interface, MemoryStore, JsonFileStore
+│  │  ├─ store.ts          Store interface, MemoryStore, JsonFileStore (games, stats, pinned daily answers)
 │  │  ├─ static.ts         client/dist serving with SPA fallback + cache headers
-│  │  └─ routes/           token, me, daily, practice, instances
+│  │  └─ routes/           token, me, daily, practice, instances (GET /api/config is in app.ts)
 │  └─ test/
 └─ client/                 @birdle/client: Vite + React 19
    ├─ vite.config.ts       envDir '..', /api proxy, allowedHosts, HMR port
    └─ src/
       ├─ main.tsx, App.tsx, session.ts, GameScreen.tsx
+      ├─ startup.ts        the error screen text when BIRDLE can't set up Discord
       ├─ api.ts            typed fetch wrapper (Bearer token, ApiError)
       ├─ discord/          SDK bootstrap (real vs mock), auth, participants, presence, share, links, mobile
       ├─ game/             reducer (typing, reveal, toasts) + useGame hook
       ├─ hooks/            useFlock, keyboard, media queries, countdown
-      ├─ components/       Board, Keyboard, modals, BirdCard, FlockPanel, …
+      ├─ components/       Board, Keyboard, modals, BirdCard, CategoryPicker, FlockPanel, …
       └─ styles.css
 ```
 
@@ -372,10 +435,10 @@ in `.env` and restart `npm run dev`.
 - *In a browser:* the server isn't accepting mock tokens. That happens in production (`npm start`) or when
   `BIRDLE_ALLOW_MOCK_AUTH=false`. Use `npm run dev` for browser play.
 - *Inside Discord:* the Discord access token was rejected or has expired. Press **Retry** to sign in again. If it
-  keeps failing, check that `VITE_DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET` belong to the **same** application
-  as the Activity you launched, and restart the dev servers after editing `.env`.
-- *"Server trouble … Discord sign-in is not configured":* `DISCORD_CLIENT_SECRET` or `VITE_DISCORD_CLIENT_ID` is
-  missing on the server.
+  keeps failing, check that `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET` belong to the **same** application as
+  the Activity you launched, and restart the dev servers after editing `.env`.
+- *"Server trouble … Discord sign-in is not configured":* `DISCORD_CLIENT_SECRET` or `DISCORD_CLIENT_ID` is missing
+  on the server.
 - *"Couldn't complete Discord sign-in":* Discord rejected the code exchange, usually because the client secret is
   wrong or was reset. Copy it again from the portal.
 
@@ -384,13 +447,21 @@ in `.env` and restart `npm run dev`.
 `identify`. The game works normally, but your status won't show puzzle progress, and the console shows a warning.
 Nothing needs fixing.
 
-**"BIRDLE couldn't start: VITE_DISCORD_CLIENT_ID is not set".** The page was opened by Discord, but the client was
-built or served without the application ID. Add it to `.env`, then restart `npm run dev` (development) or rerun
-`npm run build` (production).
+**"BIRDLE isn't set up for Discord yet".** The page was opened by Discord, but the server has no Discord application
+ID (and none was compiled into the client). Set `DISCORD_CLIENT_ID` in `.env` or the container's environment,
+restart the server (`npm run dev`, `npm start` or the app), then relaunch the Activity.
+
+**"BIRDLE couldn't start" with "HTTP 404" (or another HTTP error).** Inside Discord the client first reads
+`/api/config` from the BIRDLE server. Check that the `/` URL mapping points at the BIRDLE server (in development: the
+tunnel and `npm run dev` are both running), and that the client and server come from the same version.
 
 **Stuck on the loading screen, then "Discord did not respond".** The Discord handshake didn't finish within 20
 seconds. Close and relaunch the Activity. Also check that the tunnel is still running and that the URL mapping
 matches it.
+
+**Free Flight says "There are no … in Free Flight yet".** The word list has no entries for that category yet (for
+example no `pokemon` entries). Pick another category, or add some birds (see
+[Adding and editing birds](#adding-and-editing-birds)).
 
 **The server refuses to start in production.** It prints every configuration problem (for example missing Discord
 credentials or an invalid `PORT`) and exits. Fix the listed variables.
@@ -403,8 +474,11 @@ Vite proxy follows it.
 - **Valid-guess dictionary:** words from the ENABLE2K word list (Enhanced North American Benchmark LExicon) by Alan
   Beale and Mendel Cooper, released into the Public Domain. Source and details are in
   [shared/data/SOURCE.md](shared/data/SOURCE.md).
-- **Bird facts and hints:** short summaries written for BIRDLE, based on the English Wikipedia articles each bird
-  card links to (`https://en.wikipedia.org/wiki/<article>`). Wikipedia text is available under the
+- **Bird facts and hints:** short summaries written for BIRDLE, based on the page each bird card links to: the
+  English Wikipedia article (`https://en.wikipedia.org/wiki/<article>`), or for some Pokémon, video game and literary
+  birds a fan wiki page such as Bulbapedia. Wikipedia text is available under the
   [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0/). Follow a
-  card's *Learn more* link for the full article and its authors.
+  card's *Learn more* link for the full page, its authors and its license.
+- **Characters:** Pokémon and other character names are trademarks of their respective owners. BIRDLE is an
+  unofficial fan project and is not affiliated with or endorsed by them. BIRDLE uses no official artwork or images.
 - Built with the [Discord Embedded App SDK](https://github.com/discord/embedded-app-sdk), React, Vite and Express.

@@ -4,10 +4,12 @@ import {
   MAX_GUESSES,
   MAX_WORD_LENGTH,
   MIN_WORD_LENGTH,
+  isPracticeCategory,
   type GameMode,
   type GameStatus,
   type GuessRow,
   type PlayerProfile,
+  type PracticeCategory,
   type Stats,
 } from '@birdle/shared';
 import type { Logger } from './runtime';
@@ -19,6 +21,8 @@ export interface GameRecord {
   puzzleNumber: number | null;
   /** Daily puzzle date (YYYY-MM-DD); null in practice. */
   date: string | null;
+  /** Free Flight category the answer was drawn from; null for daily games. */
+  category: PracticeCategory | null;
   /** Uppercase answer word. */
   answer: string;
   guesses: GuessRow[];
@@ -43,7 +47,7 @@ export interface Membership extends InstanceMember {
 export interface PruneOptions {
   /** Drop instance memberships last seen before this time (ms). */
   membersSeenBefore: number;
-  /** Drop daily games of puzzles numbered below this. */
+  /** Drop daily games and pinned daily answers of puzzles numbered below this. */
   dailyPuzzlesBefore: number;
 }
 
@@ -57,6 +61,13 @@ export interface Store {
   saveDailyGame(userId: string, puzzleNumber: number, game: GameRecord): Promise<void>;
   getPracticeGame(userId: string): Promise<GameRecord | undefined>;
   savePracticeGame(userId: string, game: GameRecord): Promise<void>;
+  /** The answer pinned to daily puzzle `puzzleNumber` when it was first served, if any. */
+  getDailyAnswer(puzzleNumber: number): Promise<string | undefined>;
+  /**
+   * Pins `answer` to daily puzzle `puzzleNumber` unless an answer is pinned
+   * already, and resolves to the pinned answer either way (first pin wins).
+   */
+  pinDailyAnswer(puzzleNumber: number, answer: string): Promise<string>;
   getInstanceMembers(instanceId: string): Promise<InstanceMember[]>;
   saveInstanceMember(instanceId: string, member: InstanceMember): Promise<void>;
   removeInstanceMember(instanceId: string, userId: string): Promise<void>;
@@ -72,6 +83,8 @@ interface StoreState {
   stats: Map<string, Stats>;
   daily: Map<string, Map<number, GameRecord>>;
   practice: Map<string, GameRecord>;
+  /** Daily puzzle number -> the answer it was first served with. */
+  dailyAnswers: Map<number, string>;
   instances: Map<string, Map<string, InstanceMember>>;
   /** Index of `instances` by player: userId -> instance ids. */
   memberships: Map<string, Set<string>>;
@@ -83,6 +96,7 @@ function emptyState(): StoreState {
     stats: new Map(),
     daily: new Map(),
     practice: new Map(),
+    dailyAnswers: new Map(),
     instances: new Map(),
     memberships: new Map(),
   };
@@ -151,6 +165,19 @@ export class MemoryStore implements Store {
     this.changed();
   }
 
+  async getDailyAnswer(puzzleNumber: number): Promise<string | undefined> {
+    return this.state.dailyAnswers.get(puzzleNumber);
+  }
+
+  async pinDailyAnswer(puzzleNumber: number, answer: string): Promise<string> {
+    // No await between the check and the set, so concurrent requests can't both pin.
+    const pinned = this.state.dailyAnswers.get(puzzleNumber);
+    if (pinned !== undefined) return pinned;
+    this.state.dailyAnswers.set(puzzleNumber, answer);
+    this.changed();
+    return answer;
+  }
+
   async getInstanceMembers(instanceId: string): Promise<InstanceMember[]> {
     return [...(this.state.instances.get(instanceId)?.values() ?? [])].map(clone);
   }
@@ -199,6 +226,12 @@ export class MemoryStore implements Store {
       }
       if (games.size === 0) this.state.daily.delete(userId);
     }
+    for (const puzzleNumber of this.state.dailyAnswers.keys()) {
+      if (puzzleNumber < dailyPuzzlesBefore) {
+        this.state.dailyAnswers.delete(puzzleNumber);
+        removed++;
+      }
+    }
     if (removed > 0) this.changed();
   }
 
@@ -209,13 +242,19 @@ export class MemoryStore implements Store {
 
 const FILE_VERSION = 1;
 
-/** On-disk format (version 1). Object.fromEntries keeps keys like "__proto__" as plain data. */
+/**
+ * On-disk format (version 1). Object.fromEntries keeps keys like "__proto__" as
+ * plain data. `dailyAnswers` and game `category` fields were added later; files
+ * without them still load (see fromFile).
+ */
 interface StoreFile {
   version: typeof FILE_VERSION;
   profiles: Record<string, PlayerProfile>;
   stats: Record<string, Stats>;
   daily: Record<string, Record<string, GameRecord>>;
   practice: Record<string, GameRecord>;
+  /** Daily puzzle number -> pinned answer. */
+  dailyAnswers: Record<string, string>;
   instances: Record<string, Record<string, { joinedAt: number; lastSeen: number }>>;
 }
 
@@ -230,6 +269,7 @@ function toFile(state: StoreState): StoreFile {
     stats: Object.fromEntries(state.stats),
     daily: nested(state.daily, (game) => game),
     practice: Object.fromEntries(state.practice),
+    dailyAnswers: Object.fromEntries([...state.dailyAnswers].map(([puzzleNumber, answer]) => [String(puzzleNumber), answer])),
     instances: nested(state.instances, ({ joinedAt, lastSeen }) => ({ joinedAt, lastSeen })),
   };
 }
@@ -282,7 +322,11 @@ function isGuessRow(value: unknown, length: number): value is GuessRow {
   );
 }
 
-function isGameRecord(value: unknown, mode: GameMode): value is GameRecord {
+/**
+ * A stored game. `category` is optional in the file: games saved before Free
+ * Flight categories existed have none (see withCategory).
+ */
+function isGameRecord(value: unknown, mode: GameMode): value is Omit<GameRecord, 'category'> & { category?: unknown } {
   if (!isRecord(value) || value.mode !== mode || typeof value.answer !== 'string') return false;
   const answer = value.answer;
   const daily = mode === 'daily';
@@ -290,6 +334,7 @@ function isGameRecord(value: unknown, mode: GameMode): value is GameRecord {
     ANSWER_PATTERN.test(answer) &&
     (daily ? Number.isInteger(value.puzzleNumber) : value.puzzleNumber === null) &&
     (daily ? typeof value.date === 'string' : value.date === null) &&
+    (daily ? value.category === undefined || value.category === null : value.category === undefined || isPracticeCategory(value.category)) &&
     Array.isArray(value.guesses) &&
     value.guesses.length <= MAX_GUESSES &&
     value.guesses.every((row) => isGuessRow(row, answer.length)) &&
@@ -299,8 +344,35 @@ function isGameRecord(value: unknown, mode: GameMode): value is GameRecord {
   );
 }
 
+/** A stored game with its category filled in: null for daily games, 'all' for older practice games. */
+function withCategory(game: Omit<GameRecord, 'category'> & { category?: unknown }): GameRecord {
+  const category = game.mode === 'daily' ? null : isPracticeCategory(game.category) ? game.category : 'all';
+  return { ...game, category };
+}
+
 function isMemberTimes(value: unknown): value is { joinedAt: number; lastSeen: number } {
   return isRecord(value) && isCount(value.joinedAt) && isCount(value.lastSeen);
+}
+
+/**
+ * Pins the answer of every puzzle that has stored games but no pinned answer:
+ * the one most of its games have. Needed for files written before answers
+ * were pinned, so a changed word list can't give later players another answer.
+ */
+function pinAnswersOfStoredGames(state: StoreState): void {
+  const votes = new Map<number, Map<string, number>>();
+  for (const games of state.daily.values()) {
+    for (const [puzzleNumber, game] of games) {
+      if (state.dailyAnswers.has(puzzleNumber)) continue;
+      let counts = votes.get(puzzleNumber);
+      if (!counts) votes.set(puzzleNumber, (counts = new Map()));
+      counts.set(game.answer, (counts.get(game.answer) ?? 0) + 1);
+    }
+  }
+  for (const [puzzleNumber, counts] of votes) {
+    const [answer] = [...counts].reduce((best, next) => (next[1] > best[1] ? next : best));
+    state.dailyAnswers.set(puzzleNumber, answer);
+  }
 }
 
 /**
@@ -332,14 +404,25 @@ function fromFile(data: unknown): { state: StoreState; dropped: number } | null 
     const byPuzzle = new Map<number, GameRecord>();
     for (const [key, game] of Object.entries(games as UnknownRecord)) {
       const puzzleNumber = Number(key);
-      const ok = isGameRecord(game, 'daily') && game.puzzleNumber === puzzleNumber;
-      if (keep(ok)) byPuzzle.set(puzzleNumber, game as GameRecord);
+      if (keep(isGameRecord(game, 'daily') && game.puzzleNumber === puzzleNumber)) {
+        byPuzzle.set(puzzleNumber, withCategory(game as Omit<GameRecord, 'category'>));
+      }
     }
     if (byPuzzle.size > 0) state.daily.set(userId, byPuzzle);
   }
   for (const [userId, game] of Object.entries(file.practice)) {
-    if (keep(isGameRecord(game, 'practice'))) state.practice.set(userId, game as GameRecord);
+    if (keep(isGameRecord(game, 'practice'))) state.practice.set(userId, withCategory(game as Omit<GameRecord, 'category'>));
   }
+  // Missing in files written before daily answers were pinned.
+  const pins: unknown = (data as UnknownRecord).dailyAnswers ?? {};
+  if (keep(isRecord(pins))) {
+    for (const [key, answer] of Object.entries(pins as UnknownRecord)) {
+      const puzzleNumber = Number(key);
+      const ok = /^[1-9]\d*$/.test(key) && Number.isSafeInteger(puzzleNumber) && typeof answer === 'string' && ANSWER_PATTERN.test(answer);
+      if (keep(ok)) state.dailyAnswers.set(puzzleNumber, answer as string);
+    }
+  }
+  pinAnswersOfStoredGames(state);
   for (const [instanceId, members] of Object.entries(file.instances)) {
     if (!keep(isRecord(members))) continue;
     const byUser = new Map<string, InstanceMember>();

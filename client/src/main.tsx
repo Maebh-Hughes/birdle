@@ -1,10 +1,10 @@
-import { StrictMode } from 'react';
+import { StrictMode, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
-import { ErrorScreen } from './components/Screens';
-import { describeError } from './discord/errors';
-import { createDiscordEnv, type DiscordEnv } from './discord/sdk';
+import { ErrorScreen, LoadingScreen } from './components/Screens';
+import { createDiscordEnv } from './discord/sdk';
 import { loadSettings } from './settings';
+import { startupFailure } from './startup';
 import { applyTheme, resolveTheme } from './theme';
 import './styles.css';
 
@@ -16,26 +16,25 @@ const settings = loadSettings();
 const prefersLight = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: light)').matches;
 applyTheme(document.documentElement, resolveTheme(settings.theme, prefersLight), settings.colorBlind);
 
-let env: DiscordEnv | null = null;
-let startupError: unknown = null;
-try {
-  env = createDiscordEnv();
-} catch (error) {
-  startupError = error;
-}
+const root = createRoot(container);
+const render = (node: ReactNode) => root.render(<StrictMode>{node}</StrictMode>);
 
-createRoot(container).render(
-  <StrictMode>
-    {env ? (
-      <App env={env} initialSettings={settings} />
-    ) : (
+// Inside Discord the SDK may need the application id from the server first
+// (GET /api/config), so it is created asynchronously behind the loading screen.
+render(<LoadingScreen />);
+createDiscordEnv().then(
+  (env) => render(<App env={env} initialSettings={settings} />),
+  (error: unknown) => {
+    console.error('BIRDLE: startup failed:', error);
+    const failure = startupFailure(error);
+    render(
       <ErrorScreen
-        title="BIRDLE couldn't start"
-        message="Something went wrong while connecting to Discord."
-        detail={describeError(startupError)}
+        title={failure.title}
+        message={failure.message}
+        detail={failure.detail}
         onRetry={() => window.location.reload()}
         retryLabel="Reload"
-      />
-    )}
-  </StrictMode>,
+      />,
+    );
+  },
 );

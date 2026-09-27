@@ -25,6 +25,18 @@ export function errorMessage(error: unknown): string {
 }
 
 /**
+ * Text for a Free Flight round that couldn't start. A 400 from
+ * POST /api/practice/new explains itself ("There are no bird Pokémon in Free
+ * Flight yet. Pick another category."), so its message is shown as sent.
+ */
+export function practiceStartMessage(error: unknown): string {
+  if (error instanceof ApiError && error.code === 'BAD_REQUEST' && error.status === 400 && error.message && error.message !== error.code) {
+    return error.message;
+  }
+  return errorMessage(error);
+}
+
+/**
  * The server's game differs from the one on screen: it already ended, it was
  * replaced (another tab started a new Free Flight bird of a different length),
  * or it no longer exists. The client never sends a wrong-length guess itself.

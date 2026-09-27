@@ -2,15 +2,17 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { emptyStats } from '@birdle/shared';
+import { emptyStats, type BirdKind, type GameView, type PracticeCategory } from '@birdle/shared';
+import { BirdCard } from '../src/components/BirdCard';
 import { Board } from '../src/components/Board';
+import { CategoryPicker } from '../src/components/CategoryPicker';
 import { Keyboard } from '../src/components/Keyboard';
 import { Modal } from '../src/components/Modal';
 import { SettingsModal } from '../src/components/SettingsModal';
 import { StatsModal } from '../src/components/StatsModal';
 import { gameKeyFor, usePhysicalKeyboard } from '../src/hooks/usePhysicalKeyboard';
 import { DEFAULT_SETTINGS } from '../src/settings';
-import { makeGame, row } from './fixtures';
+import { makeGame, makeReveal, row } from './fixtures';
 
 describe('Board', () => {
   it.each([4, 7, 11])('renders 6 rows of %i tiles', (wordLength) => {
@@ -156,6 +158,15 @@ describe('physical keyboard', () => {
     expect(key({ key: 'a' }, textarea)).toBeNull();
   });
 
+  it('lets letters and Enter through from a focused radio button (the category picker)', () => {
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    expect(key({ key: 'a' }, radio)).toBe('A');
+    expect(key({ key: 'Enter' }, radio)).toBe('ENTER');
+    const text = document.createElement('input');
+    expect(key({ key: 'a' }, text)).toBeNull();
+  });
+
   function KeyboardHarness({ onKey, onStats }: { onKey: (key: string) => void; onStats: () => void }) {
     usePhysicalKeyboard(onKey, true);
     return (
@@ -234,5 +245,124 @@ describe('next puzzle', () => {
     expect(screen.queryByRole('timer')).toBeNull();
     await userEvent.setup().click(screen.getByRole('button', { name: 'Play today’s' }));
     expect(onPlayToday).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('CategoryPicker', () => {
+  function Harness({ onChange }: { onChange: (category: PracticeCategory) => void }) {
+    const [value, setValue] = useState<PracticeCategory>('all');
+    return (
+      <CategoryPicker
+        value={value}
+        onChange={(category) => {
+          onChange(category);
+          setValue(category);
+        }}
+      />
+    );
+  }
+
+  it('is a labelled radio group of the four Free Flight categories', async () => {
+    const onChange = vi.fn();
+    const user = userEvent.setup();
+    render(<Harness onChange={onChange} />);
+    const group = screen.getByRole('group', { name: 'Free Flight birds' });
+    const radios = within(group).getAllByRole('radio');
+    expect(radios.map((radio) => (radio as HTMLInputElement).value)).toEqual(['all', 'birds', 'pokemon', 'fiction']);
+    expect(within(group).getByRole('radio', { name: 'All' })).toBeChecked();
+    expect(within(group).getByRole('radio', { name: 'Real birds' }).closest('label')).toHaveAttribute(
+      'title',
+      'Real birds and bird words only',
+    );
+
+    await user.click(within(group).getByRole('radio', { name: 'Real birds' }));
+    expect(onChange).toHaveBeenLastCalledWith('birds');
+    expect(within(group).getByRole('radio', { name: 'Real birds' })).toBeChecked();
+
+    // Arrow keys move between the options like any radio group.
+    await user.keyboard('{ArrowRight}');
+    expect(onChange).toHaveBeenLastCalledWith('pokemon');
+  });
+});
+
+describe('BirdCard', () => {
+  const finished = (patch: Partial<GameView> = {}) =>
+    makeGame({ status: 'won', guesses: [row('CRANE', 'CRANE')], answer: makeReveal(), ...patch });
+
+  function renderCard(game: GameView, overrides: Partial<Parameters<typeof BirdCard>[0]> = {}) {
+    const props = {
+      game,
+      onShare: vi.fn(),
+      onLearnMore: vi.fn(),
+      onNewBird: vi.fn(),
+      category: 'all' as PracticeCategory,
+      onCategoryChange: vi.fn(),
+      onPlayFreeFlight: vi.fn(),
+      onStats: vi.fn(),
+      onClose: vi.fn(),
+      ...overrides,
+    };
+    render(<BirdCard {...props} />);
+    return props;
+  }
+
+  it.each<[BirdKind, string]>([
+    ['bird', 'Bird'],
+    ['term', 'Bird word'],
+    ['pokemon', 'Pokémon'],
+    ['game', 'Video game bird'],
+    ['literature', 'Literary bird'],
+  ])('labels a %s as "%s"', (kind, label) => {
+    renderCard(finished({ answer: makeReveal({ kind, source: kind === 'bird' || kind === 'term' ? null : 'Somewhere' }) }));
+    expect(screen.getByText(label, { selector: '.bird-card__kind' })).toBeInTheDocument();
+  });
+
+  it('shows where a character comes from under its name and links to its wiki', async () => {
+    const answer = makeReveal({
+      word: 'FARFETCHD',
+      name: 'Farfetch’d',
+      kind: 'pokemon',
+      source: 'Pokémon Red & Blue',
+      infoUrl: 'https://bulbapedia.bulbagarden.net/wiki/Farfetch%27d_(Pok%C3%A9mon)',
+      infoSite: 'Bulbapedia',
+    });
+    const props = renderCard(finished({ wordLength: 9, guesses: [row('FARFETCHD', 'FARFETCHD')], answer }));
+    const name = screen.getByText('Farfetch’d');
+    expect(name.nextElementSibling).toHaveTextContent('from Pokémon Red & Blue');
+    expect(screen.getByRole('group', { name: 'The answer: FARFETCHD' })).toBeInTheDocument();
+
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Learn more on Bulbapedia' }));
+    expect(props.onLearnMore).toHaveBeenCalledWith(answer.infoUrl);
+  });
+
+  it('a real bird has no source line and links to Wikipedia', () => {
+    renderCard(finished());
+    expect(screen.queryByText(/^from /)).toBeNull();
+    expect(screen.getByRole('button', { name: 'Learn more on Wikipedia' })).toBeInTheDocument();
+    expect(screen.getByText('Did you know?')).toBeInTheDocument();
+  });
+
+  it('leaves out the fact box of a minimal card (an answer no longer in the list)', () => {
+    renderCard(finished({ answer: makeReveal({ fact: '', infoUrl: 'https://en.wikipedia.org/wiki/Special:Search?search=Crane' }) }));
+    expect(screen.queryByText('Did you know?')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Learn more on Wikipedia' })).toBeInTheDocument();
+  });
+
+  it('offers the next Free Flight category next to "New bird", but not after a daily puzzle', async () => {
+    const user = userEvent.setup();
+    const practice = renderCard(finished({ mode: 'practice', puzzleNumber: null, date: null }), { category: 'fiction' });
+    const group = screen.getByRole('group', { name: 'Next Free Flight bird from' });
+    expect(within(group).getByRole('radio', { name: 'Games & books' })).toBeChecked();
+    await user.click(within(group).getByRole('radio', { name: 'Pokémon' }));
+    expect(practice.onCategoryChange).toHaveBeenCalledWith('pokemon');
+    expect(practice.onNewBird).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('button', { name: /New bird/ }));
+    expect(practice.onNewBird).toHaveBeenCalledTimes(1);
+  });
+
+  it('has no category picker on a daily card', () => {
+    renderCard(finished());
+    expect(screen.queryByRole('radio')).toBeNull();
+    expect(screen.queryByRole('button', { name: /New bird/ })).toBeNull();
   });
 });

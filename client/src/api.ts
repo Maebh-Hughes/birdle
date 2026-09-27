@@ -1,6 +1,7 @@
 import {
   API_ERROR_CODES,
   type ApiErrorCode,
+  type ConfigResponse,
   type DailyGuessRequest,
   type DailyGuessResponse,
   type DailyHintRequest,
@@ -9,8 +10,10 @@ import {
   type JoinInstanceRequest,
   type MeResponse,
   type OkResponse,
+  type PracticeCategory,
   type PracticeGameResponse,
   type PracticeGuessRequest,
+  type PracticeNewRequest,
   type TokenResponse,
 } from '@birdle/shared';
 
@@ -133,6 +136,19 @@ export async function exchangeCode(code: string, options: Pick<ApiOptions, 'fetc
   return body.access_token;
 }
 
+/**
+ * GET /api/config: public settings the client needs before signing in (no token).
+ * Validates the shape, so a proxy's error page or an old server can't pass as a config.
+ */
+export async function fetchConfig(options: Pick<ApiOptions, 'fetch' | 'timeoutMs'> = {}): Promise<ConfigResponse> {
+  const body = await requestJson<Partial<ConfigResponse> | null>('/api/config', { method: 'GET' }, options);
+  const id = body?.discordClientId;
+  if (id !== null && (typeof id !== 'string' || id.trim() === '')) {
+    throw new ApiError('UNKNOWN', 'The server sent an invalid configuration');
+  }
+  return { discordClientId: id === null ? null : id.trim() };
+}
+
 export interface Api {
   /** `date` is the player's local puzzle date, so streaks are shown as of their "today". */
   me(date: string, options?: RequestOptions): Promise<MeResponse>;
@@ -140,7 +156,8 @@ export interface Api {
   dailyGuess(body: DailyGuessRequest, options?: RequestOptions): Promise<DailyGuessResponse>;
   dailyHint(body: DailyHintRequest, options?: RequestOptions): Promise<GameResponse>;
   practice(options?: RequestOptions): Promise<PracticeGameResponse>;
-  practiceNew(options?: RequestOptions): Promise<GameResponse>;
+  /** Starts a Free Flight round with an answer from `category`. */
+  practiceNew(category: PracticeCategory, options?: RequestOptions): Promise<GameResponse>;
   practiceGuess(body: PracticeGuessRequest, options?: RequestOptions): Promise<GameResponse>;
   practiceHint(options?: RequestOptions): Promise<GameResponse>;
   joinInstance(instanceId: string, body: JoinInstanceRequest, options?: RequestOptions): Promise<OkResponse>;
@@ -161,7 +178,7 @@ export function createApi(token: string, options: ApiOptions = {}): Api {
     dailyGuess: (body, opts) => post('/api/daily/guess', body, opts),
     dailyHint: (body, opts) => post('/api/daily/hint', body, opts),
     practice: (opts) => get('/api/practice', opts),
-    practiceNew: (opts) => post('/api/practice/new', {}, opts),
+    practiceNew: (category, opts) => post('/api/practice/new', { category } satisfies PracticeNewRequest, opts),
     practiceGuess: (body, opts) => post('/api/practice/guess', body, opts),
     practiceHint: (opts) => post('/api/practice/hint', {}, opts),
     joinInstance: (instanceId, body, opts) => post(`${instancePath(instanceId)}/join`, body, opts),

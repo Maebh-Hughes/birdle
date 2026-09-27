@@ -412,7 +412,8 @@ button {
 }
 
 .hint-callout,
-.new-day {
+.new-day,
+.category-retry {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -439,7 +440,8 @@ button {
   color: var(--present);
 }
 
-.new-day {
+.new-day,
+.category-retry {
   justify-content: space-between;
   font-weight: 700;
 }
@@ -1155,22 +1157,8 @@ body:has(.modal-backdrop) .toasts {
   }
 }
 
-/* How to play */
+/* Statistics */
 
-.help__lead {
-  margin: 0 0 8px;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.help__rules {
-  display: grid;
-  gap: 6px;
-  margin: 0 0 12px;
-  padding-left: 1.2em;
-}
-
-.help__heading,
 .stats__heading {
   margin: 16px 0 8px;
   font-size: 0.78rem;
@@ -1179,39 +1167,6 @@ body:has(.modal-backdrop) .toasts {
   text-transform: uppercase;
   color: var(--text-muted);
 }
-
-.help__example {
-  margin-bottom: 12px;
-}
-
-.help__example p {
-  margin: 4px 0 0;
-}
-
-.help__tiles,
-.bird-card__tiles {
-  display: inline-grid;
-  grid-template-columns: repeat(var(--cols), var(--tile));
-  gap: 4px;
-}
-
-.help__tiles {
-  --tile: min(34px, 9vw);
-}
-
-.help__tiles .tile[data-state='tbd'] {
-  animation: none;
-}
-
-.help__footer {
-  margin: 14px 0 0;
-  padding-top: 12px;
-  border-top: 1px solid var(--surface-border);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Statistics */
 
 .stats__figures {
   display: grid;
@@ -1452,6 +1407,36 @@ body:has(.modal-backdrop) .toasts {
   outline-offset: 1px;
 }
 
+.category-picker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.segmented--categories {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+}
+
+/* A label that wraps ("Games & books" on a phone) makes its row taller; the others fill it. */
+.segmented--categories .segmented__option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 6px 4px;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+/* The Free Flight category picker above the board. */
+.play__category {
+  width: min(100%, 420px);
+  margin-top: 8px;
+}
+
 .settings__note {
   margin: 14px 0 0;
   font-size: 0.82rem;
@@ -1484,6 +1469,9 @@ body:has(.modal-backdrop) .toasts {
 }
 
 .bird-card__tiles {
+  display: inline-grid;
+  grid-template-columns: repeat(var(--cols), var(--tile));
+  gap: 4px;
   --tile: min(34px, calc((min(100vw, 460px) - 96px - (var(--cols) - 1) * 4px) / var(--cols)));
 }
 
@@ -1497,6 +1485,13 @@ body:has(.modal-backdrop) .toasts {
   font-size: 1.6rem;
   font-weight: 900;
   line-height: 1.2;
+}
+
+.bird-card__source {
+  margin: 2px 0 0;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-muted);
 }
 
 .bird-card__kind {
@@ -1545,6 +1540,18 @@ body:has(.modal-backdrop) .toasts {
 
 .bird-card__next:has(> .button:only-child) {
   justify-content: center;
+}
+
+/* Free Flight: the next bird's category above "New bird". */
+.bird-card__new {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.bird-card__new .category-picker {
+  width: 100%;
 }
 
 /* Manual copy fallback */
@@ -1691,6 +1698,14 @@ body:has(.modal-backdrop) .toasts {
 
   .caption {
     margin-top: 6px;
+  }
+
+  .play__category {
+    margin-top: 6px;
+  }
+
+  .segmented--categories .segmented__option span {
+    padding: 4px;
   }
 
   .play__actions {

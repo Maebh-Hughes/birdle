@@ -52,7 +52,11 @@ export function gameKeyFor(event: KeyboardEvent, isKeyboardFocused: (element: El
 
   const target = event.target;
   if (target instanceof HTMLElement) {
-    if (target.isContentEditable || target.closest('input, textarea, select')) return null;
+    // Text fields take their own typing. Radio buttons and checkboxes (such as
+    // the Free Flight category picker) don't use letters, so the game gets them.
+    const field = target.closest('input, textarea, select');
+    const choice = field instanceof HTMLInputElement && (field.type === 'radio' || field.type === 'checkbox');
+    if (target.isContentEditable || (field && !choice)) return null;
     // Enter on a control the player tabbed to activates it; on a button last
     // clicked with the mouse it still submits the guess.
     const control = target.closest('button, a[href], [role="button"], [role="switch"]');

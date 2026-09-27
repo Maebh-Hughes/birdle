@@ -1,11 +1,18 @@
-import { buildShareText, puzzleNumberForDate, statsForDisplay, type GameView } from '@birdle/shared';
+import {
+  buildShareText,
+  PRACTICE_CATEGORY_LABELS,
+  puzzleNumberForDate,
+  statsForDisplay,
+  type GameView,
+  type PracticeCategory,
+} from '@birdle/shared';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BirdCard } from './components/BirdCard';
 import { Board } from './components/Board';
+import { CategoryPicker } from './components/CategoryPicker';
 import { CopyModal } from './components/CopyModal';
 import { FlockPanel } from './components/FlockPanel';
 import { Header } from './components/Header';
-import { HelpModal } from './components/HelpModal';
 import { HintButton } from './components/HintButton';
 import { FeatherIcon, RefreshIcon, ShareIcon } from './components/Icons';
 import { Keyboard } from './components/Keyboard';
@@ -19,14 +26,14 @@ import type { DiscordEnv } from './discord/sdk';
 import { shareResult } from './discord/share';
 import { hideUnrevealedRows } from './flock';
 import { gameBeforeReveal } from './game/reducer';
-import { useGame } from './game/useGame';
+import { isRoundUnderway, practiceCategoryOf, useGame } from './game/useGame';
 import { useFlock } from './hooks/useFlock';
 import { useMediaQuery, useReducedMotion } from './hooks/useMediaQuery';
 import { usePhysicalKeyboard } from './hooks/usePhysicalKeyboard';
 import type { Session } from './session';
 import type { ResolvedTheme, Settings, UpdateSettings } from './settings';
 
-type ModalName = 'help' | 'stats' | 'settings' | 'bird' | 'copy';
+type ModalName = 'stats' | 'settings' | 'bird' | 'copy';
 
 interface GameScreenProps {
   env: DiscordEnv;
@@ -36,11 +43,12 @@ interface GameScreenProps {
   theme: ResolvedTheme;
 }
 
-function Caption({ game, loading }: { game: GameView | null; loading: boolean }) {
+function Caption({ game, loading, practice }: { game: GameView | null; loading: boolean; practice: boolean }) {
   if (!game) {
-    return <p className="caption">{loading ? 'Finding today’s bird…' : ' '}</p>;
+    return <p className="caption">{loading ? (practice ? 'Finding a bird…' : 'Finding today’s bird…') : ' '}</p>;
   }
   const letters = `${game.wordLength} letters`;
+  const category = game.mode === 'practice' ? practiceCategoryOf(game) : 'all';
   return (
     <p className="caption">
       {game.mode === 'daily' ? (
@@ -49,7 +57,10 @@ function Caption({ game, loading }: { game: GameView | null; loading: boolean })
         </>
       ) : (
         <>
-          <span className="caption__chip caption__chip--free">Free Flight</span> This bird has <strong>{letters}</strong>
+          <span className="caption__chip caption__chip--free">
+            Free Flight{category !== 'all' && ` · ${PRACTICE_CATEGORY_LABELS[category]}`}
+          </span>{' '}
+          This bird has <strong>{letters}</strong>
         </>
       )}
     </p>
@@ -59,7 +70,7 @@ function Caption({ game, loading }: { game: GameView | null; loading: boolean })
 export function GameScreen({ env, session, settings, updateSettings, theme }: GameScreenProps) {
   const reducedMotion = useReducedMotion();
   const wide = useMediaQuery('(min-width: 900px)');
-  const [modal, setModal] = useState<ModalName | null>(settings.seenHelp ? null : 'help');
+  const [modal, setModal] = useState<ModalName | null>(null);
   const [copyText, setCopyText] = useState('');
   const refreshFlock = useRef<() => void>(() => undefined);
 
@@ -67,6 +78,7 @@ export function GameScreen({ env, session, settings, updateSettings, theme }: Ga
     api: session.api,
     initialStats: session.stats,
     hardMode: settings.hardMode,
+    practiceCategory: settings.freeFlightCategory,
     reducedMotion,
     // Don't cover a modal the player opened in the meantime.
     onGameOver: () => setModal((current) => current ?? 'bird'),
@@ -112,10 +124,21 @@ export function GameScreen({ env, session, settings, updateSettings, theme }: Ga
   }, [state.hintPending, hintText]);
 
   const closeModal = useCallback(() => setModal(null), []);
-  const closeHelp = useCallback(() => {
-    setModal(null);
-    if (!settings.seenHelp) updateSettings({ seenHelp: true });
-  }, [settings.seenHelp, updateSettings]);
+
+  // The Free Flight category is a remembered setting. An untouched round follows
+  // a new choice at once (useGame swaps it); a round under way keeps its bird,
+  // and the choice applies from the next one.
+  const practiceGame = state.games.practice;
+  const chooseCategory = useCallback(
+    (category: PracticeCategory) => {
+      updateSettings({ freeFlightCategory: category });
+      const round = practiceGame;
+      if (round && round.status === 'playing' && isRoundUnderway(round) && practiceCategoryOf(round) !== category) {
+        showToast(`Next round: ${PRACTICE_CATEGORY_LABELS[category]}`);
+      }
+    },
+    [updateSettings, practiceGame, showToast],
+  );
 
   const share = useCallback(
     async (target: GameView) => {
@@ -197,7 +220,6 @@ export function GameScreen({ env, session, settings, updateSettings, theme }: Ga
       <Header
         mode={state.mode}
         onToggleMode={toggleMode}
-        onHelp={() => setModal('help')}
         onStats={() => setModal('stats')}
         onSettings={() => setModal('settings')}
       />
@@ -206,7 +228,27 @@ export function GameScreen({ env, session, settings, updateSettings, theme }: Ga
         <main className="play" aria-label={state.mode === 'daily' ? 'Daily BIRDLE' : 'Free Flight'}>
           {!wide && <FlockPanel entries={flockEntries} variant="strip" />}
 
-          <Caption game={game} loading={state.loading} />
+          <Caption game={game} loading={state.loading} practice={state.mode === 'practice'} />
+          {state.mode === 'practice' && (
+            <CategoryPicker
+              className="play__category"
+              value={settings.freeFlightCategory}
+              onChange={chooseCategory}
+              legend="Free Flight birds"
+            />
+          )}
+          {controller.categorySwitchFailed && (
+            <div className="category-retry">
+              <span>Couldn&rsquo;t switch to {PRACTICE_CATEGORY_LABELS[settings.freeFlightCategory]}.</span>
+              <button
+                type="button"
+                className="button button--gold button--small"
+                onClick={() => void controller.newPracticeGame()}
+              >
+                Try again
+              </button>
+            </div>
+          )}
           {hintText !== null && (
             <p className="hint-callout" ref={hintRef} tabIndex={-1}>
               <FeatherIcon />
@@ -265,7 +307,6 @@ export function GameScreen({ env, session, settings, updateSettings, theme }: Ga
       </p>
       <Toasts toasts={state.toasts} onDismiss={controller.dismissToast} />
 
-      {openModal === 'help' && <HelpModal onClose={closeHelp} />}
       {openModal === 'stats' && (
         <StatsModal
           stats={displayStats}
@@ -293,6 +334,8 @@ export function GameScreen({ env, session, settings, updateSettings, theme }: Ga
             setModal(null);
             void controller.newPracticeGame();
           }}
+          category={settings.freeFlightCategory}
+          onCategoryChange={chooseCategory}
           onPlayFreeFlight={() => {
             setModal(null);
             controller.setMode('practice');

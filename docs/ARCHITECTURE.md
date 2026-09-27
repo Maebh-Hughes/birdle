@@ -48,10 +48,17 @@ In a plain browser (local development), `DiscordSDKMock` replaces the real SDK a
 
 ### Start-up and sign-in
 
-1. `main.tsx` checks for the `frame_id`, `instance_id` and `platform` query parameters.
-   - All present (launched by Discord): it creates `new DiscordSDK(VITE_DISCORD_CLIENT_ID)`.
-   - Otherwise (plain browser): it creates `DiscordSDKMock(clientId, 'mock_guild', 'mock_channel', null)`. The
-     mock's instance id is the fixed `123456789012345678`, so all local tabs share one Flock.
+1. `main.tsx` shows the loading screen and calls `createDiscordEnv()` (`discord/sdk.ts`), which checks for the
+   `frame_id`, `instance_id` and `platform` query parameters. Nothing is created at import time.
+   - All present (launched by Discord): it needs the Discord application id first. That is the build-time
+     `VITE_DISCORD_CLIENT_ID` if one was compiled in; otherwise it fetches the public `GET /api/config` (the server's
+     `DISCORD_CLIENT_ID`). Only then does it create `new DiscordSDK(clientId)`. So one client build, or one Docker
+     image, works for any Discord application. With no id from either, startup fails with `MissingClientIdError`, and
+     the error screen says "BIRDLE isn't set up for Discord yet" and asks the server owner to set
+     `DISCORD_CLIENT_ID` (`startup.ts` picks the text; a failed fetch shows "No connection").
+   - Otherwise (plain browser): it creates `DiscordSDKMock(clientId, 'mock_guild', 'mock_channel', null)`, which
+     needs no real id (`birdle-local` unless one was compiled in) and no server call. The mock's instance id is the
+     fixed `123456789012345678`, so all local tabs share one Flock.
 2. Inside Discord (`session.ts` → `discord/auth.ts`):
    1. `ready()`, which times out after 20 s.
    2. `authorize({ scope: ['identify', 'rpc.activities.write'], prompt: 'none', response_type: 'code', state: '' })`.
@@ -96,6 +103,28 @@ In a plain browser (local development), `DiscordSDKMock` replaces the real SDK a
    change can't stop it). A board with guesses is kept, with a "Play today's" prompt, until any guess or hint in flight
    has been answered.
 
+### Free Flight rounds and categories
+
+1. The category picker (`components/CategoryPicker.tsx`, a radio group styled as a segmented control) sits above the
+   board in Free Flight and next to *New bird* on the bird card. Its choice is the `freeFlightCategory` setting
+   (`'all' | 'birds' | 'pokemon' | 'fiction'`, default `'all'`), saved in `localStorage` with the other settings.
+2. Entering Free Flight calls `GET /api/practice`. The client resumes the server's game if it is still playing and
+   either already under way (a guess or the hint) or untouched and from the chosen category. Otherwise it calls
+   `POST /api/practice/new { category }`. If the `GET` itself fails, nothing is started, since the server may still
+   hold a round under way: the error shows on the empty board with *Try again*, which repeats the `GET` (or as a toast
+   over a round already on screen).
+3. Choosing another category swaps an **untouched** round (no guess, no hint) for a new one from that category at
+   once. A round under way keeps its bird (the client shows "Next round: …"), and so does a finished one; *New bird*
+   then starts the next round in the chosen category. The swap waits while the server's round is in doubt: while a
+   load is under way (from the moment it is asked for), after a failed `GET`, and while a guess that may have been
+   counted waits for its reload, which then decides whether the round is still untouched.
+4. A category whose start fails (for example an empty one, which answers `400` with a message, or a dropped
+   connection) is not retried by itself, so an outage can't turn into a stream of requests. The message is shown as
+   the board's error, with *Try again*, or, over an untouched round that couldn't switch, as a toast plus a
+   "Couldn't switch to …" notice under the picker whose *Try again* starts a round in the chosen category. Picking
+   another category also tries again.
+5. The caption shows the round's category ("Free Flight · Pokémon") unless it is *All*.
+
 ### The Flock
 
 1. The client subscribes to `ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE` first, then reads the
@@ -121,8 +150,8 @@ In a plain browser (local development), `DiscordSDKMock` replaces the real SDK a
   - If that isn't available, or in a browser, it falls back to `navigator.clipboard`, then `execCommand('copy')`,
     then a read-only textarea for manual copying.
   - Daily share text never names the answer.
-- **Learn more:** `openExternalLink({ url })` inside Discord, or `window.open(url, '_blank', 'noopener')` in a
-  browser.
+- **Learn more:** the bird card's button reads "Learn more on {infoSite}" and opens `answer.infoUrl`:
+  `openExternalLink({ url })` inside Discord, or `window.open(url, '_blank', 'noopener')` in a browser.
 - **Rich presence:** `setActivity({ activity: { type: 0, details, state, timestamps: { start } } })`.
   - `details` is "BIRDLE #12" or "BIRDLE Free Flight".
   - `state` is "Guess 3 of 6", "Solved in 4/6" or "Stumped today".
@@ -135,7 +164,7 @@ All routes are under `/api` and exchange JSON. Every `/api` response carries `Ca
 bodies are limited to 16 KB. Words in responses are uppercase. Guesses are trimmed and case-insensitive. Types come
 from `shared/src/types.ts`.
 
-**Authentication.** Every route except `GET /api/health` and `POST /api/token` needs
+**Authentication.** Every route except `GET /api/health`, `GET /api/config` and `POST /api/token` needs
 `Authorization: Bearer <token>`, where the token is either:
 - a Discord OAuth2 access token, or
 - when mock auth is enabled, `mock:<id>` or `mock:<id>:<URL-encoded display name>`. `<id>` is 1–64 characters from
@@ -150,13 +179,14 @@ date within UTC today ± 1 day (which covers every time zone) and its puzzle num
 | Method & path | Request | Success response | Errors (besides 401) |
 |---|---|---|---|
 | `GET /api/health` | — | `{ ok: true }` | — |
+| `GET /api/config` | — (public, no token) | `{ discordClientId: string \| null }`: the server's `DISCORD_CLIENT_ID` (or its alias `VITE_DISCORD_CLIENT_ID`), null when unset. Nothing secret. | — |
 | `POST /api/token` | `{ code }` (1–512 chars) | `{ access_token }` | 400 missing or invalid code · 429 too many sign-ins at once · 502 Discord rejected the exchange or couldn't be reached · 503 Discord credentials not configured |
 | `GET /api/me[?date=]` | optional `date` (default, or when not playable: today's UTC date) | `{ user: PlayerProfile, stats: Stats }` | — |
 | `GET /api/daily?date=` | `date` | `{ game: GameView }` (an empty game if none; nothing is stored until the first guess) | 400 `BAD_DATE` |
 | `POST /api/daily/guess` | `{ date, guess, hardMode? }` | `{ game: GameView, stats: Stats }` | 400 `BAD_DATE` / `BAD_REQUEST` · 409 `GAME_OVER` · 422 `INVALID_GUESS` / `NOT_IN_WORD_LIST` / `HARD_MODE` |
 | `POST /api/daily/hint` | `{ date }` | `{ game: GameView }` (calling it again is harmless) | 400 `BAD_DATE` · 409 `GAME_OVER` · 422 `HINT_UNAVAILABLE` (fewer than 3 guesses) |
 | `GET /api/practice` | — | `{ game: GameView \| null }` | — |
-| `POST /api/practice/new` | `{}` | `{ game: GameView }`, which replaces the current practice game and avoids the previous answer | — |
+| `POST /api/practice/new` | `{ category? }`: `'all'` (default), `'birds'`, `'pokemon'` or `'fiction'` | `{ game: GameView }` with an answer from that category, which replaces the current practice game and avoids the previous answer when the category has another | 400 `BAD_REQUEST`: an unknown category, or a category with no answers ("There are no bird Pokémon in Free Flight yet. Pick another category."); the current game is kept |
 | `POST /api/practice/guess` | `{ guess, hardMode? }` | `{ game: GameView }` (no stats) | 404 `NOT_FOUND` (no practice game) · 409 `GAME_OVER` · 422 as for daily |
 | `POST /api/practice/hint` | `{}` | `{ game: GameView }` | 404 `NOT_FOUND` · 409 `GAME_OVER` · 422 `HINT_UNAVAILABLE` |
 | `POST /api/instances/:instanceId/join` | `{ date }` (validated, not stored) | `{ ok: true }`; a player stays in at most 5 instances, an instance keeps at most 100 members (the least recently seen are dropped) | 400 `BAD_REQUEST` (id not `[A-Za-z0-9._:-]{1,128}`) / `BAD_DATE` |
@@ -172,7 +202,7 @@ Every non-2xx response has the body `{ "error": { "code": ApiErrorCode, "message
 
 | Code | HTTP | Typical message |
 |---|---|---|
-| `BAD_REQUEST` | 400 | "Expected a JSON object body", "guess must be a string", "Missing OAuth2 code", "Malformed JSON body" |
+| `BAD_REQUEST` | 400 | "Expected a JSON object body", "guess must be a string", "Missing OAuth2 code", "Malformed JSON body", "category must be one of all, birds, pokemon, fiction", "There are no bird Pokémon in Free Flight yet. Pick another category." |
 | `UNAUTHORIZED` | 401 | "Missing bearer token", "Invalid or expired token" |
 | `BAD_DATE` | 400 | "That puzzle isn't available", "Missing puzzle date" |
 | `INVALID_GUESS` | 422 | "Not enough letters", "Too many letters", "Use letters A-Z only" |
@@ -195,6 +225,7 @@ interface GameView {
   mode: 'daily' | 'practice';
   puzzleNumber: number | null;   // null in practice
   date: string | null;           // null in practice
+  category: 'all' | 'birds' | 'pokemon' | 'fiction' | null;  // Free Flight category; null in daily
   wordLength: number;            // 4-11
   guesses: { word: string; result: ('correct' | 'present' | 'absent')[] }[];
   status: 'playing' | 'won' | 'lost';
@@ -205,7 +236,15 @@ interface GameView {
   answer: BirdReveal | null;     // only once the game is over
   maxGuesses: number;            // 6
 }
-interface BirdReveal { word: string; name: string; kind: 'bird' | 'term'; fact: string; wikiUrl: string }
+interface BirdReveal {
+  word: string;                  // FARFETCHD
+  name: string;                  // "Farfetch'd"
+  kind: 'bird' | 'term' | 'pokemon' | 'game' | 'literature';
+  source: string | null;         // "Pokémon Red & Blue" for fictional birds, else null
+  fact: string;                  // '' on a minimal card (answer no longer in birds.json)
+  infoUrl: string;               // the "Learn more" page: Wikipedia, or the entry's link (e.g. Bulbapedia)
+  infoSite: string;              // "Wikipedia", "Bulbapedia", "Fandom", "Zelda Wiki", else the host name
+}
 interface Stats {
   played: number; wins: number; currentStreak: number; maxStreak: number;
   distribution: number[];        // wins by guess count, length 6
@@ -236,17 +275,29 @@ interface FlockPlayer extends PlayerProfile {
 
 ### Daily answer selection
 
-- `DAILY_POOL` is every `birds.json` entry with `obscurity ≤ 2`, sorted by word.
+- `DAILY_POOL` is every `birds.json` entry that passes `isDailyEligible` (`shared/src/kinds.ts`): kinds `bird` and
+  `term` with `obscurity ≤ 2`, plus `pokemon`, `game` and `literature` with `obscurity 1` only. It is sorted by word.
+  The server, `check:words` and the tests all use this one rule.
 - For puzzle *n*: `cycle = ⌊(n−1)/len⌋`, `idx = (n−1) mod len`, and the answer is
   `seededShuffle(DAILY_POOL, hash(PUZZLE_SEED + ':' + cycle))[idx]`. The shuffle is a Fisher–Yates driven by
   mulberry32.
 - So there are no repeats within a cycle, and each cycle gets a fresh order.
-- Free Flight picks uniformly from **all** entries and avoids the previous answer.
+- **Pinned answers.** The first time a daily puzzle is needed (read or played by anyone), the server stores its
+  answer in the Store (`dailyAnswers`, puzzle number → word; the first pin wins) and uses the pinned word from then
+  on. Editing `birds.json` reshuffles the computed order, but puzzles already served keep their answer; puzzles not
+  yet served follow the current pool. If a pinned word has left `birds.json`, the game still evaluates guesses
+  against it (the word is always a valid guess), there is no hint, and the reveal is a minimal card: the word as its
+  name, no fact, a Wikipedia search as the "Learn more" page. Pins are pruned with the daily games (below).
+- Free Flight picks uniformly from the **chosen category's** entries and avoids the previous answer when it can:
+  `all` is every entry, `birds` is `bird` + `term`, `pokemon` is `pokemon`, `fiction` is `game` + `literature`. An
+  empty category is a `400`.
 
 ## Storage
 
 `JsonFileStore` keeps everything in memory and persists it to `DATA_FILE` as one JSON document:
-`{ version: 1, profiles, stats, daily, practice, instances }`.
+`{ version: 1, profiles, stats, daily, practice, dailyAnswers, instances }`. Files written before `dailyAnswers` and
+game `category` fields existed still load: an older practice game counts as category `all`, and each puzzle with
+stored games but no pin is pinned to the answer most of its games have.
 
 - **Writes:** batched up to 250 ms after the first unsaved change. Each write goes to `<file>.tmp`, which is flushed
   to disk (`fsync`) and then renamed over the real file (on POSIX the directory is synced too), so a crash or power
@@ -259,8 +310,8 @@ interface FlockPlayer extends PlayerProfile {
   a loud error. Individually malformed records are dropped with a warning.
 - **Concurrency:** every state change for a user runs under that user's in-process lock (`KeyedMutex`), so
   double-submits and retries apply one after another instead of overwriting each other.
-- **Pruning:** an hourly job removes instance memberships idle for more than 24 h and daily games more than 3 puzzles
-  older than today's UTC puzzle. Only dates within a day of today can be read, so older games would only slow every
+- **Pruning:** an hourly job removes instance memberships idle for more than 24 h, and daily games and pinned daily
+  answers more than 3 puzzles older than today's UTC puzzle. Only dates within a day of today can be read, so older games would only slow every
   write. Stats are kept.
 - **Scaling:** run a single server process. The store is not shared between processes.
 
@@ -274,14 +325,16 @@ interface FlockPlayer extends PlayerProfile {
   - any hint or fact;
   - adjacent dictionary words;
   - `birds.json` keys;
-  - more than 20 bird words as string literals (How to play shows a few examples);
+  - any answer's "Learn more" link (a `link` URL, or the Wikipedia article URL of a `wiki` title);
+  - more than 10 answers as string literals, counting an answer when its word or its display name is quoted (the UI
+    shows no example answers, so this leaves room only for coincidences);
   - the configured client secret.
 - The server is the only guess validator. The client never ships a dictionary, so it can't be used to narrow down
   answers.
 - A `GameView` includes `answer` only once `status` is `won` or `lost`, and includes `hint` only once it was used or
   the game is over. Error messages never mention the answer.
 - The Flock sends colours only. Other players' letters and answers never leave the server. Server tests assert that
-  no answer, hint, fact or Wikipedia link appears in any response before the game ends, including `/api/me`, the
+  no answer, hint, fact or "Learn more" link appears in any response before the game ends, including `/api/me`, the
   Flock and error bodies.
 - Daily share text never names the answer. Only Free Flight shares end with `🐦 {Name}`.
 - The daily order depends only on the word list and `PUZZLE_SEED`, and the shuffle code is public. A production
@@ -293,7 +346,7 @@ interface FlockPlayer extends PlayerProfile {
 
 - Discord access tokens are checked against `GET https://discord.com/api/v10/oauth2/@me`, which returns the token's
   application and user in one call:
-  - `401` or `403`, a token issued to another application (not `VITE_DISCORD_CLIENT_ID`), or one without the
+  - `401` or `403`, a token issued to another application (not `DISCORD_CLIENT_ID`), or one without the
     `identify` scope → the token is invalid, and the API answers `401 UNAUTHORIZED`;
   - network failure, timeout or `5xx` → `502`, never a silent pass.
   - (The spec named `/users/@me`, which answers for any app's token; `/oauth2/@me` adds the audience check.)
@@ -311,6 +364,8 @@ interface FlockPlayer extends PlayerProfile {
   - happens only on the server, and returns only `{ access_token }` to the client;
   - retries once on `429` if Discord asks for a wait of 5 s or less;
   - never puts codes, tokens or the secret in error messages.
+- `GET /api/config` is public on purpose: the application id is public anyway (Discord puts it in the Activity's
+  `<id>.discordsays.com` host), and the client needs it before anyone has signed in.
 - `DISCORD_CLIENT_SECRET` is read only by the server. Vite exposes only `VITE_*` variables to the browser, and the
   bundle check greps for the secret.
 

@@ -1,5 +1,11 @@
 import type { Request } from 'express';
-import { isPlayableDate } from '@birdle/shared';
+import {
+  DEFAULT_PRACTICE_CATEGORY,
+  PRACTICE_CATEGORIES,
+  isPlayableDate,
+  isPracticeCategory,
+  type PracticeCategory,
+} from '@birdle/shared';
 import { ApiError } from './errors';
 
 /** Longest string accepted for a guess field (anything longer is not a word). */
@@ -39,6 +45,16 @@ export function optionalHardMode(body: Record<string, unknown>): boolean {
   if (hardMode === undefined) return false;
   if (typeof hardMode !== 'boolean') throw new ApiError('BAD_REQUEST', 'hardMode must be a boolean');
   return hardMode;
+}
+
+/** The `category` field of POST /api/practice/new: optional, default 'all'. */
+export function optionalCategory(body: Record<string, unknown>): PracticeCategory {
+  const category = body.category;
+  if (category === undefined) return DEFAULT_PRACTICE_CATEGORY;
+  if (!isPracticeCategory(category)) {
+    throw new ApiError('BAD_REQUEST', `category must be one of ${PRACTICE_CATEGORIES.join(', ')}`);
+  }
+  return category;
 }
 
 export function requireInstanceId(value: unknown): string {

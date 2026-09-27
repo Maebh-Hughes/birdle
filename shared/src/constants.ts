@@ -10,9 +10,12 @@ export const HINT_AFTER_GUESSES = 3;
 export const EPOCH_DATE = '2026-09-26';
 /** Default for the PUZZLE_SEED env variable that shuffles the daily order. */
 export const DEFAULT_PUZZLE_SEED = 'birdle';
-/** Birds with obscurity above this are practice-only (never a daily answer). */
+/** Real birds and bird words with obscurity above this are practice-only (never a daily answer). */
 export const DAILY_MAX_OBSCURITY = 2;
+/** Fictional birds (Pokémon, video game and literary birds) with obscurity above this are practice-only. */
+export const DAILY_MAX_OBSCURITY_FICTIONAL = 1;
 /** Editorial limits for birds.json (enforced by `npm run check:words`). */
 export const HINT_MAX_LENGTH = 110;
 export const FACT_MAX_LENGTH = 220;
+export const SOURCE_MAX_LENGTH = 60;
 export const WIKIPEDIA_BASE_URL = 'https://en.wikipedia.org/wiki/';

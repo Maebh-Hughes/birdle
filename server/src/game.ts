@@ -11,6 +11,7 @@ import {
   type DailyGuessResponse,
   type GameView,
   type PlayerProfile,
+  type PracticeCategory,
   type Stats,
 } from '@birdle/shared';
 import { ApiError } from './errors';
@@ -29,6 +30,7 @@ export function toGameView(game: GameRecord, puzzles: Puzzles): GameView {
     mode: game.mode,
     puzzleNumber: game.puzzleNumber,
     date: game.date,
+    category: game.category,
     wordLength: game.answer.length,
     guesses: game.guesses.map((row) => ({ word: row.word, result: [...row.result] })),
     status: game.status,
@@ -85,6 +87,19 @@ export function revealHint(game: GameRecord, puzzles: Puzzles): GameRecord {
   return { ...game, hintUsed: true };
 }
 
+/** What an empty Free Flight category is missing, for the error message. */
+const CATEGORY_CONTENTS: Readonly<Record<PracticeCategory, string>> = {
+  all: 'birds',
+  birds: 'real birds',
+  pokemon: 'bird Pokémon',
+  fiction: 'video game or book birds',
+};
+
+/** The 400 for a Free Flight category that has no answers (yet). */
+export function emptyCategoryError(category: PracticeCategory): ApiError {
+  return new ApiError('BAD_REQUEST', `There are no ${CATEGORY_CONTENTS[category]} in Free Flight yet. Pick another category.`);
+}
+
 function sameProfile(a: PlayerProfile, b: PlayerProfile): boolean {
   return a.id === b.id && a.username === b.username && a.displayName === b.displayName && a.avatarUrl === b.avatarUrl;
 }
@@ -130,16 +145,29 @@ export class GameService {
     return statsForDisplay((await this.store.getStats(userId)) ?? emptyStats(), currentPuzzle);
   }
 
+  /**
+   * The answer of daily puzzle `puzzleNumber`. The first time a puzzle is
+   * served its answer is pinned in the store, and from then on the pinned word
+   * is used even if birds.json changes (which reshuffles the computed order).
+   * Puzzles nobody has been served yet follow the current word list.
+   */
+  private async dailyAnswer(puzzleNumber: number): Promise<string> {
+    const pinned = await this.store.getDailyAnswer(puzzleNumber);
+    if (pinned !== undefined) return pinned;
+    return this.store.pinDailyAnswer(puzzleNumber, this.puzzles.dailyAnswer(puzzleNumber));
+  }
+
   private async dailyGame(userId: string, date: string): Promise<GameRecord> {
     const puzzleNumber = puzzleNumberForDate(date);
     const stored = await this.store.getDailyGame(userId, puzzleNumber);
     if (stored) return stored;
-    // Not persisted until the first guess; the answer is deterministic anyway.
+    // The game itself is not persisted until the first guess; its answer is pinned now.
     return {
       mode: 'daily',
       puzzleNumber,
       date,
-      answer: this.puzzles.dailyAnswer(puzzleNumber),
+      category: null,
+      answer: await this.dailyAnswer(puzzleNumber),
       guesses: [],
       status: 'playing',
       hardMode: false,
@@ -180,15 +208,20 @@ export class GameService {
     return game ? toGameView(game, this.puzzles) : null;
   }
 
-  /** Starts a new practice game, replacing any current one. */
-  async newPractice(userId: string): Promise<GameView> {
+  /**
+   * Starts a new practice game with an answer from `category`, replacing any
+   * current one. Throws a 400 when the category has no answers.
+   */
+  async newPractice(userId: string, category: PracticeCategory = 'all'): Promise<GameView> {
+    if (this.puzzles.practiceCount(category) === 0) throw emptyCategoryError(category);
     return this.withUser(userId, async () => {
       const previous = await this.store.getPracticeGame(userId);
       const game: GameRecord = {
         mode: 'practice',
         puzzleNumber: null,
         date: null,
-        answer: this.puzzles.randomPracticeAnswer(this.random, previous?.answer),
+        category,
+        answer: this.puzzles.randomPracticeAnswer(this.random, previous?.answer, category),
         guesses: [],
         status: 'playing',
         hardMode: false,

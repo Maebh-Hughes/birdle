@@ -6,7 +6,7 @@ import { authenticate } from '../src/discord/auth';
 import { describeError } from '../src/discord/errors';
 import { MOCK_USER_KEY, mockToken, resolveMockIdentity, slugify } from '../src/discord/mockIdentity';
 import { watchParticipants } from '../src/discord/participants';
-import { presenceText, usePresence } from '../src/discord/presence';
+import { isNewPracticeRound, presenceText, usePresence } from '../src/discord/presence';
 import { isDiscordLaunch, type DiscordEnv } from '../src/discord/sdk';
 import { makeGame, row } from './fixtures';
 
@@ -225,6 +225,16 @@ describe('usePresence', () => {
       ['Solved in 2/6', 1_000],
       ['Guess 1 of 6', 605_000],
     ]);
+  });
+});
+
+describe('isNewPracticeRound', () => {
+  it('counts a fresh round from another Free Flight category as new, even of the same length', () => {
+    const round = { status: 'playing', guessCount: 0, wordLength: 5, category: 'all' } as const;
+    expect(isNewPracticeRound(round, { ...round })).toBe(false);
+    expect(isNewPracticeRound(round, { ...round, category: 'birds' })).toBe(true);
+    expect(isNewPracticeRound({ ...round, guessCount: 2 }, { ...round, guessCount: 3 })).toBe(false);
+    expect(isNewPracticeRound(null, round)).toBe(false);
   });
 });
 

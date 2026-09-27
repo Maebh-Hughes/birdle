@@ -1,23 +1,19 @@
 import type { GameMode } from '@birdle/shared';
-import { FlightIcon, HelpIcon, SettingsIcon, StatsIcon } from './Icons';
+import { FlightIcon, SettingsIcon, StatsIcon } from './Icons';
 import { Logo } from './Logo';
 
 interface HeaderProps {
   mode: GameMode;
   onToggleMode: () => void;
-  onHelp: () => void;
   onStats: () => void;
   onSettings: () => void;
 }
 
-export function Header({ mode, onToggleMode, onHelp, onStats, onSettings }: HeaderProps) {
+export function Header({ mode, onToggleMode, onStats, onSettings }: HeaderProps) {
   const practice = mode === 'practice';
   return (
     <header className="header">
       <div className="header__side">
-        <button type="button" className="icon-button" aria-label="How to play" title="How to play" onClick={onHelp}>
-          <HelpIcon />
-        </button>
         <button
           type="button"
           className="mode-toggle"

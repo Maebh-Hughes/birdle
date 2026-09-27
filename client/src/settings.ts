@@ -1,3 +1,4 @@
+import { DEFAULT_PRACTICE_CATEGORY, isPracticeCategory, type PracticeCategory } from '@birdle/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { getLocalStorage, readItem, writeItem } from './storage';
 
@@ -10,8 +11,8 @@ export interface Settings {
   colorBlind: boolean;
   /** Applied to the next game that has no guesses yet; a started game keeps its own flag. */
   hardMode: boolean;
-  /** The How to play modal opens automatically until it has been closed once. */
-  seenHelp: boolean;
+  /** Where new Free Flight birds come from (the last category the player picked). */
+  freeFlightCategory: PracticeCategory;
 }
 
 export const SETTINGS_KEY = 'birdle:settings:v1';
@@ -20,12 +21,16 @@ export const DEFAULT_SETTINGS: Readonly<Settings> = Object.freeze({
   theme: 'dark',
   colorBlind: false,
   hardMode: false,
-  seenHelp: false,
+  freeFlightCategory: DEFAULT_PRACTICE_CATEGORY,
 });
 
 const THEMES: readonly ThemeSetting[] = ['dark', 'light', 'system'];
 
-/** Parses stored settings, keeping each valid field and defaulting the rest. */
+/**
+ * Parses stored settings, keeping each valid field and defaulting the rest.
+ * Unknown fields (such as `seenHelp` from older versions) are ignored, and the
+ * next save drops them.
+ */
 export function parseSettings(raw: string | null): Settings {
   const settings: Settings = { ...DEFAULT_SETTINGS };
   if (!raw) return settings;
@@ -42,7 +47,7 @@ export function parseSettings(raw: string | null): Settings {
   if (THEMES.includes(record.theme as ThemeSetting)) settings.theme = record.theme as ThemeSetting;
   if (typeof record.colorBlind === 'boolean') settings.colorBlind = record.colorBlind;
   if (typeof record.hardMode === 'boolean') settings.hardMode = record.hardMode;
-  if (typeof record.seenHelp === 'boolean') settings.seenHelp = record.seenHelp;
+  if (isPracticeCategory(record.freeFlightCategory)) settings.freeFlightCategory = record.freeFlightCategory;
   return settings;
 }
 

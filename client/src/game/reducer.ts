@@ -46,6 +46,13 @@ export interface GameState {
   loading: boolean;
   /** Set when the active game could not be loaded at all. */
   loadError: string | null;
+  /**
+   * Where the active mode's last load failed: reading the saved game ('read'),
+   * or starting a new Free Flight round after that read ('start'). Only a failed
+   * start tells what the server holds (no round a player has begun); after a
+   * failed read nothing is started without the player.
+   */
+  loadFailure: 'read' | 'start' | null;
   /** Letters typed into the current row (uppercase). */
   current: string;
   pending: PendingGuess | null;
@@ -76,7 +83,7 @@ export type GameAction =
   | { type: 'date/set'; date: string }
   | { type: 'load/start'; mode: GameMode }
   | { type: 'load/success'; mode: GameMode; game: GameView }
-  | { type: 'load/failure'; mode: GameMode; message: string }
+  | { type: 'load/failure'; mode: GameMode; message: string; step?: 'read' | 'start' }
   | { type: 'key/letter'; letter: string }
   | { type: 'key/backspace' }
   | { type: 'guess/submit'; hardMode: boolean }
@@ -98,6 +105,7 @@ export function initialGameState(options: { date: string; stats: Stats; mode?: G
     games: { daily: null, practice: null },
     loading: false,
     loadError: null,
+    loadFailure: null,
     current: '',
     pending: null,
     nextGuessId: 1,
@@ -175,6 +183,7 @@ export function isSameGameState(a: GameView | null, b: GameView): boolean {
     a.mode === b.mode &&
     a.date === b.date &&
     a.puzzleNumber === b.puzzleNumber &&
+    a.category === b.category &&
     a.wordLength === b.wordLength &&
     a.guesses.length === b.guesses.length &&
     a.status === b.status
@@ -223,6 +232,7 @@ function sameRow(previous: GameView | null, next: GameView): boolean {
     previous !== null &&
     previous.mode === next.mode &&
     previous.puzzleNumber === next.puzzleNumber &&
+    previous.category === next.category &&
     previous.wordLength === next.wordLength &&
     previous.guesses.length === next.guesses.length &&
     next.status === 'playing'
@@ -235,31 +245,33 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'mode/set':
       if (action.mode === state.mode) return state;
-      return { ...state, ...RESET_BOARD, mode: action.mode, loading: false, loadError: null };
+      // The new mode's game loads straight away; it counts as loading from this
+      // render on, so nothing acts on a board the server hasn't confirmed yet.
+      return { ...state, ...RESET_BOARD, mode: action.mode, loading: true, loadError: null, loadFailure: null };
 
     case 'date/set': {
       // Wait for an in-flight guess or hint: its response belongs to the board on screen.
       if (action.date === state.dailyDate || state.pending !== null || state.hintPending) return state;
       const daily = state.games.daily?.date === action.date ? state.games.daily : null;
       const next: GameState = { ...state, dailyDate: action.date, games: { ...state.games, daily } };
-      return state.mode === 'daily' ? { ...next, ...RESET_BOARD, loadError: null } : next;
+      return state.mode === 'daily' ? { ...next, ...RESET_BOARD, loadError: null, loadFailure: null } : next;
     }
 
     case 'load/start':
       if (action.mode !== state.mode) return state;
-      return { ...state, loading: true, loadError: null };
+      return { ...state, loading: true, loadError: null, loadFailure: null };
 
     case 'load/success': {
       const previous = state.games[action.mode];
       const next = setGame(state, action.mode, action.game);
       if (action.mode !== state.mode) return next;
       const board = sameRow(previous, action.game) ? {} : RESET_BOARD;
-      return { ...next, ...board, loading: false, loadError: null };
+      return { ...next, ...board, loading: false, loadError: null, loadFailure: null };
     }
 
     case 'load/failure': {
       if (action.mode !== state.mode) return state;
-      const next = { ...state, loading: false };
+      const next: GameState = { ...state, loading: false, loadFailure: action.step ?? 'read' };
       // Keep showing a game we already have; only an empty board becomes an error screen.
       return activeGame(state) ? withToast(next, action.message, 'error') : { ...next, loadError: action.message };
     }

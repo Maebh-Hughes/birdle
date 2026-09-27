@@ -5,8 +5,9 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { BirdleDataError, parseBirdData, parseDictionary } from './birdData';
+import { PRACTICE_CATEGORIES } from './kinds';
 import { buildDailyPool, buildPracticePool, dailyAnswer, pickRandom } from './puzzle';
-import type { BirdEntry } from './types';
+import type { BirdEntry, PracticeCategory } from './types';
 
 export {
   BIRD_KINDS,
@@ -14,13 +15,16 @@ export {
   BirdleDataError,
   DICTIONARY_WORD_PATTERN,
   checkBirdData,
+  infoSiteFor,
+  minimalBirdReveal,
   parseBirdData,
   parseDictionary,
   toBirdReveal,
   wikiUrl,
+  wikipediaSearchUrl,
 } from './birdData';
 export type { BirdDataReport } from './birdData';
-export type { BirdEntry, BirdKind, BirdReveal, Obscurity } from './types';
+export type { BirdEntry, BirdKind, BirdReveal, Obscurity, PracticeCategory } from './types';
 
 export const BIRDS_PATH: string = fileURLToPath(new URL('../data/birds.json', import.meta.url));
 export const GUESSES_PATH: string = fileURLToPath(new URL('../data/guesses.txt', import.meta.url));
@@ -56,10 +60,12 @@ export function loadDictionary(path: string = GUESSES_PATH): Set<string> {
 
 /** Answers plus the guess validator, built from injectable word lists (use fixtures in tests). */
 export interface WordCatalog {
-  /** Every answer entry (the practice pool), sorted by word, frozen. */
+  /** Every answer entry (the 'all' practice pool), sorted by word, frozen. */
   readonly birds: readonly BirdEntry[];
-  /** Daily candidates (obscurity <= 2), sorted by word, frozen. */
+  /** Daily candidates (see isDailyEligible), sorted by word, frozen. */
   readonly dailyPool: readonly BirdEntry[];
+  /** Free Flight candidates of a category, sorted by word, frozen (possibly empty). */
+  practicePool(category: PracticeCategory): readonly BirdEntry[];
   /** Number of distinct valid guesses (dictionary ∪ bird words). */
   readonly guessCount: number;
   /** Case-insensitive: in the dictionary or one of the bird words. */
@@ -68,14 +74,21 @@ export interface WordCatalog {
   findBird(word: string): BirdEntry | undefined;
   /** Deterministic daily answer for puzzle `puzzleNumber` (>= 1) under `seed`. */
   dailyBird(puzzleNumber: number, seed: string): BirdEntry;
-  /** Random practice answer from all birds, avoiding `excludeWord` when possible. */
-  randomBird(rng?: () => number, excludeWord?: string): BirdEntry;
+  /**
+   * Random practice answer from a category (default 'all'), avoiding `excludeWord`
+   * when possible. Throws RangeError when the category has no entries.
+   */
+  randomBird(rng?: () => number, excludeWord?: string, category?: PracticeCategory): BirdEntry;
 }
 
 export function createWordCatalog(birds: readonly BirdEntry[], dictionary: Iterable<string>): WordCatalog {
   const entries = buildPracticePool(birds.map((bird) => Object.freeze({ ...bird })));
   const all = Object.freeze(entries);
   const dailyPool = Object.freeze(buildDailyPool(entries));
+  const practicePools = new Map<PracticeCategory, readonly BirdEntry[]>(
+    PRACTICE_CATEGORIES.map((category) => [category, category === 'all' ? all : Object.freeze(buildPracticePool(entries, category))]),
+  );
+  const practicePool = (category: PracticeCategory): readonly BirdEntry[] => practicePools.get(category) ?? [];
   const byWord = new Map(entries.map((entry) => [entry.word, entry] as const));
 
   const guesses = new Set<string>();
@@ -85,14 +98,16 @@ export function createWordCatalog(birds: readonly BirdEntry[], dictionary: Itera
   return {
     birds: all,
     dailyPool,
+    practicePool,
     guessCount: guesses.size,
     isValidGuess: (word) => guesses.has(word.toLowerCase()),
     findBird: (word) => byWord.get(word.toUpperCase()),
     dailyBird: (puzzleNumber, seed) => dailyAnswer(dailyPool, puzzleNumber, seed),
-    randomBird: (rng = Math.random, excludeWord) => {
+    randomBird: (rng = Math.random, excludeWord, category = 'all') => {
+      const pool = practicePool(category);
       const exclude = excludeWord?.toUpperCase();
-      const candidates = all.length > 1 && exclude !== undefined ? all.filter((entry) => entry.word !== exclude) : all;
-      return pickRandom(candidates, rng);
+      const others = exclude === undefined ? pool : pool.filter((entry) => entry.word !== exclude);
+      return pickRandom(others.length > 0 ? others : pool, rng);
     },
   };
 }
@@ -103,7 +118,7 @@ export const wordCatalog: WordCatalog = createWordCatalog(loadBirds(), loadDicti
 /** All answer entries (birds.json), sorted by word. */
 export const BIRDS: readonly BirdEntry[] = wordCatalog.birds;
 
-/** Daily answer candidates: obscurity <= 2, sorted by word. */
+/** Daily answer candidates (see isDailyEligible), sorted by word. */
 export const DAILY_POOL: readonly BirdEntry[] = wordCatalog.dailyPool;
 
 /** True when `word` (any case) is in the dictionary or is a bird word. */
@@ -121,7 +136,7 @@ export function dailyBird(puzzleNumber: number, seed: string): BirdEntry {
   return wordCatalog.dailyBird(puzzleNumber, seed);
 }
 
-/** Random practice answer from all birds; pass the previous word to avoid an immediate repeat. */
-export function randomBird(rng?: () => number, excludeWord?: string): BirdEntry {
-  return wordCatalog.randomBird(rng, excludeWord);
+/** Random practice answer from a category (default all birds); pass the previous word to avoid an immediate repeat. */
+export function randomBird(rng?: () => number, excludeWord?: string, category?: PracticeCategory): BirdEntry {
+  return wordCatalog.randomBird(rng, excludeWord, category);
 }

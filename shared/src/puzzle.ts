@@ -1,4 +1,5 @@
-import { DAILY_MAX_OBSCURITY } from './constants';
+import { isDailyEligible, isInPracticeCategory } from './kinds';
+import type { BirdKind, PracticeCategory } from './types';
 
 // Pure answer-selection helpers. They take the word list as a parameter so they
 // can be tested with fixtures; the real list is only loaded by ./server.
@@ -6,6 +7,7 @@ import { DAILY_MAX_OBSCURITY } from './constants';
 /** Minimal shape of a pool entry (BirdEntry satisfies it). */
 export interface PoolEntry {
   word: string;
+  kind: BirdKind;
   obscurity: number;
 }
 
@@ -72,14 +74,14 @@ function byWord(a: PoolEntry, b: PoolEntry): number {
   return a.word < b.word ? -1 : a.word > b.word ? 1 : 0;
 }
 
-/** Daily answer candidates: entries with obscurity <= DAILY_MAX_OBSCURITY, sorted by word. */
+/** Daily answer candidates (see isDailyEligible), sorted by word. */
 export function buildDailyPool<T extends PoolEntry>(entries: readonly T[]): T[] {
-  return entries.filter((entry) => entry.obscurity <= DAILY_MAX_OBSCURITY).sort(byWord);
+  return entries.filter(isDailyEligible).sort(byWord);
 }
 
-/** Practice ("Free Flight") candidates: every entry, sorted by word. */
-export function buildPracticePool<T extends PoolEntry>(entries: readonly T[]): T[] {
-  return [...entries].sort(byWord);
+/** Practice ("Free Flight") candidates of a category (default: every entry), sorted by word. */
+export function buildPracticePool<T extends PoolEntry>(entries: readonly T[], category: PracticeCategory = 'all'): T[] {
+  return entries.filter((entry) => isInPracticeCategory(entry.kind, category)).sort(byWord);
 }
 
 /** Uniform random pick; `rng` returns floats in [0, 1) (default Math.random). */

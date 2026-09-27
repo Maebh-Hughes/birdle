@@ -23,14 +23,39 @@ describe('settings persistence', () => {
     window.localStorage.clear();
   });
 
-  it('defaults to the dusk theme with everything off', () => {
-    expect(loadSettings(window.localStorage)).toEqual({ theme: 'dark', colorBlind: false, hardMode: false, seenHelp: false });
+  it('defaults to the dusk theme with everything off and Free Flight drawing from all birds', () => {
+    expect(loadSettings(window.localStorage)).toEqual({ theme: 'dark', colorBlind: false, hardMode: false, freeFlightCategory: 'all' });
   });
 
   it('round-trips through localStorage', () => {
-    const settings = { theme: 'system', colorBlind: true, hardMode: true, seenHelp: true } as const;
+    const settings = { theme: 'system', colorBlind: true, hardMode: true, freeFlightCategory: 'birds' } as const;
     expect(saveSettings(settings, window.localStorage)).toBe(true);
     expect(loadSettings(window.localStorage)).toEqual(settings);
+  });
+
+  it('remembers every Free Flight category and ignores unknown ones', () => {
+    for (const freeFlightCategory of ['all', 'birds', 'pokemon', 'fiction'] as const) {
+      expect(parseSettings(JSON.stringify({ freeFlightCategory }))).toEqual({ ...DEFAULT_SETTINGS, freeFlightCategory });
+    }
+    for (const freeFlightCategory of ['dragons', 'BIRDS', 3, null]) {
+      expect(parseSettings(JSON.stringify({ freeFlightCategory, hardMode: true }))).toEqual({ ...DEFAULT_SETTINGS, hardMode: true });
+    }
+  });
+
+  it('ignores the old How to play flag and drops it on the next save', () => {
+    const old = JSON.stringify({ theme: 'light', colorBlind: false, hardMode: true, seenHelp: false });
+    window.localStorage.setItem(SETTINGS_KEY, old);
+    const settings = loadSettings(window.localStorage);
+    expect(settings).toEqual({ ...DEFAULT_SETTINGS, theme: 'light', hardMode: true });
+    expect(settings).not.toHaveProperty('seenHelp');
+
+    saveSettings({ ...settings, freeFlightCategory: 'pokemon' }, window.localStorage);
+    expect(JSON.parse(window.localStorage.getItem(SETTINGS_KEY) ?? '{}')).toEqual({
+      theme: 'light',
+      colorBlind: false,
+      hardMode: true,
+      freeFlightCategory: 'pokemon',
+    });
   });
 
   it('survives a storage that throws on every call', () => {
@@ -71,5 +96,13 @@ describe('settings persistence', () => {
     const { result } = renderHook(() => useSettings());
     act(() => result.current[1]({ theme: 'light' }));
     expect(JSON.parse(window.localStorage.getItem(SETTINGS_KEY) ?? '{}')).toMatchObject({ theme: 'light' });
+  });
+
+  it('useSettings remembers the last Free Flight category across reloads', () => {
+    const first = renderHook(() => useSettings());
+    act(() => first.result.current[1]({ freeFlightCategory: 'birds' }));
+    first.unmount();
+    const second = renderHook(() => useSettings());
+    expect(second.result.current[0].freeFlightCategory).toBe('birds');
   });
 });

@@ -1,0 +1,51 @@
+# BIRDLE on TrueNAS SCALE 24.10 or later: the app on its own.
+# Use this file if you already have a way to give it a public HTTPS address (for example your own
+# reverse proxy). For a public address without opening router ports, use birdle-cloudflared.yaml.
+#
+# Install: Apps -> Discover Apps -> the three-dot menu -> Install via YAML. Application Name: birdle
+# Before saving, replace every CHANGE_ME below and POOL in the storage path.
+# Step-by-step guide: https://github.com/Maebh-Hughes/birdle/blob/main/docs/TRUENAS.md
+
+services:
+  birdle:
+    image: ghcr.io/maebh-hughes/birdle:latest
+    restart: unless-stopped
+    # The TrueNAS "apps" user and group. A dataset created with the "Apps" preset lets them write.
+    user: "568:568"
+    environment:
+      # Discord Developer Portal -> your application -> OAuth2 -> Client ID (a long number).
+      DISCORD_CLIENT_ID: "CHANGE_ME"
+      # Discord Developer Portal -> your application -> OAuth2 -> Client Secret. Keep it private.
+      DISCORD_CLIENT_SECRET: "CHANGE_ME"
+      # A long random private value that decides the order of the daily answers. Set it once and
+      # never change it. Make one in System -> Shell with:  openssl rand -hex 24
+      # (BIRDLE won't start while this is CHANGE_ME. Don't leave it empty: BIRDLE would only print a
+      # warning and use the public default seed, which makes the daily answers guessable.)
+      PUZZLE_SEED: "CHANGE_ME"
+      # Optional: the container's time zone. BIRDLE doesn't need it (the server works in UTC, and
+      # every player gets the puzzle for their own local date), so leave it out unless you want it.
+      # TZ: "Europe/London"
+    volumes:
+      # Where BIRDLE keeps its database: your dataset (create it first) -> /data in the container.
+      - type: bind
+        source: /mnt/POOL/apps/birdle   # CHANGE_ME: replace POOL with your pool's name
+        target: /data
+        bind:
+          create_host_path: false       # fail clearly instead of creating a folder in the wrong place
+    ports:
+      # http://<your-truenas-ip>:30180 on your home network. Plain HTTP: handy for checking that it
+      # runs, but Discord itself needs your public HTTPS address. Do not forward this port on your
+      # router. Remove these two lines if you don't need them.
+      - "30180:3001"
+    # BIRDLE saves its data when it is stopped; give it time to finish.
+    stop_grace_period: 30s
+    # Locked down: the program files can't be changed (it writes only to /data), no privilege
+    # escalation, no Linux capabilities.
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    # The health check (GET /api/health every 30 s) comes from the image.

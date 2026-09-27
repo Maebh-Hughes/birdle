@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dailyAnswer } from '../src/puzzle';
 import { createWordCatalog } from '../src/server';
-import { bird } from './helpers';
+import { bird, character } from './helpers';
 
 // Bird words deliberately missing from the fixture dictionary (like TWITE in the real one).
 const BIRDS = [bird('WREN'), bird('TWITE', { obscurity: 2 }), bird('ROBIN', { obscurity: 3 }), bird('PELICAN')];
@@ -58,5 +58,50 @@ describe('createWordCatalog', () => {
     expect(catalog.randomBird(() => 0, 'pelican').word).toBe('ROBIN');
     const single = createWordCatalog([bird('WREN')], []);
     expect(single.randomBird(() => 0, 'WREN').word).toBe('WREN');
+  });
+});
+
+describe('createWordCatalog with fictional birds', () => {
+  const catalog = createWordCatalog(
+    [
+      bird('WREN'),
+      bird('TALON', { kind: 'term', obscurity: 2 }),
+      bird('KAKAPO', { obscurity: 3 }),
+      character('HOOH', 'pokemon'),
+      character('LUGIA', 'pokemon', { obscurity: 2 }),
+      character('KAEPORA', 'game'),
+      character('HEDWIG', 'literature', { obscurity: 3 }),
+    ],
+    [],
+  );
+  const words = (entries: readonly { word: string }[]) => entries.map((entry) => entry.word);
+
+  it('puts real birds up to obscurity 2 and fictional birds at obscurity 1 in the daily pool', () => {
+    expect(words(catalog.dailyPool)).toEqual(['HOOH', 'KAEPORA', 'TALON', 'WREN']);
+  });
+
+  it('builds a frozen practice pool per category', () => {
+    expect(words(catalog.practicePool('all'))).toEqual(words(catalog.birds));
+    expect(words(catalog.practicePool('birds'))).toEqual(['KAKAPO', 'TALON', 'WREN']);
+    expect(words(catalog.practicePool('pokemon'))).toEqual(['HOOH', 'LUGIA']);
+    expect(words(catalog.practicePool('fiction'))).toEqual(['HEDWIG', 'KAEPORA']);
+    expect(Object.isFrozen(catalog.practicePool('pokemon'))).toBe(true);
+  });
+
+  it('picks practice birds from the chosen category only, avoiding the previous answer', () => {
+    for (const r of [0, 0.3, 0.6, 0.99]) {
+      expect(['KAKAPO', 'TALON', 'WREN']).toContain(catalog.randomBird(() => r, undefined, 'birds').word);
+      expect(['HEDWIG', 'KAEPORA']).toContain(catalog.randomBird(() => r, undefined, 'fiction').word);
+    }
+    expect(catalog.randomBird(() => 0, 'HOOH', 'pokemon').word).toBe('LUGIA');
+    // A previous answer from another category doesn't matter.
+    expect(catalog.randomBird(() => 0, 'WREN', 'pokemon').word).toBe('HOOH');
+    expect(catalog.randomBird(() => 0).word).toBe('HEDWIG'); // default: all
+  });
+
+  it('throws for a category without entries', () => {
+    const realOnly = createWordCatalog([bird('WREN')], []);
+    expect(realOnly.practicePool('pokemon')).toEqual([]);
+    expect(() => realOnly.randomBird(() => 0, undefined, 'pokemon')).toThrow(RangeError);
   });
 });

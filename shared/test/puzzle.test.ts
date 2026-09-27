@@ -10,7 +10,7 @@ import {
   seededShuffle,
 } from '../src/puzzle';
 import type { BirdEntry } from '../src/types';
-import { bird } from './helpers';
+import { bird, character } from './helpers';
 
 // Fixture list with every length 4-11 and every obscurity level, deliberately unsorted.
 const FIXTURE: BirdEntry[] = [
@@ -121,6 +121,39 @@ describe('buildDailyPool / buildPracticePool', () => {
     expect(practice).toHaveLength(FIXTURE.length);
     expect(words(practice)).toEqual([...words(FIXTURE)].sort());
     expect(practice.some((entry) => entry.obscurity === 3)).toBe(true);
+  });
+});
+
+describe('daily pool rule with fictional birds', () => {
+  const MIXED: BirdEntry[] = [
+    bird('WREN', { obscurity: 2 }),
+    bird('TALON', { kind: 'term', obscurity: 2 }),
+    bird('SMEW', { obscurity: 3 }),
+    character('HOOH', 'pokemon', { obscurity: 1 }),
+    character('LUGIA', 'pokemon', { obscurity: 2 }),
+    character('KAEPORA', 'game', { obscurity: 1 }),
+    character('NAVIS', 'game', { obscurity: 3 }),
+    character('HEDWIG', 'literature', { obscurity: 1 }),
+    character('ZAZU', 'literature', { obscurity: 2 }),
+  ];
+
+  it('takes bird/term up to obscurity 2 and pokemon/game/literature at obscurity 1 only', () => {
+    expect(words(buildDailyPool(MIXED))).toEqual(['HEDWIG', 'HOOH', 'KAEPORA', 'TALON', 'WREN']);
+  });
+
+  it('never picks a fictional bird above obscurity 1 as a daily answer', () => {
+    const pool = buildDailyPool(MIXED);
+    for (let n = 1; n <= pool.length * 4; n++) {
+      expect(['LUGIA', 'NAVIS', 'ZAZU', 'SMEW']).not.toContain(dailyAnswer(pool, n, 'birdle').word);
+    }
+  });
+
+  it('builds a practice pool per category', () => {
+    expect(words(buildPracticePool(MIXED, 'all'))).toEqual(words(MIXED).sort());
+    expect(words(buildPracticePool(MIXED, 'birds'))).toEqual(['SMEW', 'TALON', 'WREN']);
+    expect(words(buildPracticePool(MIXED, 'pokemon'))).toEqual(['HOOH', 'LUGIA']);
+    expect(words(buildPracticePool(MIXED, 'fiction'))).toEqual(['HEDWIG', 'KAEPORA', 'NAVIS', 'ZAZU']);
+    expect(buildPracticePool(FIXTURE, 'pokemon')).toEqual([]);
   });
 });
 

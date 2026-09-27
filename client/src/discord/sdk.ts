@@ -1,10 +1,14 @@
 import { DiscordSDK, DiscordSDKMock, Platform, type IDiscordSDK } from '@discord/embedded-app-sdk';
+import type { ConfigResponse } from '@birdle/shared';
+import { fetchConfig } from '../api';
 import { getLocalStorage } from '../storage';
 import { resolveMockIdentity, type MockIdentity } from './mockIdentity';
 import type { Participant } from './participants';
 
 // SDK bootstrap: the real DiscordSDK inside Discord, DiscordSDKMock in a plain
-// browser (local development and multi-tab testing).
+// browser (local development and multi-tab testing). Nothing is created at
+// import time: inside Discord the application id may have to come from the
+// server first (GET /api/config), so one client build works for any Discord app.
 
 interface BaseEnv {
   sdk: IDiscordSDK;
@@ -60,14 +64,50 @@ export function configureMock(mock: DiscordSDKMock, clientId: string, player: { 
   });
 }
 
-export function createDiscordEnv(
-  search: string = window.location.search,
-  storage: Storage | null = getLocalStorage(),
-): DiscordEnv {
-  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID?.trim() ?? '';
+/** Inside Discord, but neither the build nor the server has a Discord application id. */
+export class MissingClientIdError extends Error {
+  override readonly name = 'MissingClientIdError';
+
+  constructor() {
+    super('No Discord application ID is configured (set DISCORD_CLIENT_ID on the BIRDLE server).');
+  }
+}
+
+/**
+ * The Discord application id: the build-time VITE_DISCORD_CLIENT_ID when one
+ * was compiled in, otherwise the server's DISCORD_CLIENT_ID from GET /api/config.
+ * Throws MissingClientIdError when neither has one.
+ */
+export async function resolveClientId(buildClientId: string, loadConfig: () => Promise<ConfigResponse>): Promise<string> {
+  const built = buildClientId.trim();
+  if (built) return built;
+  const { discordClientId } = await loadConfig();
+  if (!discordClientId) throw new MissingClientIdError();
+  return discordClientId;
+}
+
+export interface DiscordEnvOptions {
+  /** Default: window.location.search. */
+  search?: string;
+  /** For the mock guest id. Default: localStorage (null when unavailable). */
+  storage?: Storage | null;
+  /** Default: import.meta.env.VITE_DISCORD_CLIENT_ID (blank = ask the server). */
+  buildClientId?: string;
+  /** Default: GET /api/config. */
+  loadConfig?: () => Promise<ConfigResponse>;
+}
+
+/**
+ * Creates the SDK for this page: inside Discord (launch query parameters
+ * present) the real DiscordSDK, constructed only once the application id is
+ * known; in a plain browser the mock, which needs no id and no server call.
+ */
+export async function createDiscordEnv(options: DiscordEnvOptions = {}): Promise<DiscordEnv> {
+  const search = options.search ?? window.location.search;
+  const buildClientId = (options.buildClientId ?? import.meta.env.VITE_DISCORD_CLIENT_ID ?? '').trim();
 
   if (isDiscordLaunch(search)) {
-    if (!clientId) throw new Error('VITE_DISCORD_CLIENT_ID is not set, so BIRDLE cannot talk to Discord.');
+    const clientId = await resolveClientId(buildClientId, options.loadConfig ?? (() => fetchConfig()));
     const sdk = new DiscordSDK(clientId, { disableConsoleLogOverride: false });
     return {
       embedded: true,
@@ -78,8 +118,8 @@ export function createDiscordEnv(
     };
   }
 
-  const identity = resolveMockIdentity(search, storage);
-  const mockClientId = clientId || 'birdle-local';
+  const identity = resolveMockIdentity(search, options.storage === undefined ? getLocalStorage() : options.storage);
+  const mockClientId = buildClientId || 'birdle-local';
   // Its instanceId is the fixed '123456789012345678', so every local tab shares one Flock.
   const mock = new DiscordSDKMock(mockClientId, 'mock_guild', 'mock_channel', null);
   configureMock(mock, mockClientId, identity);

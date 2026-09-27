@@ -1,5 +1,5 @@
 import express, { Router, type Express } from 'express';
-import type { HealthResponse } from '@birdle/shared';
+import type { ConfigResponse, HealthResponse } from '@birdle/shared';
 import type { WordCatalog } from '@birdle/shared/server';
 import { createAuthenticator, requireAuth } from './auth';
 import type { Config } from './config';
@@ -21,7 +21,7 @@ import type { Store } from './store';
 /** Largest accepted JSON request body. Real requests are well under 1 KB. */
 export const JSON_BODY_LIMIT = '16kb';
 
-export type AppConfig = Pick<Config, 'allowMockAuth' | 'puzzleSeed' | 'clientDistDir'>;
+export type AppConfig = Pick<Config, 'allowMockAuth' | 'puzzleSeed' | 'clientDistDir' | 'discordClientId'>;
 
 export interface AppDeps {
   config: AppConfig;
@@ -72,6 +72,12 @@ export function createApp(deps: AppDeps): Express {
 
   api.get('/health', (_req, res) => {
     const body: HealthResponse = { ok: true };
+    res.json(body);
+  });
+  // Public: the client asks for the Discord application id before it can sign in,
+  // so one client build works for any Discord app. Nothing here is secret.
+  api.get('/config', (_req, res) => {
+    const body: ConfigResponse = { discordClientId: deps.config.discordClientId };
     res.json(body);
   });
   api.use(tokenRoutes(discord, logger));

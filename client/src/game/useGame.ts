@@ -1,16 +1,18 @@
 import {
   BACKSPACE_KEY,
+  DEFAULT_PRACTICE_CATEGORY,
   ENTER_KEY,
   localIsoDate,
   msUntilNextLocalMidnight,
   type GameMode,
   type GameView,
   type LetterState,
+  type PracticeCategory,
   type Stats,
 } from '@birdle/shared';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { isAbortError, type Api } from '../api';
-import { errorMessage, isRejectedGuess, isStaleGameError, isUncertainOutcome } from './errors';
+import { isAbortError, type Api, type RequestOptions } from '../api';
+import { errorMessage, isRejectedGuess, isStaleGameError, isUncertainOutcome, practiceStartMessage } from './errors';
 import {
   activeGame,
   gameReducer,
@@ -27,6 +29,12 @@ export interface UseGameOptions {
   initialStats: Stats;
   /** The hard-mode setting, sent with a game's first guess. */
   hardMode: boolean;
+  /**
+   * The chosen Free Flight category (default 'all'). New rounds draw from it,
+   * and a round nobody has touched yet (no guess, no hint) is swapped for one
+   * from the new category as soon as it changes.
+   */
+  practiceCategory?: PracticeCategory;
   /** Skip animation delays (prefers-reduced-motion). */
   reducedMotion: boolean;
   /** A game finished in this session, its reveal has played out, and it is still on screen. */
@@ -43,14 +51,30 @@ export interface GameController {
   keys: Record<string, LetterState>;
   /** The local date moved on while yesterday's daily board (with guesses) is still shown. */
   newDayAvailable: boolean;
+  /**
+   * Free Flight couldn't switch the untouched round on screen to the chosen
+   * category (the start failed); `newPracticeGame` tries again.
+   */
+  categorySwitchFailed: boolean;
   pressKey: (key: string) => void;
   revealHint: () => Promise<void>;
   setMode: (mode: GameMode) => void;
+  /** Starts a new Free Flight round in the chosen category. */
   newPracticeGame: () => Promise<void>;
   reload: () => void;
   startNewDay: () => void;
   showToast: (message: string, tone?: ToastTone, durationMs?: number) => void;
   dismissToast: (id: number) => void;
+}
+
+/** A round the player has started: a guess or a hint makes it theirs to finish. */
+export function isRoundUnderway(game: Pick<GameView, 'guesses' | 'hintUsed'>): boolean {
+  return game.guesses.length > 0 || game.hintUsed;
+}
+
+/** The Free Flight category of a practice game; one without a category (an older server's) counts as 'all'. */
+export function practiceCategoryOf(game: Pick<GameView, 'category'>): PracticeCategory {
+  return game.category ?? DEFAULT_PRACTICE_CATEGORY;
 }
 
 /** Game screen controller: server calls, typing, submit, reveal sequencing and toasts. */
@@ -76,11 +100,31 @@ export function useGame(options: UseGameOptions): GameController {
   const isCurrent = (mode: GameMode, game: GameView) => mode !== 'daily' || game.date === stateRef.current.dailyDate;
 
   const [reloadCount, setReloadCount] = useState(0);
-  const reload = useCallback(() => setReloadCount((n) => n + 1), []);
+  const reload = useCallback(() => {
+    // Loading from this render on (like a mode switch), so nothing acts on the
+    // board in the render before the load effect starts.
+    dispatch({ type: 'load/start', mode: stateRef.current.mode });
+    setReloadCount((n) => n + 1);
+  }, []);
 
-  // Load (or resume) the active mode's game. Entering Free Flight resumes an
-  // unfinished practice game or starts a new one. Practice games don't depend
-  // on the date, so a new day doesn't reload (and replace) them.
+  const chosenCategory = () => optionsRef.current.practiceCategory ?? DEFAULT_PRACTICE_CATEGORY;
+  /**
+   * The category of the latest Free Flight start request (POST /api/practice/new),
+   * whether it worked or not. A round is started automatically only for a
+   * category other than this one, so each choice is followed at most once: a
+   * category that can't start (say, one without birds yet) isn't retried in a
+   * loop, and neither is one whose rounds come back labelled differently.
+   */
+  const lastStart = useRef<PracticeCategory | null>(null);
+  const startPractice = (category: PracticeCategory, request?: RequestOptions) => {
+    lastStart.current = category;
+    return api.practiceNew(category, request);
+  };
+
+  // Load (or resume) the active mode's game. Entering Free Flight resumes a
+  // round under way, or one not yet touched in the chosen category; otherwise
+  // it starts a new round in that category. Practice games don't depend on the
+  // date, so a new day doesn't reload (and replace) them.
   const mode = state.mode;
   const loadDate = mode === 'daily' ? state.dailyDate : null;
   useEffect(() => {
@@ -89,10 +133,14 @@ export function useGame(options: UseGameOptions): GameController {
     const seq = beginRequest(mode);
     dispatch({ type: 'load/start', mode });
 
+    const category = chosenCategory();
+    let step: 'read' | 'start' = 'read';
     const load = async (): Promise<GameView> => {
       if (loadDate !== null) return (await api.daily(loadDate, { signal })).game;
       const { game } = await api.practice({ signal });
-      return game && game.status === 'playing' ? game : (await api.practiceNew({ signal })).game;
+      if (game && game.status === 'playing' && (isRoundUnderway(game) || practiceCategoryOf(game) === category)) return game;
+      step = 'start';
+      return (await startPractice(category, { signal })).game;
     };
     load().then(
       (game) => {
@@ -100,7 +148,8 @@ export function useGame(options: UseGameOptions): GameController {
       },
       (error: unknown) => {
         if (signal.aborted || isAbortError(error) || !isLatest(mode, seq)) return;
-        dispatch({ type: 'load/failure', mode, message: errorMessage(error) });
+        const message = mode === 'practice' ? practiceStartMessage(error) : errorMessage(error);
+        dispatch({ type: 'load/failure', mode, message, step });
       },
     );
     return () => controller.abort();
@@ -243,16 +292,53 @@ export function useGame(options: UseGameOptions): GameController {
     if (practiceBusy.current || stateRef.current.mode !== 'practice' || stateRef.current.pending) return;
     practiceBusy.current = true;
     const seq = beginRequest('practice');
+    const category = chosenCategory();
     dispatch({ type: 'load/start', mode: 'practice' });
     try {
-      const { game: fresh } = await api.practiceNew();
+      const { game: fresh } = await startPractice(category);
       if (isLatest('practice', seq)) dispatch({ type: 'load/success', mode: 'practice', game: fresh });
     } catch (error) {
-      if (isLatest('practice', seq)) dispatch({ type: 'load/failure', mode: 'practice', message: errorMessage(error) });
+      if (isLatest('practice', seq)) {
+        dispatch({ type: 'load/failure', mode: 'practice', message: practiceStartMessage(error), step: 'start' });
+      }
     } finally {
       practiceBusy.current = false;
     }
   }, [api]);
+
+  // Follow the chosen category with a round nobody has touched: swap an
+  // untouched round from another category, or (after a failed start) try the
+  // newly chosen one. Rounds under way and finished ones are left alone; they
+  // wait for "New bird". One start at a time, so quick changes converge on
+  // the latest choice. Nothing is started while the server's round is in
+  // doubt: while a load is on its way (from the render that asks for it),
+  // after a failed read (the player reloads or plays on), or while a guess
+  // that may have been counted waits for its reload.
+  const practiceCategory = options.practiceCategory ?? DEFAULT_PRACTICE_CATEGORY;
+  const practice = state.games.practice;
+  const practiceIdle =
+    state.mode === 'practice' &&
+    !state.loading &&
+    state.loadFailure !== 'read' &&
+    state.resync !== 'practice' &&
+    state.pending === null &&
+    !state.hintPending &&
+    state.revealingRow === null;
+  const untouchedElsewhere =
+    practice !== null &&
+    practice.status === 'playing' &&
+    !isRoundUnderway(practice) &&
+    practiceCategoryOf(practice) !== practiceCategory;
+  const noRound = practice === null && state.loadFailure === 'start';
+  const followCategory = practiceIdle && (untouchedElsewhere || noRound) && lastStart.current !== practiceCategory;
+  useEffect(() => {
+    if (followCategory) void newPracticeGame();
+  }, [followCategory, practiceCategory, newPracticeGame]);
+  // Switching the untouched round to the chosen category failed, and it stays
+  // on screen. The player retries (newPracticeGame); it is never retried by
+  // itself, so an outage can't turn into a stream of requests.
+  const categorySwitchFailed =
+    practiceIdle && untouchedElsewhere && state.loadFailure === 'start' && lastStart.current === practiceCategory;
 
   const setMode = useCallback((next: GameMode) => dispatch({ type: 'mode/set', mode: next }), []);
   const startNewDay = useCallback(() => dispatch({ type: 'date/set', date: today }), [today]);
@@ -269,6 +355,7 @@ export function useGame(options: UseGameOptions): GameController {
     game,
     keys,
     newDayAvailable: newDay && dailyStarted,
+    categorySwitchFailed,
     pressKey,
     revealHint,
     setMode,

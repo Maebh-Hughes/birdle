@@ -17,6 +17,19 @@ describe('API basics', () => {
     expect(res.headers['x-frame-options']).toBeUndefined(); // must stay embeddable in Discord
   });
 
+  it('GET /api/config needs no auth and returns only the public client id', async () => {
+    for (const discordClientId of ['123456789012345678', null]) {
+      const { app } = makeTestApp({ discordClientId });
+      const res = await request(app).get('/api/config');
+      expect(res.status).toBe(200);
+      expect(res.headers['cache-control']).toBe('no-store');
+      expect(res.body).toEqual({ discordClientId });
+    }
+    // A bearer token changes nothing.
+    const { app } = makeTestApp({ discordClientId: '123456789012345678' });
+    expect((await request(app).get('/api/config').set(as('alice'))).body).toEqual({ discordClientId: '123456789012345678' });
+  });
+
   it('answers unknown API routes with 404 NOT_FOUND', async () => {
     const { app } = makeTestApp();
     const res = await request(app).get('/api/nope').set(as('alice'));

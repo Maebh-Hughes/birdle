@@ -21,8 +21,14 @@ describe('real word data', () => {
   });
 
   it('picks practice answers from the whole list', () => {
-    const answer = puzzles.randomPracticeAnswer(() => 0.999);
+    const answer = puzzles.randomPracticeAnswer(() => 0.999, undefined, 'all');
     expect(wordCatalog.findBird(answer)).toBeDefined();
-    expect(puzzles.reveal(answer).wikiUrl).toMatch(/^https:\/\/en\.wikipedia\.org\/wiki\/\S+$/);
+    expect(puzzles.reveal(answer).infoUrl).toMatch(/^https:\/\/\S+$/);
+  });
+
+  it('has real birds for the "birds" Free Flight category', () => {
+    expect(puzzles.practiceCount('birds')).toBeGreaterThan(0);
+    const answer = puzzles.randomPracticeAnswer(() => 0.5, undefined, 'birds');
+    expect(['bird', 'term']).toContain(wordCatalog.findBird(answer)?.kind);
   });
 });

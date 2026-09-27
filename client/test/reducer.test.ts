@@ -10,7 +10,7 @@ import {
   type GameAction,
   type GameState,
 } from '../src/game/reducer';
-import { makeGame, makeStats, row } from './fixtures';
+import { makeGame, makeReveal, makeStats, row } from './fixtures';
 import type { GameView } from '@birdle/shared';
 
 function stateWith(game: GameView | null, patch: Partial<GameState> = {}): GameState {
@@ -169,7 +169,7 @@ describe('reveal sequencing', () => {
     const game = makeGame({
       status: 'lost',
       guesses: Array.from({ length: 6 }, () => row('STORK', 'CRANE')),
-      answer: { word: 'CRANE', name: 'Crane', kind: 'bird', fact: 'Fixture fact.', wikiUrl: 'https://example.org' },
+      answer: makeReveal(),
     });
     const state = run(stateWith(game, { revealingRow: 5 }), { type: 'reveal/done' });
     expect(state.toasts.at(-1)?.message).toBe('The bird was CRANE');
@@ -192,6 +192,30 @@ describe('modes and loading', () => {
     expect(same.current).toBe('OWL');
     const moved = run(typed, { type: 'load/success', mode: 'daily', game: makeGame({ guesses: [row('STORK', 'CRANE')] }) });
     expect(moved.current).toBe('');
+  });
+
+  it('a Free Flight round from another category is a new board, even of the same length', () => {
+    const practice = (category: GameView['category']) => makeGame({ mode: 'practice', puzzleNumber: null, date: null, category });
+    const typed = type(stateWith(practice('all')), 'OWL');
+    expect(run(typed, { type: 'load/success', mode: 'practice', game: practice('all') }).current).toBe('OWL');
+    expect(run(typed, { type: 'load/success', mode: 'practice', game: practice('birds') }).current).toBe('');
+  });
+
+  it('counts as loading from the mode switch on, before the load itself starts', () => {
+    const state = run(stateWith(makeGame()), { type: 'mode/set', mode: 'practice' });
+    expect(state.loading).toBe(true);
+    expect(state.loadFailure).toBeNull();
+  });
+
+  it('records whether a failed load failed reading the saved game or starting a new round', () => {
+    const practice = makeGame({ mode: 'practice', puzzleNumber: null, date: null });
+    const read = run(stateWith(null, { mode: 'practice' }), { type: 'load/failure', mode: 'practice', message: 'offline' });
+    expect(read.loadFailure).toBe('read');
+    const start = run(stateWith(practice), { type: 'load/failure', mode: 'practice', message: 'offline', step: 'start' });
+    expect(start.loadFailure).toBe('start');
+    expect(run(start, { type: 'load/start', mode: 'practice' }).loadFailure).toBeNull();
+    expect(run(start, { type: 'load/success', mode: 'practice', game: practice }).loadFailure).toBeNull();
+    expect(run(start, { type: 'mode/set', mode: 'daily' }).loadFailure).toBeNull();
   });
 
   it('a failed load is an error screen without a game, a toast with one', () => {
@@ -293,7 +317,7 @@ describe('gameBeforeReveal', () => {
     status: 'won',
     guesses,
     hint: 'Tall wading bird',
-    answer: { word: 'CRANE', name: 'Crane', kind: 'bird', fact: 'Fixture fact.', wikiUrl: 'https://example.org' },
+    answer: makeReveal(),
   });
 
   it('shows a game-ending guess as still in progress while it flips', () => {
@@ -319,5 +343,7 @@ describe('isSameGameState', () => {
     expect(isSameGameState(makeGame({ mode: 'practice', puzzleNumber: null, date: null }), won)).toBe(false);
     expect(isSameGameState({ ...won, date: '2026-10-03', puzzleNumber: 8 }, won)).toBe(false);
     expect(isSameGameState(makeGame(), won)).toBe(false);
+    const practiceWon = makeGame({ mode: 'practice', puzzleNumber: null, date: null, status: 'won', guesses: [row('CRANE', 'CRANE')] });
+    expect(isSameGameState({ ...practiceWon, category: 'birds' }, practiceWon)).toBe(false);
   });
 });

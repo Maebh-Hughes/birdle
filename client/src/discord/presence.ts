@@ -3,7 +3,8 @@ import type { GameView } from '@birdle/shared';
 import { useEffect, useRef } from 'react';
 import { describeError } from './errors';
 
-type PresenceGame = Pick<GameView, 'mode' | 'puzzleNumber' | 'status' | 'guesses' | 'maxGuesses' | 'wordLength'>;
+type PresenceGame = Pick<GameView, 'mode' | 'puzzleNumber' | 'status' | 'guesses' | 'maxGuesses' | 'wordLength'> &
+  Partial<Pick<GameView, 'category'>>;
 
 export interface PresenceText {
   details: string;
@@ -37,6 +38,7 @@ export interface PracticeSnapshot {
   status: GameView['status'];
   guessCount: number;
   wordLength: number;
+  category?: GameView['category'];
 }
 
 /** `next` is a fresh practice game rather than `previous` carrying on. */
@@ -44,7 +46,10 @@ export function isNewPracticeRound(previous: PracticeSnapshot | null, next: Prac
   return (
     previous !== null &&
     next.status === 'playing' &&
-    (previous.status !== 'playing' || next.guessCount < previous.guessCount || next.wordLength !== previous.wordLength)
+    (previous.status !== 'playing' ||
+      next.guessCount < previous.guessCount ||
+      next.wordLength !== previous.wordLength ||
+      (next.category ?? null) !== (previous.category ?? null))
   );
 }
 
@@ -65,14 +70,15 @@ export function usePresence(sdk: IDiscordSDK, enabled: boolean, game: PresenceGa
   const status = game?.status;
   const guessCount = game?.guesses.length ?? 0;
   const wordLength = game?.wordLength ?? 0;
+  const category = game?.category ?? null;
 
   // Declared before the presence effect so a new round is counted before it is announced.
   useEffect(() => {
     if (mode !== 'practice' || status === undefined) return;
-    const snapshot: PracticeSnapshot = { status, guessCount, wordLength };
+    const snapshot: PracticeSnapshot = { status, guessCount, wordLength, category };
     if (isNewPracticeRound(lastPractice.current, snapshot)) practiceRound.current += 1;
     lastPractice.current = snapshot;
-  }, [mode, status, guessCount, wordLength]);
+  }, [mode, status, guessCount, wordLength, category]);
 
   useEffect(() => {
     if (!enabled || details === undefined || state === undefined) return;

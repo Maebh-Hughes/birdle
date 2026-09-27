@@ -27,6 +27,16 @@
     "obscurity": 3
   },
   {
+    "word": "AKKA",
+    "name": "Akka",
+    "kind": "literature",
+    "source": "The Wonderful Adventures of Nils",
+    "hint": "Wise old leader of the wild goose flock that tiny Nils journeys with across Sweden",
+    "fact": "Said to be over 100 years old, she once raised an orphaned eagle chick named Gorgo. Her author, Selma Lagerlöf, was the first woman to win the Nobel Prize in Literature.",
+    "wiki": "The Wonderful Adventures of Nils",
+    "obscurity": 3
+  },
+  {
     "word": "ALALA",
     "name": "Alala",
     "kind": "bird",
@@ -43,6 +53,16 @@
     "fact": "Great albatrosses have wingspans of up to about 3.5 m. A Laysan albatross named Wisdom is the oldest known wild bird, still raising chicks in her 70s.",
     "wiki": "Albatross",
     "obscurity": 1
+  },
+  {
+    "word": "ALTARIA",
+    "name": "Altaria",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Blue Dragon/Flying songbird with cloud-like wings; evolves from a cotton-winged bird",
+    "fact": "Its humming is described as a dreamy soprano. Its Mega Evolution becomes a Dragon/Fairy type with even puffier, cloud-like wings.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Altaria_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "ALTRICIAL",
@@ -108,6 +128,16 @@
     "obscurity": 3
   },
   {
+    "word": "APOLLO",
+    "name": "Apollo",
+    "kind": "game",
+    "source": "Animal Crossing",
+    "hint": "Grumpy bald-eagle villager in Animal Crossing whose catchphrase is 'pah'",
+    "fact": "His birthday is July 4, and his name likely nods to NASA's Apollo program, whose first Moon lander was named Eagle. He has appeared in every Animal Crossing game.",
+    "link": "https://nookipedia.com/wiki/Apollo",
+    "obscurity": 2
+  },
+  {
     "word": "APOSTLEBIRD",
     "name": "Apostlebird",
     "kind": "bird",
@@ -126,6 +156,36 @@
     "obscurity": 3
   },
   {
+    "word": "ARCHEN",
+    "name": "Archen",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Colourful Rock/Flying fossil bird revived from the Plume Fossil in Unova",
+    "fact": "It is based on Archaeopteryx, long thought to be the earliest bird. Unable to fly, it hopped from branch to branch in the treetops.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Archen_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "ARCHEOPS",
+    "name": "Archeops",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Ancient Rock/Flying bird that runs better than it flies; evolved fossil Pokémon of Unova",
+    "fact": "It needs a running start of about 25 mph to take off. Its Defeatist ability halves its attacking stats once its HP drops to half or less.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Archeops_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "ARCHIMEDES",
+    "name": "Archimedes",
+    "kind": "literature",
+    "source": "The Sword in the Stone",
+    "hint": "Merlyn's wise talking owl who helps tutor the young King Arthur, known as Wart",
+    "fact": "He first appeared in T. H. White's 1938 novel, perched in Merlyn's cluttered cottage full of books and curiosities. Disney's 1963 film turned him into a famously grumpy sidekick.",
+    "wiki": "The_Sword_in_the_Stone_(novel)",
+    "obscurity": 2
+  },
+  {
     "word": "ARGUS",
     "name": "Argus",
     "kind": "bird",
@@ -133,6 +193,16 @@
     "fact": "The great argus is named after the hundred-eyed giant of Greek myth, after the many eyespots males fan out in courtship.",
     "wiki": "Great_argus",
     "obscurity": 3
+  },
+  {
+    "word": "ARTICUNO",
+    "name": "Articuno",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Legendary ice bird of Kanto, found in the Seafoam Islands in Red & Blue",
+    "fact": "Legend says it appears to travellers lost in icy mountains, and snow falls wherever it flies. A Psychic-type Galarian form debuted in Sword & Shield's Crown Tundra expansion.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Articuno_(Pok%C3%A9mon)",
+    "obscurity": 1
   },
   {
     "word": "ASITY",
@@ -270,6 +340,26 @@
     "obscurity": 1
   },
   {
+    "word": "BEAN",
+    "name": "Bean the Dynamite",
+    "kind": "game",
+    "source": "Sonic the Fighters",
+    "hint": "Hyper, bomb-throwing green bird fighter from Sonic the Fighters (1996)",
+    "fact": "His look comes from Bin and Pin, the duck heroes of Sega's 1988 arcade game Dynamite Düx, and his name echoes 'Bin'. True to his title, he pelts anyone nearby with bombs.",
+    "link": "https://sonic.fandom.com/wiki/Bean_the_Dynamite",
+    "obscurity": 3
+  },
+  {
+    "word": "BEAT",
+    "name": "Beat",
+    "kind": "game",
+    "source": "Mega Man 5",
+    "hint": "Little blue robot bird who swoops at enemies to help Mega Man",
+    "fact": "In Mega Man 5 (1992) you must find eight hidden plates spelling MEGAMANV before you can summon this robot bird, built by Dr. Cossack as a gift for Mega Man. Once called, he homes in on enemies.",
+    "link": "https://megaman.fandom.com/wiki/Beat",
+    "obscurity": 3
+  },
+  {
     "word": "BELLBIRD",
     "name": "Bellbird",
     "kind": "bird",
@@ -277,6 +367,16 @@
     "fact": "The white bellbird has the loudest bird call ever recorded, up to about 125 decibels. Males may deliver it while facing a female perched nearby.",
     "wiki": "White_bellbird",
     "obscurity": 3
+  },
+  {
+    "word": "BERDLY",
+    "name": "Berdly",
+    "kind": "game",
+    "source": "Deltarune",
+    "hint": "Blue-feathered know-it-all classmate of Kris in Toby Fox's episodic RPG",
+    "fact": "This snobby bluebird has pushed himself to be the best ever since he beat Noelle in a spelling bee. In Chapter 2 he sides with Queen until she betrays him, then joins Kris's team.",
+    "wiki": "List of Undertale and Deltarune characters#Berdly",
+    "obscurity": 2
   },
   {
     "word": "BESRA",
@@ -414,6 +514,26 @@
     "obscurity": 2
   },
   {
+    "word": "BLATHERS",
+    "name": "Blathers",
+    "kind": "game",
+    "source": "Animal Crossing",
+    "hint": "Owl museum curator of Animal Crossing who lectures at length about every donation",
+    "fact": "His name comes from 'blather', meaning to talk on and on, which he does about every fossil and fish you bring. Bugs are the exception: he can't stand them.",
+    "link": "https://nookipedia.com/wiki/Blathers",
+    "obscurity": 2
+  },
+  {
+    "word": "BLAZIKEN",
+    "name": "Blaziken",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Final form of Hoenn's Fire starter: a kicking Fire/Fighting bird with flaming wrists",
+    "fact": "It can leap over a 30-storey building, and every few years its old feathers burn away so fresh, supple ones can grow in.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Blaziken_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "BLUEBIRD",
     "name": "Bluebird",
     "kind": "bird",
@@ -450,6 +570,26 @@
     "obscurity": 2
   },
   {
+    "word": "BOMB",
+    "name": "Bomb",
+    "kind": "game",
+    "source": "Angry Birds",
+    "hint": "Round black bird that explodes on command in the pig-smashing slingshot game",
+    "fact": "Originally called the Black Bird, he has one job: blow things up. In The Angry Birds Movie (2016), Danny McBride voiced him as a laid-back bird who explodes when startled or upset.",
+    "link": "https://angrybirds.fandom.com/wiki/Bomb",
+    "obscurity": 2
+  },
+  {
+    "word": "BOMBIRDIER",
+    "name": "Bombirdier",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Paldean Flying/Dark stork Pokémon that drops rocks and objects from the sky",
+    "fact": "It plays on the legend of storks delivering babies: it carries things in an apron of shed feathers, then drops them from high up for fun, especially noisy ones.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Bombirdier_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "BOOBOOK",
     "name": "Boobook",
     "kind": "bird",
@@ -466,6 +606,16 @@
     "fact": "The name may come from the Spanish 'bobo' (fool), because these tame seabirds often landed on ships and were easily caught.",
     "wiki": "Booby",
     "obscurity": 2
+  },
+  {
+    "word": "BORKA",
+    "name": "Borka",
+    "kind": "literature",
+    "source": "Borka: The Adventures of a Goose with No Feathers",
+    "hint": "John Burningham's goose born without feathers, whose mother knits her a jersey",
+    "fact": "This was Burningham's first book and won the 1963 Kate Greenaway Medal. Left behind when her family flies south, she sails to London and makes a home in Kew Gardens.",
+    "wiki": "Borka: The Adventures of a Goose with No Feathers",
+    "obscurity": 3
   },
   {
     "word": "BOUBOU",
@@ -504,6 +654,16 @@
     "obscurity": 2
   },
   {
+    "word": "BRAVIARY",
+    "name": "Braviary",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Red, white and blue eagle Pokémon from Unova; evolves from a fearless eaglet",
+    "fact": "It is strong enough to fly while carrying a car. Scars on its front earn its flock's respect, but scars on its back get it mocked.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Braviary_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "BRENT",
     "name": "Brent",
     "kind": "bird",
@@ -511,6 +671,26 @@
     "fact": "These small geese breed on high-Arctic tundra and spend the winter on temperate sea coasts, where they graze heavily on eelgrass.",
     "wiki": "Brant_(goose)",
     "obscurity": 3
+  },
+  {
+    "word": "BREWSTER",
+    "name": "Brewster",
+    "kind": "game",
+    "source": "Animal Crossing",
+    "hint": "Quiet, mustachioed pigeon barista who runs The Roost café in Animal Crossing",
+    "fact": "He rarely says much, but let your coffee cool before drinking it and he's openly shocked. His name puns on 'brew', and he's been serving cups since Wild World.",
+    "link": "https://nookipedia.com/wiki/Brewster",
+    "obscurity": 2
+  },
+  {
+    "word": "BRIGHTBILL",
+    "name": "Brightbill",
+    "kind": "literature",
+    "source": "The Wild Robot",
+    "hint": "Orphaned gosling raised by the robot Roz on a wild island",
+    "fact": "Roz must get him swimming and flying in time for the geese's autumn migration. Peter Brown's 2016 novel became a hit animated film in 2024.",
+    "wiki": "The Wild Robot (book series)",
+    "obscurity": 2
   },
   {
     "word": "BRISTLEBIRD",
@@ -556,6 +736,26 @@
     "fact": "A broody hen will sit tight for about three weeks, puffing up and growling if disturbed, and may even try to hatch dummy eggs or none at all.",
     "wiki": "Broodiness",
     "obscurity": 2
+  },
+  {
+    "word": "BROWT",
+    "name": "Browt",
+    "kind": "pokemon",
+    "source": "Pokémon Winds and Waves",
+    "hint": "Fluffy yellow Grass chick with leafy eyebrows; a first partner of Gen 10",
+    "fact": "Revealed on Pokémon Day 2026 with Pombon and Gecqua as the first Gen X Pokémon, this Bean Chick Pokémon photosynthesizes through the leaves that form its eyebrows.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Browt_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "BUBBLES",
+    "name": "Bubbles",
+    "kind": "game",
+    "source": "Angry Birds",
+    "hint": "Small candy-loving orange bird that puffs up like a balloon on impact",
+    "fact": "He debuted in Ham'o'ween, the 2011 Halloween episode of Angry Birds Seasons. About a second after hitting something he inflates to several times his size, shoving blocks and pigs away.",
+    "link": "https://angrybirds.fandom.com/wiki/Bubbles",
+    "obscurity": 3
   },
   {
     "word": "BUDGERIGAR",
@@ -765,6 +965,16 @@
     "obscurity": 2
   },
   {
+    "word": "CELESTE",
+    "name": "Celeste",
+    "kind": "game",
+    "source": "Animal Crossing",
+    "hint": "Stargazing owl, sister of the museum curator, who visits on starry nights in Animal Crossing",
+    "fact": "She is Blathers' younger sister, and her name likely nods to 'celestial'. The pink bow she always wears was a gift from her big brother.",
+    "link": "https://nookipedia.com/wiki/Celeste",
+    "obscurity": 2
+  },
+  {
     "word": "CERE",
     "name": "Cere",
     "kind": "term",
@@ -792,6 +1002,16 @@
     "obscurity": 2
   },
   {
+    "word": "CHANTICLEER",
+    "name": "Chanticleer",
+    "kind": "literature",
+    "source": "The Canterbury Tales",
+    "hint": "Chaucer's proud rooster who dreams of a fox in The Nun's Priest's Tale",
+    "fact": "When a flattering fox carries him off, he tricks it into opening its mouth to taunt the chasing farmyard and flies free. Barbara Cooney's picture-book retelling won the 1959 Caldecott Medal.",
+    "wiki": "The Nun's Priest's Tale",
+    "obscurity": 2
+  },
+  {
     "word": "CHARM",
     "name": "Charm",
     "kind": "term",
@@ -807,6 +1027,16 @@
     "hint": "Small Old World flycatcher; also a word for a casual conversation",
     "fact": "The stonechat, one of the best-known chats, is named for its call, which sounds like two pebbles being tapped together.",
     "wiki": "Chat_(bird)",
+    "obscurity": 2
+  },
+  {
+    "word": "CHATOT",
+    "name": "Chatot",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Music-note-headed parrot Pokémon from Sinnoh that mimics human speech",
+    "fact": "In the Nintendo DS games, its move Chatter played back a sound the player recorded with the DS microphone. Its tail flicks like a metronome to keep rhythm.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Chatot_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -855,12 +1085,32 @@
     "obscurity": 2
   },
   {
+    "word": "CHIL",
+    "name": "Chil",
+    "kind": "literature",
+    "source": "The Jungle Book",
+    "hint": "Kipling's kite who carries word to Baloo and Bagheera after monkeys kidnap Mowgli",
+    "fact": "His name is simply the Hindi word for a kite. Some early editions of Kipling's stories called the same bird Rann, meaning 'battle'.",
+    "wiki": "List of The Jungle Book characters",
+    "obscurity": 3
+  },
+  {
     "word": "CHIRP",
     "name": "Chirp",
     "kind": "term",
     "hint": "Short, sharp, high-pitched sound of a small bird",
     "fact": "Many small birds use brief calls to keep in touch with their flock, separate from the longer songs used to attract mates.",
     "wiki": "Bird_vocalization",
+    "obscurity": 1
+  },
+  {
+    "word": "CHOCOBO",
+    "name": "Chocobo",
+    "kind": "game",
+    "source": "Final Fantasy",
+    "hint": "Big yellow rideable bird that cries 'Kweh!' across the Final Fantasy series",
+    "fact": "Chocobos debuted in Final Fantasy II (1988). Creator Koichi Ishii drew on memories of raising a chick as a child, and the birds now star in their own racing and dungeon spin-offs.",
+    "wiki": "Chocobo",
     "obscurity": 1
   },
   {
@@ -882,6 +1132,26 @@
     "obscurity": 2
   },
   {
+    "word": "CHOZO",
+    "name": "Chozo",
+    "kind": "game",
+    "source": "Metroid",
+    "hint": "Ancient bird-like race who raised Samus Aran and built her Power Suit",
+    "fact": "They took in young Samus after space pirates killed her parents, even giving her some of their DNA. Their statues, often clutching item spheres, hand out power-ups throughout the Metroid series.",
+    "wiki": "List of Metroid characters#Chozo",
+    "obscurity": 2
+  },
+  {
+    "word": "CHUCK",
+    "name": "Chuck",
+    "kind": "game",
+    "source": "Angry Birds",
+    "hint": "Yellow triangle-shaped bird that speeds up mid-flight when tapped, in the slingshot game",
+    "fact": "Originally just called the Yellow Bird, he lives for speed. In The Angry Birds Movie (2016) he was voiced by Josh Gad, who also voiced Olaf in Frozen.",
+    "link": "https://angrybirds.fandom.com/wiki/Chuck",
+    "obscurity": 2
+  },
+  {
     "word": "CHUKAR",
     "name": "Chukar",
     "kind": "bird",
@@ -900,6 +1170,16 @@
     "obscurity": 3
   },
   {
+    "word": "CLAIRE",
+    "name": "Claire",
+    "kind": "game",
+    "source": "A Short Hike",
+    "hint": "Young bird hiking to the top of Hawk Peak in a cosy 2019 indie game",
+    "fact": "She's spending the summer with her Aunt May, a park ranger, and heads for the summit because it's the only spot with phone signal. The call, when it comes, is from her mom, who had surgery while she was away.",
+    "wiki": "A Short Hike",
+    "obscurity": 3
+  },
+  {
     "word": "CLOACA",
     "name": "Cloaca",
     "kind": "term",
@@ -907,6 +1187,16 @@
     "fact": "Birds, reptiles and amphibians all have a cloaca, one all-purpose rear opening for eggs and waste. The name is Latin for 'sewer'.",
     "wiki": "Cloaca",
     "obscurity": 3
+  },
+  {
+    "word": "CLOCKWERK",
+    "name": "Clockwerk",
+    "kind": "game",
+    "source": "Sly Cooper",
+    "hint": "Metal owl villain who has hunted Sly Cooper's family of raccoon thieves for centuries",
+    "fact": "This Eurasian eagle-owl was so jealous of the Cooper clan's thieving fame that he swapped his body for machinery just to outlive them. Fittingly, real owls prey on raccoons.",
+    "wiki": "Sly Cooper#Recurring characters",
+    "obscurity": 2
   },
   {
     "word": "CLUCK",
@@ -970,6 +1260,16 @@
     "fact": "Combs come in shapes such as single, rose, pea and walnut that help identify chicken breeds. Most are red, but Silkies have dark purple ones.",
     "wiki": "Comb_(anatomy)",
     "obscurity": 1
+  },
+  {
+    "word": "COMBUSKEN",
+    "name": "Combusken",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Fire/Fighting middle stage of Hoenn's chicken starter line, famed for rapid kicks",
+    "fact": "It toughens its legs by running through fields and mountains and can land ten kicks in a single second. Its loud, sharp cries help it focus and rattle opponents.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Combusken_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "CONDOR",
@@ -1050,6 +1350,26 @@
     "hint": "Member of the crow family",
     "fact": "Crows, ravens, jays and magpies are among the smartest birds, and New Caledonian crows even make and use hooked tools.",
     "wiki": "Corvidae",
+    "obscurity": 2
+  },
+  {
+    "word": "CORVIKNIGHT",
+    "name": "Corviknight",
+    "kind": "pokemon",
+    "source": "Pokémon Sword & Shield",
+    "hint": "Armoured Steel/Flying raven that serves as Galar's flying taxi service",
+    "fact": "In Sword & Shield it carries taxi cabs across Galar. Its design may nod to the famous ravens kept at the Tower of London.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Corviknight_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "CORVISQUIRE",
+    "name": "Corvisquire",
+    "kind": "pokemon",
+    "source": "Pokémon Sword & Shield",
+    "hint": "Middle stage of Galar's raven line, smart enough to use tools in battle",
+    "fact": "It has been seen flinging rocks and tying up opponents with rope. Its design may draw on jackdaws, hooded crows and blue jays.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Corvisquire_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -1134,6 +1454,16 @@
     "obscurity": 2
   },
   {
+    "word": "CRAMORANT",
+    "name": "Cramorant",
+    "kind": "pokemon",
+    "source": "Pokémon Sword & Shield",
+    "hint": "Galar seabird Pokémon that swallows Arrokuda whole, sometimes grabbing the wrong prey",
+    "fact": "When it uses Surf or Dive, its Gulp Missile ability lets it snatch prey to spit at attackers: usually an Arrokuda, but sometimes a Pikachu caught by mistake.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Cramorant_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "CRANE",
     "name": "Crane",
     "kind": "bird",
@@ -1141,6 +1471,16 @@
     "fact": "In Japanese tradition, folding 1,000 origami cranes is said to grant a wish, and the red-crowned crane symbolises long life.",
     "wiki": "Crane_(bird)",
     "obscurity": 1
+  },
+  {
+    "word": "CREBAIN",
+    "name": "Crebain",
+    "kind": "literature",
+    "source": "The Lord of the Rings",
+    "hint": "Flock of spying black crows from Dunland that force the Fellowship to hide",
+    "fact": "The word is Tolkien's Elvish plural of 'craban', a crow. In the book the Fellowship hides, fearing Saruman's spies; Peter Jackson's film shows them reporting to him at Isengard.",
+    "link": "https://tolkiengateway.net/wiki/Crebain",
+    "obscurity": 2
   },
   {
     "word": "CRECHE",
@@ -1186,6 +1526,16 @@
     "fact": "New Caledonian crows craft hooked tools from twigs and leaves to fish grubs out of holes, one of the most impressive examples of tool-making in animals.",
     "wiki": "Crow",
     "obscurity": 1
+  },
+  {
+    "word": "CUCCO",
+    "name": "Cucco",
+    "kind": "game",
+    "source": "The Legend of Zelda",
+    "hint": "Zelda's clucking hen; Link can carry one overhead to glide",
+    "fact": "Zelda's chickens have punished players who attack them too often ever since A Link to the Past (1991): a furious flock swoops in from off-screen and pecks Link relentlessly.",
+    "link": "https://zeldawiki.wiki/wiki/Cucco",
+    "obscurity": 2
   },
   {
     "word": "CUCKOO",
@@ -1269,12 +1619,42 @@
     "obscurity": 3
   },
   {
+    "word": "DABDAB",
+    "name": "Dab-Dab",
+    "kind": "literature",
+    "source": "The Story of Doctor Dolittle",
+    "hint": "Doctor Dolittle's thrifty, bossy duck who keeps his house",
+    "fact": "She became the Doctor's housekeeper after his sister Sarah moved out, fed up with his animals (a crocodile was the last straw). Octavia Spencer voiced her in the 2020 film.",
+    "wiki": "List of Doctor Dolittle characters#Dab-Dab",
+    "obscurity": 3
+  },
+  {
     "word": "DARTER",
     "name": "Darter",
     "kind": "bird",
     "hint": "Long-necked waterbird that spears fish underwater; also called the snakebird",
     "fact": "Darters swim with only their thin neck above water, like a snake, then spread their wings to dry because their feathers get soaked.",
     "wiki": "Darter",
+    "obscurity": 3
+  },
+  {
+    "word": "DARTRIX",
+    "name": "Dartrix",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Vain, preening middle stage of Alola's owl starter line",
+    "fact": "This dandy is a clean freak: dirt on its feathers can leave it too distracted to battle. It throws sharp feathers called blade quills that seldom miss.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Dartrix_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "DARZEE",
+    "name": "Darzee",
+    "kind": "literature",
+    "source": "The Jungle Book",
+    "hint": "Tailorbird friend of the mongoose hero in Kipling's Rikki-Tikki-Tavi",
+    "fact": "His name comes from the Hindi word for a tailor. His quick-thinking wife fakes a broken wing to lure the cobra Nagaina away so that Rikki can destroy the snake's eggs.",
+    "wiki": "Rikki-Tikki-Tavi",
     "obscurity": 3
   },
   {
@@ -1287,6 +1667,16 @@
     "obscurity": 3
   },
   {
+    "word": "DECIDUEYE",
+    "name": "Decidueye",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Hooded Grass/Ghost archer owl; final form of Alola's Grass starter",
+    "fact": "It can nock and fire an arrow quill from its wing in a tenth of a second. Legends: Arceus added a Grass/Fighting Hisuian form.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Decidueye_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "DECOY",
     "name": "Decoy",
     "kind": "term",
@@ -1294,6 +1684,26 @@
     "fact": "Duck decoys woven from tule reeds and feathers around 2,000 years ago were found in Lovelock Cave, Nevada.",
     "wiki": "Duck_decoy_(model)",
     "obscurity": 1
+  },
+  {
+    "word": "DEDEDE",
+    "name": "King Dedede",
+    "kind": "game",
+    "source": "Kirby",
+    "hint": "Hammer-swinging, self-crowned penguin-like ruler of Dream Land; Kirby's big rival",
+    "fact": "He stole all of Dream Land's food in Kirby's Dream Land (1992). His species is a mystery: he looks like a penguin, but Nintendo Power once called him a 'regal eagle'.",
+    "link": "https://wikirby.com/wiki/King_Dedede",
+    "obscurity": 2
+  },
+  {
+    "word": "DELIBIRD",
+    "name": "Delibird",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Red-and-white Ice/Flying bird that carries food in its sack-like tail, much like Santa",
+    "fact": "It shares the food bundled in its tail with people lost in the mountains; one entry credits it with helping an explorer reach the top of Mt. Everest.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Delibird_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "DIPPER",
@@ -1321,6 +1731,26 @@
     "fact": "The dodo was a giant flightless pigeon from Mauritius; its last widely accepted sighting was in 1662. A Dodo famously runs the Caucus-race in Alice's Adventures in Wonderland.",
     "wiki": "Dodo",
     "obscurity": 1
+  },
+  {
+    "word": "DODRIO",
+    "name": "Dodrio",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Three-headed, flightless running bird from Kanto that evolves from Doduo",
+    "fact": "One Pokédex entry says its three heads stand for joy, sadness and anger; another claims it has three hearts and three sets of lungs for long runs.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Dodrio_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "DODUO",
+    "name": "Doduo",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Two-headed, flightless Kanto bird that sprints on powerful legs",
+    "fact": "Its two heads take turns sleeping so one can always keep watch. It cannot fly well, but it races across the plains at over 60 mph.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Doduo_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "DOLLARBIRD",
@@ -1404,6 +1834,16 @@
     "obscurity": 2
   },
   {
+    "word": "DRUMSTICK",
+    "name": "Drumstick",
+    "kind": "game",
+    "source": "Diddy Kong Racing",
+    "hint": "Champion rooster racer turned into a frog by Wizpig in Rare's 1997 kart game",
+    "fact": "Timber's Island's top racer was turned into a frog by Wizpig. Complete the Wizpig amulet and win every Trophy Race, then drive over the frog wearing a rooster's comb to break the spell.",
+    "link": "https://www.mariowiki.com/Drumstick_(character)",
+    "obscurity": 3
+  },
+  {
     "word": "DUCK",
     "name": "Duck",
     "kind": "bird",
@@ -1411,6 +1851,16 @@
     "fact": "Ducks keep their plumage waterproof partly by spreading oil from a preen gland at the base of the tail over their feathers while grooming.",
     "wiki": "Duck",
     "obscurity": 1
+  },
+  {
+    "word": "DUCKLETT",
+    "name": "Ducklett",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Blue Water/Flying duckling Pokémon from Unova that loves eating peat moss",
+    "fact": "Its line is inspired by The Ugly Duckling: this scruffy little bird grows into an elegant swan. It dives far better than it flies.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Ducklett_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "DUCKLING",
@@ -1485,6 +1935,26 @@
     "obscurity": 2
   },
   {
+    "word": "EISCUE",
+    "name": "Eiscue",
+    "kind": "pokemon",
+    "source": "Pokémon Sword & Shield",
+    "hint": "Penguin Pokémon from Galar with a big block of ice for a head",
+    "fact": "It keeps its heat-sensitive head in ice and fishes by dangling its single hair into the sea. The extinct great auk may have inspired it.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Eiscue_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "EMPOLEON",
+    "name": "Empoleon",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Water/Steel emperor penguin with a trident-like beak; final form of Sinnoh's Water starter",
+    "fact": "The three horns extending from its beak show its strength, and a group's leader has the biggest. Its sharp-edged wings can slice through drifting ice.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Empoleon_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "ERNE",
     "name": "Erne",
     "kind": "bird",
@@ -1492,6 +1962,26 @@
     "fact": "The white-tailed eagle, or erne, was wiped out in Britain but reintroduced to Scotland from 1975 and, more recently, to the Isle of Wight.",
     "wiki": "White-tailed_eagle",
     "obscurity": 3
+  },
+  {
+    "word": "ERROL",
+    "name": "Errol",
+    "kind": "literature",
+    "source": "Harry Potter",
+    "hint": "The Weasley family's ancient, worn-out great grey owl",
+    "fact": "He is so old and frail that he often crash-lands or collapses in a heap after a delivery, so post from the Weasleys rarely arrives gracefully.",
+    "wiki": "List of fictional birds of prey#Errol",
+    "obscurity": 2
+  },
+  {
+    "word": "ESPATHRA",
+    "name": "Espathra",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Psychic ostrich Pokémon from Paldea with frilly, multicoloured plumage",
+    "fact": "This ostrich can sprint at over 120 mph and freeze foes in place with psychic power from its huge eyes. Its look and its name both draw on Cleopatra.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Espathra_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "EUPHONIA",
@@ -1530,12 +2020,32 @@
     "obscurity": 2
   },
   {
+    "word": "FABY",
+    "name": "Faby",
+    "kind": "game",
+    "source": "Flappy Bird",
+    "hint": "Official name of the tap-to-flap hero of the 2013 pipe-dodging mobile hit",
+    "fact": "The little bird was drawn in 2012 for a cancelled platform game before starring in Flappy Bird. At the height of its fame, creator Dong Nguyen pulled the game, saying it had become too addictive.",
+    "wiki": "Flappy Bird",
+    "obscurity": 3
+  },
+  {
     "word": "FAIRYWREN",
     "name": "Fairywren",
     "kind": "bird",
     "hint": "Tiny cocked-tailed Australian songbird; breeding males of the superb species are bright blue",
     "fact": "Female superb fairywrens teach a 'password' note to their chicks, which helps parents tell their own young from cuckoo chicks sneaked into the nest.",
     "wiki": "Superb_fairywren",
+    "obscurity": 2
+  },
+  {
+    "word": "FALCO",
+    "name": "Falco Lombardi",
+    "kind": "game",
+    "source": "Star Fox",
+    "hint": "Cocky ace pilot on Fox McCloud's team, later a Super Smash Bros. fighter",
+    "fact": "Developers have called him a pheasant, yet his first name is the scientific genus of falcons. He has been a Super Smash Bros. fighter since Melee (2001).",
+    "wiki": "List of Star Fox characters#Falco Lombardi",
     "obscurity": 2
   },
   {
@@ -1566,6 +2076,36 @@
     "obscurity": 3
   },
   {
+    "word": "FARFETCHD",
+    "name": "Farfetch'd",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Brown wild duck Pokémon that carries a leek stalk and swings it like a sword",
+    "fact": "Its Japanese name, Kamonegi, comes from a saying about a duck turning up with a leek on its back, meaning a very handy stroke of luck.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Farfetch%27d_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "FAWKES",
+    "name": "Fawkes",
+    "kind": "literature",
+    "source": "Harry Potter",
+    "hint": "Dumbledore's loyal phoenix, whose tears can heal wounds",
+    "fact": "Harry's and Voldemort's wands each hold a tail feather from this phoenix, which is why they behave so strangely when they duel. He is named after Guy Fawkes of Bonfire Night.",
+    "wiki": "List of Harry Potter characters#Fawkes",
+    "obscurity": 2
+  },
+  {
+    "word": "FEAROW",
+    "name": "Fearow",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Long-necked, long-beaked Kanto bird of prey that evolves from Spearow",
+    "fact": "Its broad wings let it stay airborne for a whole day without landing, and its long, thin beak is shaped for plucking prey out of soil or water.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Fearow_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "FEATHER",
     "name": "Feather",
     "kind": "term",
@@ -1581,6 +2121,16 @@
     "hint": "Streaky brown New Zealand wetland songster with a ragged, spiny-looking tail",
     "fact": "The New Zealand fernbird lives only in New Zealand, in wetlands and scrub. Its thin, spine-like tail feathers give it a ragged look.",
     "wiki": "New_Zealand_fernbird",
+    "obscurity": 3
+  },
+  {
+    "word": "FEZANDIPITI",
+    "name": "Fezandipiti",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet: The Teal Mask",
+    "hint": "Poison/Fairy pheasant, one of the Loyal Three of Kitakami in The Teal Mask",
+    "fact": "The Loyal Three may nod to the Momotarō folktale, whose hero travels with a dog, a monkey and a pheasant. This pheasant owes its beauty and lovely voice to its toxic chain.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Fezandipiti_(Pok%C3%A9mon)",
     "obscurity": 3
   },
   {
@@ -1620,6 +2170,16 @@
     "obscurity": 3
   },
   {
+    "word": "FIREBIRD",
+    "name": "Firebird",
+    "kind": "literature",
+    "source": "Russian fairy tales",
+    "hint": "Glowing magical bird hunted by heroes in Russian folk tales",
+    "fact": "A single lost feather glows bright enough to light a room, which usually sends the hero off on a perilous quest. Stravinsky's 1910 ballet helped make the bird world-famous.",
+    "wiki": "Firebird (Slavic folklore)",
+    "obscurity": 2
+  },
+  {
     "word": "FIRECREST",
     "name": "Firecrest",
     "kind": "bird",
@@ -1645,6 +2205,16 @@
     "fact": "A group of flamingos is often called a flamboyance, fitting for pink birds that perform synchronised 'marching' displays in huge crowds.",
     "wiki": "Flamingo",
     "obscurity": 3
+  },
+  {
+    "word": "FLAMIGO",
+    "name": "Flamigo",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Paldean Flying/Fighting flamingo that ties a knot in its neck",
+    "fact": "It knots its neck so the energy stored in its belly can't escape through its beak. Flocks can top 10,000 birds and attack in perfect sync.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Flamigo_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "FLAMINGO",
@@ -1674,12 +2244,42 @@
     "obscurity": 1
   },
   {
+    "word": "FLETCHINDER",
+    "name": "Fletchinder",
+    "kind": "pokemon",
+    "source": "Pokémon X & Y",
+    "hint": "Fire/Flying middle stage of Kalos's robin line with a flame sac in its belly",
+    "fact": "It fires embers into tall grass to flush out bug Pokémon, then snaps them up. The hotter its flame sac, the faster it can fly.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Fletchinder_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "FLETCHLING",
+    "name": "Fletchling",
+    "kind": "pokemon",
+    "source": "Pokémon X & Y",
+    "hint": "Tiny robin Pokémon from Kalos with a sweet song and an arrow-like tail",
+    "fact": "Its melodious chirps are actually warnings to intruders. Its body is always warm, so some trainers in cold places sleep with one.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Fletchling_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "FLICKER",
     "name": "Flicker",
     "kind": "bird",
     "hint": "Ground-feeding woodpecker of the Americas that eats huge numbers of ants",
     "fact": "Northern flickers often feed on the ground, lapping up ants with a long, sticky, barbed tongue.",
     "wiki": "Colaptes",
+    "obscurity": 2
+  },
+  {
+    "word": "FLICKY",
+    "name": "Flicky",
+    "kind": "game",
+    "source": "Flicky (Sega, 1984)",
+    "hint": "Little blue bird of a 1984 Sega arcade game; later the critters Sonic frees from badniks",
+    "fact": "In her arcade debut this flightless bird leads little Chirps to the exit while dodging house cats and iguanas. Flickies later became a whole species in the Sonic series.",
+    "wiki": "Flicky",
     "obscurity": 2
   },
   {
@@ -1690,6 +2290,16 @@
     "fact": "Losing the ability to fly evolved many times, often on islands without predators; the dodo of Mauritius and the kakapo of New Zealand are famous examples.",
     "wiki": "Flightless_bird",
     "obscurity": 1
+  },
+  {
+    "word": "FLITTLE",
+    "name": "Flittle",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Tiny Psychic-type chick from Paldea that floats just above the ground",
+    "fact": "It hovers about half an inch up, lifted by psychic energy from the frills on its belly. Swipe its beloved berries and this vengeful chick will chase you down.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Flittle_(Pok%C3%A9mon)",
+    "obscurity": 3
   },
   {
     "word": "FLOCK",
@@ -1771,6 +2381,16 @@
     "fact": "Frigatebirds can soar for weeks on ocean winds and have the largest wing area relative to body mass of any bird. Males inflate a red throat pouch to court females.",
     "wiki": "Frigatebird",
     "obscurity": 2
+  },
+  {
+    "word": "FRIGHTFUL",
+    "name": "Frightful",
+    "kind": "literature",
+    "source": "My Side of the Mountain",
+    "hint": "Peregrine falcon trained by runaway Sam Gribley in the Catskill Mountains",
+    "fact": "Sam takes her from a nest as a chick and trains her to hunt food for him. She later got a sequel all her own, Frightful's Mountain (1999).",
+    "wiki": "My Side of the Mountain",
+    "obscurity": 3
   },
   {
     "word": "FROGMOUTH",
@@ -1872,6 +2492,26 @@
     "obscurity": 3
   },
   {
+    "word": "GARUDA",
+    "name": "Garuda",
+    "kind": "literature",
+    "source": "Mahabharata",
+    "hint": "Eagle-like king of birds who carries the Hindu god Vishnu",
+    "fact": "In the Mahabharata he fights the gods themselves to win the nectar of immortality and free his mother. Today he is the national emblem of both Indonesia and Thailand.",
+    "wiki": "Garuda",
+    "obscurity": 2
+  },
+  {
+    "word": "GERTRUDE",
+    "name": "Gertrude McFuzz",
+    "kind": "literature",
+    "source": "Yertle the Turtle and Other Stories",
+    "hint": "Dr. Seuss girl-bird with a one-feather tail who gobbles magic berries to grow more",
+    "fact": "The berries give her so many tail feathers that she can no longer fly. Universal's Seuss Landing has a gift shop named after her: Gertrude McFuzz Fine Feathered Finery.",
+    "wiki": "Yertle the Turtle and Other Stories",
+    "obscurity": 3
+  },
+  {
     "word": "GIZZARD",
     "name": "Gizzard",
     "kind": "term",
@@ -1897,6 +2537,16 @@
     "fact": "Albatrosses can travel for hours without flapping, using a technique called dynamic soaring to harvest energy from the wind over the waves.",
     "wiki": "Gliding_flight",
     "obscurity": 1
+  },
+  {
+    "word": "GLIMFEATHER",
+    "name": "Glimfeather",
+    "kind": "literature",
+    "source": "The Chronicles of Narnia: The Silver Chair",
+    "hint": "Narnian talking owl who secretly takes Jill and Eustace to a night-time meeting",
+    "fact": "He brings the children to a secret 'Parliament of Owls', where the owls explain how Prince Rilian vanished and plan how the children can go and find him.",
+    "wiki": "List of The Chronicles of Narnia characters#G",
+    "obscurity": 3
   },
   {
     "word": "GNATCATCHER",
@@ -1969,6 +2619,16 @@
     "fact": "American goldfinches nest late in summer, when thistles have gone to seed, and line their nests with thistle down. They eat an almost entirely vegetarian diet.",
     "wiki": "American_goldfinch",
     "obscurity": 1
+  },
+  {
+    "word": "GOLDUCK",
+    "name": "Golduck",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Blue, webbed-limbed evolution of Kanto's headache-prone duck, with a red gem on its forehead",
+    "fact": "The Pokédex calls it the fastest swimmer of all Pokémon, and early entries note it was often mistaken for the kappa, a river creature of Japanese folklore.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Golduck_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "GOOSANDER",
@@ -2061,6 +2721,16 @@
     "obscurity": 3
   },
   {
+    "word": "GRIP",
+    "name": "Grip",
+    "kind": "literature",
+    "source": "Barnaby Rudge",
+    "hint": "Barnaby Rudge's cheeky talking raven in a Charles Dickens novel",
+    "fact": "Dickens modelled him on his own talking pet raven, also named Grip, often credited with inspiring Poe's poem 'The Raven'. The real bird, stuffed, is kept at the Free Library of Philadelphia.",
+    "wiki": "Grip (raven)",
+    "obscurity": 3
+  },
+  {
     "word": "GROSBEAK",
     "name": "Grosbeak",
     "kind": "bird",
@@ -2113,6 +2783,26 @@
     "fact": "Gulls are resourceful feeders: many carry shellfish into the air and drop them onto rocks or roads to crack them open.",
     "wiki": "Gull",
     "obscurity": 1
+  },
+  {
+    "word": "GULLIVER",
+    "name": "Gulliver",
+    "kind": "game",
+    "source": "Animal Crossing",
+    "hint": "Forgetful sailor seagull who keeps washing up asleep on your Animal Crossing beach",
+    "fact": "His name puns on 'gull' and the 1726 novel Gulliver's Travels. He's usually a shipwrecked sailor, but in Wild World and City Folk he was an astronaut whose UFO you shot down with a slingshot.",
+    "link": "https://nookipedia.com/wiki/Gulliver",
+    "obscurity": 2
+  },
+  {
+    "word": "GWAIHIR",
+    "name": "Gwaihir",
+    "kind": "literature",
+    "source": "The Lord of the Rings",
+    "hint": "Tolkien's Windlord, the Great Eagle who rescues Gandalf and later Frodo and Sam",
+    "fact": "His name means 'wind-lord' in Tolkien's Elvish. He plucks Gandalf from the top of Orthanc, and later flies to Mount Doom to carry Frodo and Sam to safety.",
+    "wiki": "Eagles in Middle-earth#Third Age",
+    "obscurity": 2
   },
   {
     "word": "GYRFALCON",
@@ -2196,6 +2886,36 @@
     "obscurity": 1
   },
   {
+    "word": "HAWLUCHA",
+    "name": "Hawlucha",
+    "kind": "pokemon",
+    "source": "Pokémon X & Y",
+    "hint": "Fighting/Flying bird of prey from Kalos styled after a masked Mexican pro wrestler",
+    "fact": "It wins with flashy aerial moves and submission holds, but it always strikes a pose before its finisher, giving foes a chance to counter.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Hawlucha_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "HEDWIG",
+    "name": "Hedwig",
+    "kind": "literature",
+    "source": "Harry Potter",
+    "hint": "Harry's snowy owl, a birthday present from Hagrid",
+    "fact": "Harry picked her name out of his schoolbook A History of Magic. In the films she was mostly played by male snowy owls, which are whiter than the more speckled females.",
+    "wiki": "List of Harry Potter characters#Hedwig",
+    "obscurity": 1
+  },
+  {
+    "word": "HERMES",
+    "name": "Hermes",
+    "kind": "literature",
+    "source": "Harry Potter",
+    "hint": "Percy Weasley's screech owl, named after a Greek messenger god",
+    "fact": "Ron says their dad bought Percy this owl as a reward for being made a prefect. Naming a letter-carrying owl after the messenger of the gods is a very Percy thing to do.",
+    "wiki": "List of fictional birds of prey#Hermes",
+    "obscurity": 3
+  },
+  {
     "word": "HERON",
     "name": "Heron",
     "kind": "bird",
@@ -2259,6 +2979,16 @@
     "obscurity": 3
   },
   {
+    "word": "HONCHKROW",
+    "name": "Honchkrow",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Crow boss Pokémon with a fedora-like crest that commands gangs of Murkrow",
+    "fact": "A single deep cry can summon over a hundred Murkrow cronies, earning it the title Summoner of Night. It evolves from Murkrow via a Dusk Stone.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Honchkrow_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "HONEYEATER",
     "name": "Honeyeater",
     "kind": "bird",
@@ -2286,6 +3016,16 @@
     "obscurity": 1
   },
   {
+    "word": "HOOH",
+    "name": "Ho-Oh",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Rainbow-winged legendary phoenix from Johto and mascot of Pokémon Gold",
+    "fact": "Ash glimpsed it flying past a rainbow at the end of the anime's very first episode, years before its game debut. Its feathers shimmer in seven colours.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Ho-Oh_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "HOOPOE",
     "name": "Hoopoe",
     "kind": "bird",
@@ -2302,6 +3042,16 @@
     "fact": "The famous 'twit-twoo' of the tawny owl is usually a duet: the female calls 'ke-wick' and the male answers with a hoot.",
     "wiki": "Tawny_owl",
     "obscurity": 1
+  },
+  {
+    "word": "HOOTHOOT",
+    "name": "Hoothoot",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Round brown owl from Johto that stands on one foot and hoots on a strict schedule",
+    "fact": "An internal organ senses the Earth's rotation, so it starts hooting at exactly the same time every day. Some trainers use one as a clock.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Hoothoot_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "HORNBILL",
@@ -2329,6 +3079,16 @@
     "fact": "Hummingbirds stay still in mid-air by sweeping their wings in a figure-eight; the kestrel does it by facing into the wind, hence its old name 'windhover'.",
     "wiki": "Bird_flight",
     "obscurity": 1
+  },
+  {
+    "word": "HUGINN",
+    "name": "Huginn",
+    "kind": "literature",
+    "source": "Norse mythology (Poetic Edda)",
+    "hint": "One of Odin's two ravens; his name is usually translated as 'thought'",
+    "fact": "Each day he and his partner fly over the whole world, then report everything to Odin. A matching pair of Iron Age raven brooches from Denmark, worn one on each shoulder, may depict them.",
+    "wiki": "Huginn and Muninn",
+    "obscurity": 2
   },
   {
     "word": "HUIA",
@@ -2373,6 +3133,16 @@
     "hint": "Grey Himalayan wader of shingle rivers with a crimson, down-curved beak and black face",
     "fact": "The ibisbill is so distinctive that it is placed in its own family. It lives on stony riverbeds in the high mountains of Central Asia and the Himalayas.",
     "wiki": "Ibisbill",
+    "obscurity": 3
+  },
+  {
+    "word": "IKAROS",
+    "name": "Ikaros",
+    "kind": "game",
+    "source": "Assassin's Creed Odyssey",
+    "hint": "The misthios's eagle companion in the Assassin's Creed set in ancient Greece",
+    "fact": "His name is the Greek spelling of Icarus, the mythical boy whose wax wings melted when he flew too near the sun. Players send him soaring to spot enemies and treasure.",
+    "link": "https://assassinscreed.fandom.com/wiki/Ikaros",
     "obscurity": 3
   },
   {
@@ -2421,6 +3191,16 @@
     "obscurity": 3
   },
   {
+    "word": "JABBERJAY",
+    "name": "Jabberjay",
+    "kind": "literature",
+    "source": "The Hunger Games",
+    "hint": "Capitol-engineered spy bird that memorises and repeats human conversations",
+    "fact": "When the rebels realised the birds were spies, they fed them lies. The Capitol released the all-male birds to die out, but they mated with mockingbirds and created mockingjays.",
+    "link": "https://thehungergames.fandom.com/wiki/Jabberjay",
+    "obscurity": 2
+  },
+  {
     "word": "JABIRU",
     "name": "Jabiru",
     "kind": "bird",
@@ -2466,6 +3246,56 @@
     "obscurity": 3
   },
   {
+    "word": "JATAYU",
+    "name": "Jatayu",
+    "kind": "literature",
+    "source": "Ramayana",
+    "hint": "Aged vulture king of the Ramayana who battles Ravana to rescue Sita",
+    "fact": "Kerala's Jatayu Earth's Center has a 61-metre-wide sculpture of the fallen bird, credited as the largest bird sculpture in the world.",
+    "wiki": "Jatayu",
+    "obscurity": 3
+  },
+  {
+    "word": "JEMIMA",
+    "name": "Jemima Puddle-Duck",
+    "kind": "literature",
+    "source": "The Tale of Jemima Puddle-Duck",
+    "hint": "Beatrix Potter's bonnet-wearing farm duck, fooled by a smooth-talking fox",
+    "fact": "She first waddled into print in The Tale of Tom Kitten (1907), a year before her own book. Her story is set on Beatrix Potter's own Lake District farm, Hill Top.",
+    "wiki": "The Tale of Jemima Puddle-Duck",
+    "obscurity": 2
+  },
+  {
+    "word": "JEREMY",
+    "name": "Jeremy",
+    "kind": "literature",
+    "source": "Mrs. Frisby and the Rats of NIMH",
+    "hint": "Young crow tangled in string, freed by a brave widowed mouse just before the farm cat pounces",
+    "fact": "To repay her, he flies Mrs. Frisby on his back to visit the wise old owl. In the 1982 film The Secret of NIMH he was voiced by Dom DeLuise.",
+    "wiki": "Mrs. Frisby and the Rats of NIMH",
+    "obscurity": 3
+  },
+  {
+    "word": "JONATHAN",
+    "name": "Jonathan Livingston Seagull",
+    "kind": "literature",
+    "source": "Jonathan Livingston Seagull",
+    "hint": "Richard Bach's gull who cares more about the joy of flying than about finding food",
+    "fact": "Several publishers rejected the 1970 novella and its first printing was only 3,000 copies, yet two years later it reached No. 1 on the New York Times bestseller list.",
+    "wiki": "Jonathan Livingston Seagull",
+    "obscurity": 2
+  },
+  {
+    "word": "JUBJUB",
+    "name": "Jubjub bird",
+    "kind": "literature",
+    "source": "Jabberwocky (Through the Looking-Glass)",
+    "hint": "Lewis Carroll's dangerous nonsense bird, to be avoided along with the Bandersnatch",
+    "fact": "In The Hunting of the Snark, Carroll says its shrill scream sounds like a pencil squeaking on a slate. An asteroid, 9781 Jubjubbird, is named after it.",
+    "wiki": "Jubjub bird",
+    "obscurity": 2
+  },
+  {
     "word": "JUNCO",
     "name": "Junco",
     "kind": "bird",
@@ -2484,12 +3314,32 @@
     "obscurity": 2
   },
   {
+    "word": "KAEPORA",
+    "name": "Kaepora Gaebora",
+    "kind": "game",
+    "source": "The Legend of Zelda: Ocarina of Time",
+    "hint": "Wise, long-winded talking owl who keeps popping up with advice for Link in Ocarina of Time",
+    "fact": "A Gossip Stone hints this owl is an ancient Sage, and Hyrule Historia confirms he's Rauru, the Sage of Light. He'll also fly Link down from Death Mountain to a Kakariko rooftop.",
+    "wiki": "List of The Legend of Zelda: Ocarina of Time characters#Kaepora Gaebora / Rauru",
+    "obscurity": 2
+  },
+  {
     "word": "KAGU",
     "name": "Kagu",
     "kind": "bird",
     "hint": "Crested, pale grey, nearly flightless bird found only in New Caledonia",
     "fact": "The kagu has 'nasal corns' covering its nostrils, a feature found in no other bird. It is a treasured emblem of New Caledonia, and pairs duet in the mornings.",
     "wiki": "Kagu",
+    "obscurity": 3
+  },
+  {
+    "word": "KAISA",
+    "name": "Kaisa",
+    "kind": "literature",
+    "source": "His Dark Materials",
+    "hint": "Snow goose dæmon of the witch queen Serafina Pekkala",
+    "fact": "Unlike most dæmons, a witch's dæmon can travel far away from its human, so this goose often flies off alone as a scout and messenger for Lyra's allies.",
+    "wiki": "List of His Dark Materials and The Book of Dust characters#Serafina Pekkala",
     "obscurity": 3
   },
   {
@@ -2529,12 +3379,42 @@
     "obscurity": 3
   },
   {
+    "word": "KASS",
+    "name": "Kass",
+    "kind": "game",
+    "source": "The Legend of Zelda: Breath of the Wild",
+    "hint": "Accordion-playing Rito bard whose songs point Link toward hidden shrines",
+    "fact": "He roams Hyrule to fulfil the last wish of his teacher, a Sheikah court poet at Hyrule Castle, and the old songs he plays hide shrine puzzles. Back home he has five daughters.",
+    "wiki": "List of The Legend of Zelda: Breath of the Wild and Tears of the Kingdom characters#Kass",
+    "obscurity": 2
+  },
+  {
+    "word": "KAZOOIE",
+    "name": "Kazooie",
+    "kind": "game",
+    "source": "Banjo-Kazooie",
+    "hint": "Sharp-tongued red-crested breegull who rides in a honey bear's backpack (Rare, 1998)",
+    "fact": "She's named after the kazoo, chosen because the instrument is as annoying as her personality. She pops out of Banjo's backpack to fire eggs, sprint and fly.",
+    "wiki": "Banjo & Kazooie",
+    "obscurity": 2
+  },
+  {
     "word": "KEEL",
     "name": "Keel",
     "kind": "term",
     "hint": "Blade-like ridge on the breastbone that anchors flight muscles",
     "fact": "The keel gives the big flight muscles room to attach. Flightless ostriches and emus lack one and have a flat, raft-shaped breastbone instead.",
     "wiki": "Keel_(bird_anatomy)",
+    "obscurity": 2
+  },
+  {
+    "word": "KEHAAR",
+    "name": "Kehaar",
+    "kind": "literature",
+    "source": "Watership Down",
+    "hint": "Injured, gruff black-headed gull who scouts from the air for Hazel's rabbits",
+    "fact": "Richard Adams said this bird, with his guttural accent and fighting spirit, was based on a member of the Norwegian Resistance in World War II.",
+    "wiki": "Watership Down#Non-rabbits",
     "obscurity": 2
   },
   {
@@ -2565,12 +3445,32 @@
     "obscurity": 2
   },
   {
+    "word": "KIKI",
+    "name": "Kiki",
+    "kind": "literature",
+    "source": "The Adventure Series (Enid Blyton)",
+    "hint": "Enid Blyton's mischievous talking parrot who belongs to Jack",
+    "fact": "She picked up bossy orders like 'Wipe your feet!' from the grumpy uncle Jack once lived with, and her very human voice has fooled villains and got the children out of tight spots.",
+    "wiki": "The Adventure Series",
+    "obscurity": 3
+  },
+  {
     "word": "KILLDEER",
     "name": "Killdeer",
     "kind": "bird",
     "hint": "American plover named after its shrill call; fakes a broken wing to lure predators",
     "fact": "Killdeer often nest on open gravel, even in parking lots and on flat gravel roofs, where their speckled eggs blend in with the stones.",
     "wiki": "Killdeer",
+    "obscurity": 2
+  },
+  {
+    "word": "KILOWATTREL",
+    "name": "Kilowattrel",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Electric frigatebird Pokémon from Paldea with an inflatable throat sac",
+    "fact": "It inflates its throat sac to amplify electricity and can ride the wind over 430 miles a day, but with so little oil in its feathers it swims poorly.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Kilowattrel_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -2664,12 +3564,32 @@
     "obscurity": 1
   },
   {
+    "word": "KURO",
+    "name": "Kuro",
+    "kind": "game",
+    "source": "Ori and the Blind Forest",
+    "hint": "Giant shadowy owl who steals the Spirit Tree's light in Ori and the Blind Forest",
+    "fact": "The Spirit Tree's blinding flash killed her chicks, so she stole its light to protect her last egg. She dies returning it, and that egg hatches the owlet Ku, a star of the sequel.",
+    "wiki": "Ori and the Blind Forest",
+    "obscurity": 2
+  },
+  {
     "word": "LAMMERGEIER",
     "name": "Lammergeier",
     "kind": "bird",
     "hint": "Bone-eating Old World vulture that drops bones onto rocks to smash them",
     "fact": "The lammergeier, or bearded vulture, eats a diet that is 70-90% bone, dropping large bones from a height to crack them. It stains its feathers orange by bathing in iron-rich mud.",
     "wiki": "Bearded_vulture",
+    "obscurity": 3
+  },
+  {
+    "word": "LANDROVAL",
+    "name": "Landroval",
+    "kind": "literature",
+    "source": "The Lord of the Rings",
+    "hint": "Great Eagle, brother of the Windlord, who helps rescue Frodo and Sam from Mount Doom",
+    "fact": "His Elvish name means 'broad-winged'. Tolkien ranks him and his brother as the greatest Eagles of the North, descended from Thorondor, the ancient King of Eagles.",
+    "wiki": "Eagles in Middle-earth#Third Age",
     "obscurity": 3
   },
   {
@@ -2754,6 +3674,16 @@
     "obscurity": 2
   },
   {
+    "word": "LOFTWING",
+    "name": "Loftwing",
+    "kind": "game",
+    "source": "The Legend of Zelda: Skyward Sword",
+    "hint": "Giant bird that every Skyloft resident is paired with in Zelda: Skyward Sword",
+    "fact": "Their design is based on the shoebill, and their curly tails came from a designer's pet Shiba Inu. Link's Crimson Loftwing is a rare breed once thought to be extinct.",
+    "link": "https://zeldawiki.wiki/wiki/Loftwing",
+    "obscurity": 2
+  },
+  {
     "word": "LONGCLAW",
     "name": "Longclaw",
     "kind": "bird",
@@ -2808,6 +3738,16 @@
     "obscurity": 2
   },
   {
+    "word": "LOUIS",
+    "name": "Louis",
+    "kind": "literature",
+    "source": "The Trumpet of the Swan",
+    "hint": "E. B. White's trumpeter swan, born without a voice, who learns to play a real trumpet",
+    "fact": "His father crashes through a music-shop window in Billings, Montana, to get him an instrument. His name is a nod to the jazz trumpeter Louis Armstrong.",
+    "wiki": "The Trumpet of the Swan",
+    "obscurity": 2
+  },
+  {
     "word": "LOVEBIRD",
     "name": "Lovebird",
     "kind": "bird",
@@ -2815,6 +3755,16 @@
     "fact": "Lovebirds are small parrots of the African genus Agapornis. Rosy-faced lovebird females carry nesting strips tucked among their rump feathers.",
     "wiki": "Lovebird",
     "obscurity": 1
+  },
+  {
+    "word": "LUGIA",
+    "name": "Lugia",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Silver-white legendary guardian of the seas and mascot of Pokémon Silver",
+    "fact": "Pokédex entries say a light flap of its wings can blow houses apart, so it hides deep beneath the sea. It starred in the second Pokémon movie.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Lugia_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "LYREBIRD",
@@ -2907,6 +3857,16 @@
     "obscurity": 2
   },
   {
+    "word": "MANDIBUZZ",
+    "name": "Mandibuzz",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Female-only vulture Pokémon from Unova that decorates itself with bones",
+    "fact": "Only females exist. It builds its nest from bones and adorns itself with them, supposedly to attract males, even though no male has ever been found.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Mandibuzz_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "MANUCODE",
     "name": "Manucode",
     "kind": "bird",
@@ -2925,12 +3885,32 @@
     "obscurity": 3
   },
   {
+    "word": "MARGALO",
+    "name": "Margalo",
+    "kind": "literature",
+    "source": "Stuart Little",
+    "hint": "Pretty little bird who befriends the mouse-sized hero of E. B. White's first children's book",
+    "fact": "After she rescues Stuart from a garbage barge, she flees a cat's plot, and Stuart sets off in a tiny car to find her. The book ends with his search still going on.",
+    "wiki": "Stuart Little",
+    "obscurity": 2
+  },
+  {
     "word": "MARTIN",
     "name": "Martin",
     "kind": "bird",
     "hint": "Swallow relative; the purple kind nests in gourds and multi-room houses people put up",
     "fact": "In eastern North America purple martins nest almost only in human-provided housing, a tradition that began with Native Americans hanging gourds.",
     "wiki": "Purple_martin",
+    "obscurity": 2
+  },
+  {
+    "word": "MATILDA",
+    "name": "Matilda",
+    "kind": "game",
+    "source": "Angry Birds",
+    "hint": "White hen-like bird that drops an explosive egg mid-flight in the slingshot game",
+    "fact": "Originally called the White Bird, she's a peace-loving gardener with a very short fuse. In The Angry Birds Movie she teaches the anger-management class and was voiced by Maya Rudolph.",
+    "link": "https://angrybirds.fandom.com/wiki/Matilda",
     "obscurity": 2
   },
   {
@@ -2943,12 +3923,32 @@
     "obscurity": 3
   },
   {
+    "word": "MAYZIE",
+    "name": "Mayzie",
+    "kind": "literature",
+    "source": "Horton Hatches the Egg",
+    "hint": "Dr. Seuss's lazy bird who leaves an elephant sitting on her egg",
+    "fact": "In Seuss's early drafts she was called Bessie, then Saidie. She flies off to Palm Beach while Horton guards her egg, which finally hatches into an elephant-bird.",
+    "wiki": "Horton Hatches the Egg",
+    "obscurity": 2
+  },
+  {
     "word": "MEADOWLARK",
     "name": "Meadowlark",
     "kind": "bird",
     "hint": "Open-country songbird with a yellow breast and black V; the western species is state bird of six states",
     "fact": "Western and eastern meadowlarks look nearly identical and are best told apart by song. Despite the name, they are not larks but members of the blackbird family.",
     "wiki": "Meadowlark",
+    "obscurity": 2
+  },
+  {
+    "word": "MEDLI",
+    "name": "Medli",
+    "kind": "game",
+    "source": "The Legend of Zelda: The Wind Waker",
+    "hint": "Young Rito attendant who plays the harp and awakens as the Sage of Earth in Wind Waker",
+    "fact": "An apprentice attendant to the Rito's sky spirit Valoo, she's still learning to fly. In the Earth Temple she carries Link over short gaps and bounces light off her harp to solve puzzles.",
+    "link": "https://zeldawiki.wiki/wiki/Medli",
     "obscurity": 2
   },
   {
@@ -3069,6 +4069,16 @@
     "obscurity": 1
   },
   {
+    "word": "MOCKINGJAY",
+    "name": "Mockingjay",
+    "kind": "literature",
+    "source": "The Hunger Games",
+    "hint": "Songbird on Katniss Everdeen's pin that becomes the symbol of the rebellion",
+    "fact": "The species was an accident: Capitol-made spy birds bred with wild mockingbirds. The offspring can't repeat words, but they can copy human voices and sing back whole songs.",
+    "link": "https://thehungergames.fandom.com/wiki/Mockingjay_(bird)",
+    "obscurity": 1
+  },
+  {
     "word": "MOHUA",
     "name": "Mohua",
     "kind": "bird",
@@ -3096,6 +4106,16 @@
     "obscurity": 2
   },
   {
+    "word": "MOLTRES",
+    "name": "Moltres",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Legendary fire bird of Kanto with flaming wings, waiting in Victory Road in Red & Blue",
+    "fact": "Pokédex entries say its arrival brings early spring to wintry lands, and that it heals wounds by bathing in the molten magma of a volcano.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Moltres_(Pok%C3%A9mon)",
+    "obscurity": 1
+  },
+  {
     "word": "MONAL",
     "name": "Monal",
     "kind": "bird",
@@ -3121,6 +4141,16 @@
     "fact": "The morepork, or ruru, is New Zealand's only surviving native owl. Its name imitates its distinctive two-note call.",
     "wiki": "Morepork",
     "obscurity": 3
+  },
+  {
+    "word": "MOSES",
+    "name": "Moses",
+    "kind": "literature",
+    "source": "Animal Farm",
+    "hint": "Farmer Jones's tame raven in Orwell's fable, full of tales of a paradise in the sky",
+    "fact": "He tells the animals about Sugarcandy Mountain, a happy land above the clouds where they will rest from work. Orwell used the storytelling raven to satirise organised religion.",
+    "wiki": "Animal Farm#Other animals",
+    "obscurity": 2
   },
   {
     "word": "MOTMOT",
@@ -3159,12 +4189,32 @@
     "obscurity": 3
   },
   {
+    "word": "MUNINN",
+    "name": "Muninn",
+    "kind": "literature",
+    "source": "Norse mythology (Poetic Edda)",
+    "hint": "One of Odin's two ravens; his name is usually translated as 'memory' or 'mind'",
+    "fact": "In the Poetic Edda, Odin frets that his thought-raven may not come back from its daily flight, but says he worries even more about losing this one.",
+    "wiki": "Huginn and Muninn",
+    "obscurity": 2
+  },
+  {
     "word": "MURDER",
     "name": "Murder",
     "kind": "term",
     "hint": "Collective noun for crows",
     "fact": "Calling a group of crows a murder dates back to at least the 15th century, probably inspired by old folklore linking crows with death.",
     "wiki": "Crow",
+    "obscurity": 2
+  },
+  {
+    "word": "MURKROW",
+    "name": "Murkrow",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Dark-type crow from Johto whose crest looks like a witch's pointed hat",
+    "fact": "Tales in the Pokédex say spotting it at night brings bad luck. It hoards anything shiny, and it and Meowth are said to raid each other's stashes.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Murkrow_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -3228,6 +4278,26 @@
     "hint": "Alternative name for the rhea, the large flightless bird of South America",
     "fact": "Male rheas incubate the eggs of several females in a single nest and then raise the chicks on their own.",
     "wiki": "Rhea_(bird)",
+    "obscurity": 3
+  },
+  {
+    "word": "NATU",
+    "name": "Natu",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Tiny green Psychic/Flying bird from Johto that hops because its wings aren't grown",
+    "fact": "It can't fly yet, so it hops everywhere and stares intently at anything that catches its eye. Move even slightly and it bounds away.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Natu_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "NECKY",
+    "name": "Necky",
+    "kind": "game",
+    "source": "Donkey Kong Country",
+    "hint": "Coconut-hurling brown vulture enemy of Donkey Kong Country",
+    "fact": "These big brown vultures pelt the Kongs with coconuts from perches or swoop back and forth across the sky. The boss Master Necky is so huge you only ever see his head.",
+    "link": "https://www.mariowiki.com/Necky",
     "obscurity": 3
   },
   {
@@ -3303,6 +4373,16 @@
     "obscurity": 3
   },
   {
+    "word": "NOCTOWL",
+    "name": "Noctowl",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Large Johto owl Pokémon that turns its head upside down when thinking hard",
+    "fact": "Silent wings and eyes that gather the faintest light make it a near-perfect night hunter. Ash caught a rare shiny one during his Johto journey.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Noctowl_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "NODDY",
     "name": "Noddy",
     "kind": "bird",
@@ -3357,6 +4437,26 @@
     "obscurity": 3
   },
   {
+    "word": "OPUS",
+    "name": "Opus",
+    "kind": "literature",
+    "source": "Bloom County",
+    "hint": "Big-nosed penguin star of Berkeley Breathed's comic strip",
+    "fact": "He hails from the Falkland Islands and is very self-conscious about his large nose. He was crushed when a friend pointed out that he looks more like a puffin than a penguin.",
+    "wiki": "Opus the Penguin",
+    "obscurity": 2
+  },
+  {
+    "word": "ORICORIO",
+    "name": "Oricorio",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Alolan dancing bird that changes style and type by sipping different nectars",
+    "fact": "It has four styles (Baile, Pom-Pom, Pa'u and Sensu), each found on a different Alolan island, and its design seems inspired by Hawaiian honeycreepers.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Oricorio_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "ORIOLE",
     "name": "Oriole",
     "kind": "bird",
@@ -3393,6 +4493,16 @@
     "obscurity": 3
   },
   {
+    "word": "ORVILLE",
+    "name": "Orville",
+    "kind": "game",
+    "source": "Animal Crossing: New Horizons",
+    "hint": "Dodo who staffs the airport check-in desk in Animal Crossing: New Horizons",
+    "fact": "He works the Dodo Airlines desk while his partner Wilbur flies the seaplane. The pair's names likely nod to the Wright brothers, which is extra funny since dodos can't fly.",
+    "link": "https://nookipedia.com/wiki/Orville",
+    "obscurity": 2
+  },
+  {
     "word": "OSPREY",
     "name": "Osprey",
     "kind": "bird",
@@ -3418,6 +4528,16 @@
     "fact": "Ostriches lay the largest eggs of any living bird and can sprint at about 70 km/h (43 mph); they don't really bury their heads in sand.",
     "wiki": "Ostrich",
     "obscurity": 1
+  },
+  {
+    "word": "OTUS",
+    "name": "Otus",
+    "kind": "game",
+    "source": "Owlboy",
+    "hint": "Mute young owl hero of a 2016 pixel-art platformer who carries friends through the air",
+    "fact": "He comes from the floating village of Vellie, where he's mocked as an unworthy heir to the owls' legacy. His game took its small studio about nine years to finish, from 2007 to 2016.",
+    "wiki": "Owlboy",
+    "obscurity": 3
   },
   {
     "word": "OUZEL",
@@ -3627,6 +4747,16 @@
     "obscurity": 1
   },
   {
+    "word": "PELIPPER",
+    "name": "Pelipper",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Big-billed pelican Pokémon from Hoenn that ferries small Pokémon and eggs",
+    "fact": "It works as a flying delivery service, carrying cargo in its bill. Gaining the Drizzle ability in Sun & Moon made it a staple of competitive rain teams.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Pelipper_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "PELLET",
     "name": "Pellet",
     "kind": "term",
@@ -3636,6 +4766,16 @@
     "obscurity": 2
   },
   {
+    "word": "PENGO",
+    "name": "Pengo",
+    "kind": "game",
+    "source": "Pengo",
+    "hint": "Red penguin who slides ice blocks to squash Sno-Bees in a 1982 Sega arcade game",
+    "fact": "The first version of his arcade game played a chiptune take on the 1969 synth tune 'Popcorn'. Lining up the three diamond blocks earns a bonus of up to 10,000 points.",
+    "wiki": "Pengo (video game)",
+    "obscurity": 3
+  },
+  {
     "word": "PENGUIN",
     "name": "Penguin",
     "kind": "bird",
@@ -3643,6 +4783,16 @@
     "fact": "Emperor penguins can dive deeper than 500 m (1,600 ft) and stay underwater for more than 20 minutes.",
     "wiki": "Penguin",
     "obscurity": 1
+  },
+  {
+    "word": "PENTA",
+    "name": "Penta",
+    "kind": "game",
+    "source": "Antarctic Adventure",
+    "hint": "Konami's 1980s penguin mascot who races between Antarctic research stations",
+    "fact": "He debuted in Antarctic Adventure (1983). He and his son Pentarou went on to appear in more than ten Konami games, including the cheerfully silly Parodius shooters.",
+    "wiki": "Antarctic Adventure",
+    "obscurity": 3
   },
   {
     "word": "PERCH",
@@ -3663,6 +4813,16 @@
     "obscurity": 1
   },
   {
+    "word": "PERTELOTE",
+    "name": "Pertelote",
+    "kind": "literature",
+    "source": "The Canterbury Tales",
+    "hint": "Chaucer's no-nonsense hen, favourite wife of a vain rooster",
+    "fact": "Top hen among her rooster's seven wives, she insists his nightmare about a fox is only indigestion and prescribes a course of herbal remedies.",
+    "wiki": "The Nun's Priest's Tale",
+    "obscurity": 3
+  },
+  {
     "word": "PETREL",
     "name": "Petrel",
     "kind": "bird",
@@ -3670,6 +4830,16 @@
     "fact": "The name is thought to honour Saint Peter, who walked on water, because some species patter their feet on the sea while feeding.",
     "wiki": "Procellariiformes",
     "obscurity": 2
+  },
+  {
+    "word": "PETUNIA",
+    "name": "Petunia",
+    "kind": "literature",
+    "source": "Petunia (Roger Duvoisin)",
+    "hint": "Roger Duvoisin's silly farmyard goose who thinks owning a book makes her wise",
+    "fact": "In her 1950 debut she carries a book under her wing and hands out terrible advice, until a disaster teaches her that wisdom comes from reading a book, not just owning one.",
+    "wiki": "Roger Duvoisin",
+    "obscurity": 3
   },
   {
     "word": "PEWEE",
@@ -3735,6 +4905,56 @@
     "obscurity": 3
   },
   {
+    "word": "PIDGEOT",
+    "name": "Pidgeot",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Final form of Kanto's first bird line, with a long red-and-yellow head crest",
+    "fact": "Pokédex entries claim it can fly at Mach 2. It later gained a Mega Evolution in Omega Ruby and Alpha Sapphire with a much longer crest.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Pidgeot_(Pok%C3%A9mon)",
+    "obscurity": 1
+  },
+  {
+    "word": "PIDGEOTTO",
+    "name": "Pidgeotto",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Middle stage of Kanto's common bird line; Ash caught one in the anime's third episode",
+    "fact": "Ash's Pidgeotto evolved into Pidgeot while defending a flock of wild Pidgey and Pidgeotto from a Fearow and its Spearow gang, and Ash released it to protect them.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Pidgeotto_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "PIDGEY",
+    "name": "Pidgey",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Tiny brown Normal/Flying bird found on Kanto's very first routes",
+    "fact": "Pokédex entries say it has an unerring sense of direction and can always find its way back to its nest, however far away it has been taken.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Pidgey_(Pok%C3%A9mon)",
+    "obscurity": 1
+  },
+  {
+    "word": "PIDGIT",
+    "name": "Pidgit",
+    "kind": "game",
+    "source": "Super Mario Bros. 2",
+    "hint": "Crow enemy that swoops around on a flying magic carpet in Super Mario Bros. 2",
+    "fact": "Said to bring bad dreams, these crows can't fly on their own, so Wart gave them magic carpets. Toss one off and you can ride its carpet yourself for a short distance.",
+    "link": "https://www.mariowiki.com/Pidgit",
+    "obscurity": 3
+  },
+  {
+    "word": "PIDOVE",
+    "name": "Pidove",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Small grey pigeon Pokémon from Unova that flocks in city parks",
+    "fact": "Its design adds a heart motif because the Japanese words for pigeon, hato, and heart, hāto, sound alike. It is forgetful but famously friendly.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Pidove_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "PIGEON",
     "name": "Pigeon",
     "kind": "bird",
@@ -3742,6 +4962,16 @@
     "fact": "Homing pigeons can find their way home from hundreds of kilometres away, and messenger birds carried vital notes in both World Wars.",
     "wiki": "Columbidae",
     "obscurity": 1
+  },
+  {
+    "word": "PIGWIDGEON",
+    "name": "Pigwidgeon",
+    "kind": "literature",
+    "source": "Harry Potter",
+    "hint": "Ron's tiny, over-excited owl, a gift from Sirius Black",
+    "fact": "Ginny chose his grand name, but Ron just calls him Pig. Sirius sent him to replace Scabbers, the pet rat who turned out to be Peter Pettigrew in disguise.",
+    "wiki": "List of fictional birds of prey#Pigwidgeon",
+    "obscurity": 2
   },
   {
     "word": "PIHA",
@@ -3753,6 +4983,16 @@
     "obscurity": 3
   },
   {
+    "word": "PIKIPEK",
+    "name": "Pikipek",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Small Normal/Flying woodpecker Pokémon found early in Alola",
+    "fact": "It can peck a tree 16 times a second, drilling holes for storing food and nesting. It fires berry seeds from its mouth as ammunition.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Pikipek_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "PINFEATHER",
     "name": "Pinfeather",
     "kind": "term",
@@ -3760,6 +5000,16 @@
     "fact": "Growing pinfeathers carry a blood supply, so they are also called blood feathers; later, preening strips off the waxy sheath and the feather unfurls.",
     "wiki": "Pin_feather",
     "obscurity": 3
+  },
+  {
+    "word": "PING",
+    "name": "Ping",
+    "kind": "literature",
+    "source": "The Story About Ping",
+    "hint": "Little duck who lives on a boat on China's Yangtze River in a 1933 picture book",
+    "fact": "Rather than take the swat on the back given to the last duck aboard, he hides and gets lost. Thanks to the 'ping' network command, the book became an in-joke among Unix programmers.",
+    "wiki": "The Story About Ping",
+    "obscurity": 2
   },
   {
     "word": "PINION",
@@ -3787,6 +5037,16 @@
     "fact": "Meadow pipits are among the cuckoo's most frequent hosts in Britain, often raising a chick far bigger than themselves.",
     "wiki": "Pipit",
     "obscurity": 2
+  },
+  {
+    "word": "PIPLUP",
+    "name": "Piplup",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Proud little blue penguin, the Water starter of Sinnoh in Diamond & Pearl",
+    "fact": "It is too proud to accept food from people and often trips over its own feet, but it can stay underwater for over 10 minutes while hunting.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Piplup_(Pok%C3%A9mon)",
+    "obscurity": 1
   },
   {
     "word": "PISHING",
@@ -3825,6 +5085,16 @@
     "obscurity": 3
   },
   {
+    "word": "PLOP",
+    "name": "Plop",
+    "kind": "literature",
+    "source": "The Owl Who Was Afraid of the Dark",
+    "hint": "Baby barn owl in Jill Tomlinson's classic who is scared of the night",
+    "fact": "Over seven nights he learns that the dark is exciting, kind, fun, necessary, fascinating, wonderful and beautiful. In 2022 Catherine, then Duchess of Cambridge, read his story on CBeebies.",
+    "wiki": "The Owl Who Was Afraid of the Dark",
+    "obscurity": 3
+  },
+  {
     "word": "PLOVER",
     "name": "Plover",
     "kind": "bird",
@@ -3859,6 +5129,26 @@
     "fact": "The common pochard was reclassified as Vulnerable by the IUCN in 2015 after steep declines across much of its range.",
     "wiki": "Pochard",
     "obscurity": 3
+  },
+  {
+    "word": "POLL",
+    "name": "Poll",
+    "kind": "literature",
+    "source": "Robinson Crusoe",
+    "hint": "Robinson Crusoe's talking parrot and companion on his desert island",
+    "fact": "Crusoe taught the parrot to speak, then got the fright of his life when he woke to a voice calling 'Poor Robin Crusoe!' It was only the bird repeating his lessons.",
+    "wiki": "Robinson Crusoe",
+    "obscurity": 3
+  },
+  {
+    "word": "POLYNESIA",
+    "name": "Polynesia",
+    "kind": "literature",
+    "source": "The Story of Doctor Dolittle",
+    "hint": "Doctor Dolittle's clever parrot, who teaches him to talk to animals",
+    "fact": "She can never remember exactly how old she is, but claims she saw King Charles II hiding in an oak tree from his enemies, which would make her well over 150.",
+    "wiki": "List of Doctor Dolittle characters#Polynesia",
+    "obscurity": 2
   },
   {
     "word": "POORWILL",
@@ -3924,6 +5214,16 @@
     "obscurity": 1
   },
   {
+    "word": "PRINPLUP",
+    "name": "Prinplup",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Middle stage of Sinnoh's penguin starter line; a solitary, self-important swimmer",
+    "fact": "Every one of them believes it is the most important, so they can never form a group. A blow from its wings can snap thick trees.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Prinplup_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "PRION",
     "name": "Prion",
     "kind": "bird",
@@ -3931,6 +5231,16 @@
     "fact": "Prions are also called whalebirds: some strain tiny crustaceans through fringed bills, rather like baleen whales. Their name comes from the Greek for 'saw'.",
     "wiki": "Prion_(bird)",
     "obscurity": 3
+  },
+  {
+    "word": "PSYDUCK",
+    "name": "Psyduck",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Yellow duck Pokémon forever clutching its aching head; Misty's accidental catch",
+    "fact": "It suffers from constant headaches, and when the pain peaks it unleashes psychic powers that it cannot remember using afterwards.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Psyduck_(Pok%C3%A9mon)",
+    "obscurity": 1
   },
   {
     "word": "PTARMIGAN",
@@ -4023,6 +5333,36 @@
     "obscurity": 1
   },
   {
+    "word": "QUAQUAVAL",
+    "name": "Quaquaval",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Water/Fighting dancer bird, final form of Paldea's duck starter",
+    "fact": "One kick can send a truck rolling. Its mesmerising dances evoke far-off lands, and flourishes of its decorative water feathers can slice foes.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Quaquaval_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "QUAXLY",
+    "name": "Quaxly",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Duckling Water starter of Paldea with a slicked-back hairdo",
+    "fact": "A gel secreted by its feathers repels water and grime. It likes to keep things tidy and tends to overthink everything.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Quaxly_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "QUAXWELL",
+    "name": "Quaxwell",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Middle stage of Paldea's duck starter line that practises dance kicks",
+    "fact": "It trains its legs by running through shallow water and copies moves from people and Pokémon of other regions for its dance routines.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Quaxwell_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "QUELEA",
     "name": "Quelea",
     "kind": "bird",
@@ -4050,6 +5390,16 @@
     "obscurity": 1
   },
   {
+    "word": "QUOTH",
+    "name": "Quoth",
+    "kind": "literature",
+    "source": "Discworld",
+    "hint": "Discworld talking raven who acts as the Death of Rats' steed and translator",
+    "fact": "A wizard named him as a joke about Poe's 'The Raven', so he stubbornly refuses ever to say 'Nevermore'. He is always hoping that olives and walnuts might be eyeballs.",
+    "wiki": "Death (Discworld)#Quoth",
+    "obscurity": 3
+  },
+  {
     "word": "RAFT",
     "name": "Raft",
     "kind": "term",
@@ -4066,6 +5416,16 @@
     "fact": "Rails often colonise remote islands and lose the power of flight. The Inaccessible Island rail of the South Atlantic is the smallest living flightless bird.",
     "wiki": "Rail_(bird)",
     "obscurity": 2
+  },
+  {
+    "word": "RAMIA",
+    "name": "Ramia",
+    "kind": "game",
+    "source": "Dragon Quest III",
+    "hint": "Legendary phoenix of Dragon Quest III, hatched from an egg once six orbs are gathered",
+    "fact": "Gather all six orbs and this great bird hatches from her egg, becoming the series' first flying transport and carrying the heroes to Archfiend Baramos's castle.",
+    "link": "https://dragon-quest.org/wiki/Ramia",
+    "obscurity": 3
   },
   {
     "word": "RAPTOR",
@@ -4176,6 +5536,16 @@
     "obscurity": 3
   },
   {
+    "word": "REVALI",
+    "name": "Revali",
+    "kind": "game",
+    "source": "The Legend of Zelda: Breath of the Wild",
+    "hint": "Arrogant Rito Champion who piloted Divine Beast Vah Medoh a century before Breath of the Wild",
+    "fact": "The first Rito designed for Breath of the Wild, he could have been a swallow or woodpecker before the team chose a bird of prey. Free his spirit and he grants Link his updraft, Revali's Gale.",
+    "wiki": "List of The Legend of Zelda: Breath of the Wild and Tears of the Kingdom characters#Revali",
+    "obscurity": 2
+  },
+  {
     "word": "RHEA",
     "name": "Rhea",
     "kind": "bird",
@@ -4210,6 +5580,26 @@
     "fact": "Bird ringing, or banding, reveals lifespans: a Laysan albatross named Wisdom, first ringed in 1956, was still breeding in her 70s.",
     "wiki": "Bird_ringing",
     "obscurity": 2
+  },
+  {
+    "word": "RITO",
+    "name": "Rito",
+    "kind": "game",
+    "source": "The Legend of Zelda",
+    "hint": "Winged bird-folk race of Zelda that includes Revali, Medli and Kass",
+    "fact": "Their name likely flips 'tori', Japanese for bird. In The Wind Waker they're an evolved form of the Zora, and young Rito only grow wings after receiving a scale from the sky spirit Valoo.",
+    "link": "https://zeldawiki.wiki/wiki/Rito",
+    "obscurity": 2
+  },
+  {
+    "word": "ROAC",
+    "name": "Roäc",
+    "kind": "literature",
+    "source": "The Hobbit",
+    "hint": "Aged chief raven of Ravenhill who brings Thorin news in The Hobbit",
+    "fact": "This son of Carc is 153 years old when he brings Thorin word that Smaug is dead. His name is thought to imitate a raven's croak.",
+    "link": "https://tolkiengateway.net/wiki/Ro%C3%A4c",
+    "obscurity": 3
   },
   {
     "word": "ROADRUNNER",
@@ -4266,6 +5656,16 @@
     "obscurity": 2
   },
   {
+    "word": "ROOKIDEE",
+    "name": "Rookidee",
+    "kind": "pokemon",
+    "source": "Pokémon Sword & Shield",
+    "hint": "Tiny blue Flying-type bird met early in Galar; evolves toward the region's taxi raven",
+    "fact": "It fearlessly challenges any opponent, and even a defeat makes it a little stronger. Its look borrows from small songbirds such as the blue tit.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Rookidee_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "ROOST",
     "name": "Roost",
     "kind": "term",
@@ -4302,12 +5702,42 @@
     "obscurity": 2
   },
   {
+    "word": "ROSIE",
+    "name": "Rosie",
+    "kind": "literature",
+    "source": "Rosie's Walk",
+    "hint": "Pat Hutchins's hen who strolls round the farmyard, unaware of a fox behind her",
+    "fact": "The whole 1968 picture book is a single 32-word sentence, and the text never mentions the fox at all: the joke is told entirely by the pictures.",
+    "wiki": "Pat Hutchins",
+    "obscurity": 3
+  },
+  {
+    "word": "ROWLET",
+    "name": "Rowlet",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Round owl Grass/Flying starter from Alola with a leafy bow tie",
+    "fact": "It soaks up sunlight by day and hunts silently at night. It loves snug, dark spots and may use its Trainer's pocket or bag as a nest.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Rowlet_(Pok%C3%A9mon)",
+    "obscurity": 1
+  },
+  {
     "word": "RUFF",
     "name": "Ruff",
     "kind": "bird",
     "hint": "Sandpiper whose breeding males grow a showy feather collar; females are reeves",
     "fact": "Male ruffs come in three types: territorial 'independents', satellite males, and rare 'faeders' that look like females and sneak matings at the lek.",
     "wiki": "Ruff_(bird)",
+    "obscurity": 2
+  },
+  {
+    "word": "RUFFLET",
+    "name": "Rufflet",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Fluffy-headed eaglet Pokémon from Unova that fearlessly picks fights",
+    "fact": "It is based on a bald eagle chick, fitting Unova's American inspiration. It challenges any foe and grows stronger every time it gets beaten.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Rufflet_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -4482,6 +5912,16 @@
     "obscurity": 3
   },
   {
+    "word": "SENU",
+    "name": "Senu",
+    "kind": "game",
+    "source": "Assassin's Creed Origins",
+    "hint": "Bayek's scouting eagle companion in the Assassin's Creed set in ancient Egypt",
+    "fact": "She's a Bonelli's eagle. Bayek looks through her eyes to scout forts and mark targets, turning the series' famous Eagle Vision into something literal.",
+    "link": "https://assassinscreed.fandom.com/wiki/Senu",
+    "obscurity": 2
+  },
+  {
     "word": "SERIEMA",
     "name": "Seriema",
     "kind": "bird",
@@ -4608,6 +6048,16 @@
     "obscurity": 3
   },
   {
+    "word": "SIGILYPH",
+    "name": "Sigilyph",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Psychic/Flying Unova Pokémon shaped like an ancient glyph, guarding desert ruins",
+    "fact": "Its design draws on the bird figures of Peru's Nazca Lines. It never changes its flight route, clinging to memories of guarding an ancient city now buried in the desert.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Sigilyph_(Pok%C3%A9mon)",
+    "obscurity": 3
+  },
+  {
     "word": "SILVEREYE",
     "name": "Silvereye",
     "kind": "bird",
@@ -4615,6 +6065,26 @@
     "fact": "The silvereye arrived in New Zealand in large numbers in 1856, probably blown across from Australia. Its Maori name, tauhou, means 'stranger'.",
     "wiki": "Silvereye",
     "obscurity": 3
+  },
+  {
+    "word": "SIMURGH",
+    "name": "Simurgh",
+    "kind": "literature",
+    "source": "The Conference of the Birds",
+    "hint": "Legendary Persian king of birds whom the hoopoe leads the world's birds to find",
+    "fact": "In Attar's 12th-century poem only thirty birds survive the journey, and they discover they themselves are what they sought: in Persian, 'si morgh' means 'thirty birds'.",
+    "wiki": "Simurgh",
+    "obscurity": 3
+  },
+  {
+    "word": "SIRFETCHD",
+    "name": "Sirfetch'd",
+    "kind": "pokemon",
+    "source": "Pokémon Sword & Shield",
+    "hint": "Knightly Fighting-type duck with a leek lance and leaf shield, from Galar",
+    "fact": "Galarian Farfetch'd evolves into it after landing three critical hits in one battle. When its leek withers, it retires from combat.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Sirfetch%27d_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "SISKIN",
@@ -4633,6 +6103,16 @@
     "fact": "Sittellas look and behave like nuthatches but belong to their own Australasian family, Neosittidae, an example of convergent evolution.",
     "wiki": "Sittella",
     "obscurity": 3
+  },
+  {
+    "word": "SKARMORY",
+    "name": "Skarmory",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Steel-armoured bird Pokémon from Johto with razor-edged wings",
+    "fact": "Its heavy-looking steel body is light enough to fly at over 180 mph. People once made swords from the sharp feathers it sheds.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Skarmory_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "SKEIN",
@@ -4716,6 +6196,16 @@
     "obscurity": 3
   },
   {
+    "word": "SNUGGLY",
+    "name": "Snuggly the Crow",
+    "kind": "game",
+    "source": "Dark Souls",
+    "hint": "Talking crow in Dark Souls who swaps items left in her nest",
+    "fact": "Drop an item in her Northern Undead Asylum nest, reload, and a gift may await, if she likes it: she asks for things soft and warm. Her name comes from fans and guidebooks; the game never says it.",
+    "link": "https://darksouls.fandom.com/wiki/Snuggly_the_Crow",
+    "obscurity": 3
+  },
+  {
     "word": "SOAR",
     "name": "Soar",
     "kind": "term",
@@ -4743,6 +6233,16 @@
     "obscurity": 3
   },
   {
+    "word": "SOREN",
+    "name": "Soren",
+    "kind": "literature",
+    "source": "Guardians of Ga'Hoole",
+    "hint": "Young barn owl hero of Kathryn Lasky's Ga'Hoole book series",
+    "fact": "As an owlet he is snatched by the sinister St. Aegolius Academy for Orphaned Owls and escapes with an elf owl named Gylfie. Zack Snyder directed the 2010 film version.",
+    "wiki": "Guardians of Ga'Hoole",
+    "obscurity": 2
+  },
+  {
     "word": "SPARROW",
     "name": "Sparrow",
     "kind": "bird",
@@ -4758,6 +6258,16 @@
     "hint": "Small Eurasian woodland raptor that ambushes songbirds; females are far bigger than males",
     "fact": "The female Eurasian sparrowhawk is up to 25% larger than the male, one of the greatest size differences between the sexes in any bird species.",
     "wiki": "Eurasian_sparrowhawk",
+    "obscurity": 2
+  },
+  {
+    "word": "SPEAROW",
+    "name": "Spearow",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Small, cranky Kanto bird with stubby wings; an angry flock chased Ash in the first anime episode",
+    "fact": "Its loud cry can be heard over half a mile away. The very Spearow Ash hit with a rock in the anime's first episode later returned as a Fearow, still leading its angry flock.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Spearow_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -4833,6 +6343,36 @@
     "obscurity": 1
   },
   {
+    "word": "SQUAWKS",
+    "name": "Squawks",
+    "kind": "game",
+    "source": "Donkey Kong Country",
+    "hint": "Green parrot Animal Friend who lights dark caves and carries the Kongs",
+    "fact": "He debuted in Donkey Kong Country (1994), carrying a lantern through the dark level Torchlight Trouble. In the sequel he spits eggs and flies Diddy and Dixie over hazards.",
+    "wiki": "List of Donkey Kong characters#Animal Friends",
+    "obscurity": 2
+  },
+  {
+    "word": "STARAPTOR",
+    "name": "Staraptor",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Fierce bird of prey with a drooping crest; final form of Sinnoh's starling line",
+    "fact": "When it evolves it leaves its flock to live alone. It fusses over the shape of its crest and keeps attacking even when it is hurt.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Staraptor_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "STARAVIA",
+    "name": "Staravia",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Middle stage of Sinnoh's starling line; lives in huge, quarrelsome flocks",
+    "fact": "It always lives in a flock and cries noisily when left alone. Its design is based on a starling, with features borrowed from the crested northern lapwing.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Staravia_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "STARLING",
     "name": "Starling",
     "kind": "bird",
@@ -4840,6 +6380,26 @@
     "fact": "North America's many millions of common starlings descend from about 100 birds released in New York's Central Park in 1890 and 1891.",
     "wiki": "Common_starling",
     "obscurity": 1
+  },
+  {
+    "word": "STARLY",
+    "name": "Starly",
+    "kind": "pokemon",
+    "source": "Pokémon Diamond & Pearl",
+    "hint": "Tiny starling Pokémon from Sinnoh that travels in huge, noisy flocks",
+    "fact": "Weak on their own, they band together in big flocks but start bickering if the group grows too large. A strike from its small wings stings for a week.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Starly_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "STELLA",
+    "name": "Stella",
+    "kind": "game",
+    "source": "Angry Birds",
+    "hint": "Pink Angry Birds bird who traps things in bubbles",
+    "fact": "Originally called the Pink Bird, she debuted in the 2012 'Back to School' episode of Angry Birds Seasons, then led her own spin-off game and animated series in 2014.",
+    "link": "https://angrybirds.fandom.com/wiki/Stella",
+    "obscurity": 2
   },
   {
     "word": "STILT",
@@ -4896,6 +6456,26 @@
     "obscurity": 1
   },
   {
+    "word": "STORM",
+    "name": "Storm the Albatross",
+    "kind": "game",
+    "source": "Sonic Riders",
+    "hint": "Burly albatross muscle of Jet the Hawk's thief gang in Sonic Riders",
+    "fact": "He's the powerhouse of the Babylon Rogues, a gang of bird thieves introduced in Sonic Riders (2006), and fiercely loyal to their leader, Jet the Hawk.",
+    "wiki": "List of Sonic the Hedgehog characters#Storm the Albatross",
+    "obscurity": 3
+  },
+  {
+    "word": "STORMBIRD",
+    "name": "Stormbird",
+    "kind": "game",
+    "source": "Horizon Zero Dawn",
+    "hint": "Huge lightning-charged machine bird that dive-bombs Aloy in Horizon Zero Dawn",
+    "fact": "The AI GAIA first designed them as terraforming machines to help restore Earth's atmosphere. By Aloy's time they've been turned into aggressive combat machines that hurl lightning.",
+    "link": "https://horizon.fandom.com/wiki/Stormbird",
+    "obscurity": 3
+  },
+  {
     "word": "SUGARBIRD",
     "name": "Sugarbird",
     "kind": "bird",
@@ -4950,6 +6530,16 @@
     "obscurity": 3
   },
   {
+    "word": "SWABLU",
+    "name": "Swablu",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Small blue Normal/Flying Hoenn bird with fluffy wings like cotton clouds",
+    "fact": "It has no fear of people and likes to settle on their heads like a fluffy cotton hat. It is also obsessed with keeping itself spotless.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Swablu_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "SWALLOW",
     "name": "Swallow",
     "kind": "bird",
@@ -4975,6 +6565,26 @@
     "fact": "In Britain the Crown can claim unmarked mute swans on open water, and each summer the 'Swan Upping' ceremony counts the swans on the River Thames.",
     "wiki": "Swan",
     "obscurity": 1
+  },
+  {
+    "word": "SWANNA",
+    "name": "Swanna",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Elegant white swan Pokémon from Unova; evolves from a blue duckling",
+    "fact": "Flocks begin to dance at dusk, with the leader in the centre. Its design takes cues from the mute swan and the ballet Swan Lake.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Swanna_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "SWELLOW",
+    "name": "Swellow",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Sleek Hoenn swallow Pokémon with long forked tail feathers; evolves from Taillow",
+    "fact": "Pairs carefully groom each other's glossy wings. When its two long tail feathers stand straight up, it is a sign the bird is in good health.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Swellow_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "SWIFT",
@@ -5004,6 +6614,16 @@
     "obscurity": 1
   },
   {
+    "word": "SYNIN",
+    "name": "Sýnin",
+    "kind": "game",
+    "source": "Assassin's Creed Valhalla",
+    "hint": "Eivor's raven companion in the Viking-era Assassin's Creed",
+    "fact": "Her name is Old Norse for 'insight', from sýn, meaning sight. Picking a raven over the series' usual eagle nods to Odin, whose ravens Huginn and Muninn flew the world to bring him news.",
+    "link": "https://assassinscreed.fandom.com/wiki/S%C3%BDnin",
+    "obscurity": 3
+  },
+  {
     "word": "SYRINX",
     "name": "Syrinx",
     "kind": "term",
@@ -5011,6 +6631,26 @@
     "fact": "Because the syrinx sits where the windpipe divides, some songbirds can control each side separately and sing two different notes at once.",
     "wiki": "Syrinx_(bird_anatomy)",
     "obscurity": 3
+  },
+  {
+    "word": "TACKY",
+    "name": "Tacky",
+    "kind": "literature",
+    "source": "Tacky the Penguin",
+    "hint": "Loud, Hawaiian-shirted odd bird among neat penguins in Helen Lester's picture books",
+    "fact": "His tidy companions are named Goodly, Lovely, Angel, Neatly and Perfect. His noisy weirdness ends up scaring off a gang of hunters and saving them all.",
+    "wiki": "Helen Lester#Tacky the Penguin",
+    "obscurity": 3
+  },
+  {
+    "word": "TAILLOW",
+    "name": "Taillow",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Tiny, gutsy swallow Pokémon found on Hoenn's early routes",
+    "fact": "Despite its size it bravely takes on much bigger foes, even Skarmory. It hates the cold and migrates to warmer lands, flying over 180 miles a day.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Taillow_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "TAILORBIRD",
@@ -5040,6 +6680,16 @@
     "obscurity": 1
   },
   {
+    "word": "TALONFLAME",
+    "name": "Talonflame",
+    "kind": "pokemon",
+    "source": "Pokémon X & Y",
+    "hint": "Blazing Fire/Flying falcon from Kalos; final form of the tiny robin line",
+    "fact": "It dives at close to 310 mph. In X and Y its Gale Wings ability gave all its Flying-type moves priority, making it a feared competitive pick.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Talonflame_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "TANAGER",
     "name": "Tanager",
     "kind": "bird",
@@ -5058,6 +6708,16 @@
     "obscurity": 3
   },
   {
+    "word": "TAPUKOKO",
+    "name": "Tapu Koko",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Electric/Fairy guardian deity of Melemele Island whose shell forms a rooster-like mask",
+    "fact": "This curious, quick-tempered guardian sometimes appears before people. Its closed shell looks like a stylised rooster, and it stores lightning from thunderclouds.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Tapu_Koko_(Pok%C3%A9mon)",
+    "obscurity": 3
+  },
+  {
     "word": "TEAL",
     "name": "Teal",
     "kind": "bird",
@@ -5065,6 +6725,26 @@
     "fact": "The colour teal is named after the blue-green stripe on this little duck's head. Outside the breeding season teal are very sociable and gather in large flocks.",
     "wiki": "Eurasian_teal",
     "obscurity": 2
+  },
+  {
+    "word": "TEBA",
+    "name": "Teba",
+    "kind": "game",
+    "source": "The Legend of Zelda: Breath of the Wild",
+    "hint": "Rito Village's top warrior-archer who helps Link storm Divine Beast Vah Medoh",
+    "fact": "Rito Village's most skilled warrior idolizes Revali and flies with Link to take down Vah Medoh. By Tears of the Kingdom he has become leader of the Rito.",
+    "wiki": "List of The Legend of Zelda: Breath of the Wild and Tears of the Kingdom characters#Teba",
+    "obscurity": 2
+  },
+  {
+    "word": "TERENCE",
+    "name": "Terence",
+    "kind": "game",
+    "source": "Angry Birds",
+    "hint": "Huge, near-silent red Angry Birds heavyweight whose sheer bulk flattens pig forts",
+    "fact": "Originally called the Big Brother, he barely says a word, but his bulk smashes almost anything. In The Angry Birds Movie his grunts and growls came from Oscar winner Sean Penn.",
+    "link": "https://angrybirds.fandom.com/wiki/Terence",
+    "obscurity": 3
   },
   {
     "word": "TERN",
@@ -5094,6 +6774,16 @@
     "obscurity": 3
   },
   {
+    "word": "THORONDOR",
+    "name": "Thorondor",
+    "kind": "literature",
+    "source": "The Silmarillion",
+    "hint": "Tolkien's First Age King of Eagles, said to be the greatest of all birds",
+    "fact": "Tolkien gives him a wingspan of 30 fathoms, about 55 metres. After the Elven king Fingolfin fell, this eagle swooped on Morgoth and scarred the Dark Lord's face.",
+    "wiki": "Eagles in Middle-earth#First Age",
+    "obscurity": 3
+  },
+  {
     "word": "THRASHER",
     "name": "Thrasher",
     "kind": "bird",
@@ -5110,6 +6800,16 @@
     "fact": "The wood thrush can sing two notes at once, using the two sides of its voice box (syrinx) independently to make its flute-like song.",
     "wiki": "Thrush_(bird)",
     "obscurity": 1
+  },
+  {
+    "word": "TIBARN",
+    "name": "Tibarn",
+    "kind": "game",
+    "source": "Fire Emblem: Path of Radiance",
+    "hint": "Hawk King of Phoenicis among the bird laguz of Fire Emblem's Tellius games",
+    "fact": "After the herons of Serenes were massacred, his hawks turned pirate and raided only Begnion's ships. Fire Emblem Heroes dubs him the 'Shipless Pirate', fitting for a raider who needs no boat.",
+    "link": "https://fireemblemwiki.org/wiki/Tibarn",
+    "obscurity": 3
   },
   {
     "word": "TIERCEL",
@@ -5166,6 +6866,16 @@
     "obscurity": 3
   },
   {
+    "word": "TORCHIC",
+    "name": "Torchic",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "Orange chick-shaped Fire starter from Hoenn in Ruby & Sapphire",
+    "fact": "A flame burns in a sac inside its belly, so hugging it feels like holding a hot-water bottle. Its bright colour was inspired by dyed chicks sold at festivals.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Torchic_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "TOUCAN",
     "name": "Toucan",
     "kind": "bird",
@@ -5184,6 +6894,16 @@
     "obscurity": 3
   },
   {
+    "word": "TOUCANNON",
+    "name": "Toucannon",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Big Alolan bird Pokémon with a huge striped bill that heats up and fires seeds",
+    "fact": "Its beak can heat past 212°F in battle. Couples are famously devoted, so it is brought to weddings as a good-luck charm.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Toucannon_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "TOWHEE",
     "name": "Towhee",
     "kind": "bird",
@@ -5200,6 +6920,16 @@
     "fact": "Male tragopans display by inflating a brightly colored throat lappet and raising fleshy horns. Unusually for their family, they nest in trees.",
     "wiki": "Tragopan",
     "obscurity": 3
+  },
+  {
+    "word": "TRANQUILL",
+    "name": "Tranquill",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Middle stage of Unova's pigeon line that can always find its way home",
+    "fact": "Like a homing pigeon, it can return to its nest and its Trainer from anywhere. Many believe a peaceful place free of war lies deep in the forest it calls home.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Tranquill_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "TREECREEPER",
@@ -5256,6 +6986,16 @@
     "obscurity": 2
   },
   {
+    "word": "TRUMBEAK",
+    "name": "Trumbeak",
+    "kind": "pokemon",
+    "source": "Pokémon Sun & Moon",
+    "hint": "Middle stage of Alola's woodpecker line, with a long bill shaped like a brass bugle",
+    "fact": "By bending the tip of its beak it can make over a hundred different calls. It stores berry seeds in its beak and fires them in a burst.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Trumbeak_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "TRUMPETER",
     "name": "Trumpeter",
     "kind": "bird",
@@ -5263,6 +7003,16 @@
     "fact": "Trumpeters are hunched, long-legged birds of Amazon forests that live in groups. They feed largely on fallen fruit, especially fruit knocked down by monkeys.",
     "wiki": "Psophia",
     "obscurity": 3
+  },
+  {
+    "word": "TULIN",
+    "name": "Tulin",
+    "kind": "game",
+    "source": "The Legend of Zelda: Tears of the Kingdom",
+    "hint": "Teba's young son, who becomes the Sage of Wind alongside Link in Tears of the Kingdom",
+    "fact": "As Sage of Wind he blasts gusts that shoot a gliding Link forward. After he helps save Rito Village, his father hands him the treasured Great Eagle Bow.",
+    "wiki": "List of The Legend of Zelda: Breath of the Wild and Tears of the Kingdom characters#Tulin",
+    "obscurity": 2
   },
   {
     "word": "TURACO",
@@ -5328,6 +7078,16 @@
     "obscurity": 3
   },
   {
+    "word": "UNFEZANT",
+    "name": "Unfezant",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Pheasant-like final form of Unova's pigeon line; males sport long pink head ribbons",
+    "fact": "It has one of the most striking gender differences of any Pokémon: showy males swing their head plumes at rivals, while plainer females are the stronger fliers.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Unfezant_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
     "word": "UNKINDNESS",
     "name": "Unkindness",
     "kind": "term",
@@ -5379,6 +7139,16 @@
     "hint": "Small olive-green American songbird; the red-eyed species sings tirelessly all day",
     "fact": "One red-eyed vireo was once counted singing over 20,000 songs in a single day, and its nonstop, sermon-like phrases earned it the nickname 'preacher bird'.",
     "wiki": "Vireo",
+    "obscurity": 2
+  },
+  {
+    "word": "VULLABY",
+    "name": "Vullaby",
+    "kind": "pokemon",
+    "source": "Pokémon Black & White",
+    "hint": "Baby vulture Pokémon from Unova that wears a bone like a diaper",
+    "fact": "Its wings are too small for flight, so it hops around protecting its rear with bones handed down by its evolved form.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Vullaby_(Pok%C3%A9mon)",
     "obscurity": 2
   },
   {
@@ -5478,6 +7248,26 @@
     "hint": "Large Australian honeyeater; some species have fleshy flaps hanging from the cheeks",
     "fact": "Wattlebirds are large honeyeaters found only in Australia. Some species have fleshy wattles on their cheeks, and the red wattlebird is common in city gardens.",
     "wiki": "Anthochaera",
+    "obscurity": 3
+  },
+  {
+    "word": "WATTREL",
+    "name": "Wattrel",
+    "kind": "pokemon",
+    "source": "Pokémon Scarlet & Violet",
+    "hint": "Electric/Flying storm petrel Pokémon that nests on Paldea's sea cliffs",
+    "fact": "When wind catches its wings, the bones inside generate electricity. It dives into the sea and stuns its prey with shocks.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Wattrel_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "WAVE",
+    "name": "Wave the Swallow",
+    "kind": "game",
+    "source": "Sonic Riders",
+    "hint": "Swallow mechanic of Jet the Hawk's thief gang in Sonic Riders",
+    "fact": "She tunes the Babylon Rogues' Extreme Gear hoverboards, just as her father did for the gang before her, and her know-how is said to top even Tails and Dr. Eggman.",
+    "wiki": "List of Sonic the Hedgehog characters#Wave the Swallow",
     "obscurity": 3
   },
   {
@@ -5634,6 +7424,16 @@
     "obscurity": 2
   },
   {
+    "word": "WILBUR",
+    "name": "Wilbur",
+    "kind": "game",
+    "source": "Animal Crossing: New Horizons",
+    "hint": "Sunglasses-wearing dodo pilot who flies you between islands in Animal Crossing: New Horizons",
+    "fact": "He and fellow dodo Orville are likely named after the Wright brothers. He talks in the pilots' phonetic alphabet, except that his W is 'whisker'.",
+    "link": "https://nookipedia.com/wiki/Wilbur",
+    "obscurity": 2
+  },
+  {
     "word": "WILLET",
     "name": "Willet",
     "kind": "bird",
@@ -5659,6 +7459,16 @@
     "fact": "A wandering albatross caught in 1965 had a wingspan of 3.63 metres (11 ft 11 in), the official record for any living bird.",
     "wiki": "Wingspan",
     "obscurity": 1
+  },
+  {
+    "word": "WINGULL",
+    "name": "Wingull",
+    "kind": "pokemon",
+    "source": "Pokémon Ruby & Sapphire",
+    "hint": "White Water/Flying seagull Pokémon with long, narrow wings, common on Hoenn's coasts",
+    "fact": "It rarely flaps, instead gliding on updrafts from the sea like a glider. It likes to tuck food and treasures away in hiding spots.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Wingull_(Pok%C3%A9mon)",
+    "obscurity": 2
   },
   {
     "word": "WISHBONE",
@@ -5706,6 +7516,16 @@
     "obscurity": 1
   },
   {
+    "word": "WOODSTOCK",
+    "name": "Woodstock",
+    "kind": "literature",
+    "source": "Peanuts",
+    "hint": "Snoopy's tiny yellow bird best friend in Charles Schulz's comic strip",
+    "fact": "He hung around Snoopy for years before Schulz named him in 1970 after the famous music festival. His speech is drawn as scratchy marks, and he flies very badly, often upside down.",
+    "wiki": "Woodstock (Peanuts)",
+    "obscurity": 1
+  },
+  {
     "word": "WOODSWALLOW",
     "name": "Woodswallow",
     "kind": "bird",
@@ -5749,6 +7569,36 @@
     "fact": "Wrynecks can turn their heads almost 180 degrees. Unlike true woodpeckers they don't dig their own nest holes, and they feed mainly on ants.",
     "wiki": "Wryneck",
     "obscurity": 3
+  },
+  {
+    "word": "XATU",
+    "name": "Xatu",
+    "kind": "pokemon",
+    "source": "Pokémon Gold & Silver",
+    "hint": "Tall green Johto totem bird said to see the past with one eye and the future with the other",
+    "fact": "It can stand motionless staring at the sun all day long. Its design appears to draw on the resplendent quetzal and on Native American totem poles.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Xatu_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "YVELTAL",
+    "name": "Yveltal",
+    "kind": "pokemon",
+    "source": "Pokémon X & Y",
+    "hint": "Red-and-black legendary of destruction shaped like the letter Y; mascot of Pokémon Y",
+    "fact": "When its wings and tail spread and glow red, it drains the life force of living things. At the end of its life it becomes a cocoon.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Yveltal_(Pok%C3%A9mon)",
+    "obscurity": 2
+  },
+  {
+    "word": "ZAPDOS",
+    "name": "Zapdos",
+    "kind": "pokemon",
+    "source": "Pokémon Red & Blue",
+    "hint": "Legendary electric bird of Kanto, found in the Power Plant in Red & Blue",
+    "fact": "It is said to live inside thunderclouds and grow stronger when struck by lightning. Its Galarian form can barely fly, so it dashes across mountains on powerful legs instead.",
+    "link": "https://bulbapedia.bulbagarden.net/wiki/Zapdos_(Pok%C3%A9mon)",
+    "obscurity": 1
   },
   {
     "word": "ZYGODACTYLY",

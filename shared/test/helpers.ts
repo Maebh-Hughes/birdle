@@ -1,4 +1,4 @@
-import type { BirdEntry, GuessRow, LetterState } from '../src/types';
+import type { BirdEntry, BirdKind, GuessRow, LetterState } from '../src/types';
 
 const CODES: Record<string, LetterState> = { G: 'correct', Y: 'present', '.': 'absent' };
 
@@ -28,4 +28,13 @@ export function bird(word: string, overrides: Partial<BirdEntry> = {}): BirdEntr
     obscurity: 1,
     ...overrides,
   };
+}
+
+/**
+ * A valid fictional-bird fixture (Pokémon, video game or literary): it names a
+ * `source` and links a non-Wikipedia page instead of `wiki`. Override any field.
+ */
+export function character(word: string, kind: Extract<BirdKind, 'pokemon' | 'game' | 'literature'>, overrides: Partial<BirdEntry> = {}): BirdEntry {
+  const { wiki: _wiki, ...base } = bird(word, { kind });
+  return { ...base, source: 'Fixture Adventures', link: `https://example.org/wiki/${base.name}`, ...overrides };
 }

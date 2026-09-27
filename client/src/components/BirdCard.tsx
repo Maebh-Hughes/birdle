@@ -1,5 +1,6 @@
-import { winMessage, type GameView } from '@birdle/shared';
+import { KIND_LABELS, winMessage, type GameView, type PracticeCategory } from '@birdle/shared';
 import type { CSSProperties } from 'react';
+import { CategoryPicker } from './CategoryPicker';
 import { NextPuzzle } from './Countdown';
 import { ExternalIcon, FlightIcon, RefreshIcon, ShareIcon, StatsIcon } from './Icons';
 import { Modal } from './Modal';
@@ -11,6 +12,9 @@ interface BirdCardProps {
   onShare: () => void;
   onLearnMore: (url: string) => void;
   onNewBird: () => void;
+  /** Free Flight: the category the next bird comes from, chosen next to "New bird". */
+  category: PracticeCategory;
+  onCategoryChange: (category: PracticeCategory) => void;
   onPlayFreeFlight: () => void;
   onStats: () => void;
   /** Present when today's puzzle has already unlocked (replaces the countdown). */
@@ -18,12 +22,14 @@ interface BirdCardProps {
   onClose: () => void;
 }
 
-/** The end-of-game reveal: the bird, a fun fact, Wikipedia and sharing. */
+/** The end-of-game reveal: the bird, where it's from, a fun fact, a "Learn more" link and sharing. */
 export function BirdCard({
   game,
   onShare,
   onLearnMore,
   onNewBird,
+  category,
+  onCategoryChange,
   onPlayFreeFlight,
   onStats,
   onPlayToday,
@@ -56,19 +62,17 @@ export function BirdCard({
             ))}
           </div>
           <p className="bird-card__name">{answer.name}</p>
-          <p className="bird-card__kind">{answer.kind === 'term' ? 'Bird word' : 'Bird'}</p>
-          <div className="bird-card__fact">
-            <h3 className="bird-card__fact-title">Did you know?</h3>
-            <p>{answer.fact}</p>
-          </div>
+          {answer.source && <p className="bird-card__source">from {answer.source}</p>}
+          <p className="bird-card__kind">{KIND_LABELS[answer.kind] ?? KIND_LABELS.bird}</p>
+          {answer.fact && (
+            <div className="bird-card__fact">
+              <h3 className="bird-card__fact-title">Did you know?</h3>
+              <p>{answer.fact}</p>
+            </div>
+          )}
           <div className="bird-card__actions">
-            <button
-              type="button"
-              className="button button--ghost"
-              onClick={() => onLearnMore(answer.wikiUrl)}
-              aria-label={`Learn more about ${answer.name} on Wikipedia`}
-            >
-              <ExternalIcon /> Learn more
+            <button type="button" className="button button--ghost" onClick={() => onLearnMore(answer.infoUrl)}>
+              <ExternalIcon /> Learn more on {answer.infoSite}
             </button>
             <button type="button" className="button button--primary" onClick={onShare}>
               <ShareIcon /> Share
@@ -85,9 +89,12 @@ export function BirdCard({
 
       <div className="bird-card__next">
         {practice ? (
-          <button type="button" className="button button--gold" onClick={onNewBird}>
-            <RefreshIcon /> New bird
-          </button>
+          <div className="bird-card__new">
+            <CategoryPicker value={category} onChange={onCategoryChange} legend="Next Free Flight bird from" />
+            <button type="button" className="button button--gold" onClick={onNewBird}>
+              <RefreshIcon /> New bird
+            </button>
+          </div>
         ) : (
           <>
             <NextPuzzle onPlayToday={onPlayToday} />

@@ -1,0 +1,38 @@
+# Keeps the Docker build context small and free of secrets. The Dockerfile copies only the package
+# manifests, the sources and the word data it needs; everything below never reaches the builder.
+
+# Secrets and local configuration (.env holds the Discord client secret)
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Dependencies and build output (the image installs and builds its own)
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+**/coverage
+
+# Local database files
+server/data
+
+# Version control, CI and deployment files
+.git
+.gitattributes
+.gitignore
+.github
+Dockerfile
+.dockerignore
+deploy
+
+# Documentation and notes
+docs
+README.md
+
+# Editor, tooling and OS clutter
+.claude
+.vscode
+.idea
+**/*.log
+**/.DS_Store
+**/Thumbs.db

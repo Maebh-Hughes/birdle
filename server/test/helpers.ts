@@ -2,7 +2,7 @@ import { format } from 'node:util';
 import type { Express } from 'express';
 import request from 'supertest';
 import { vi } from 'vitest';
-import type { BirdEntry, GameView } from '@birdle/shared';
+import type { BirdEntry, BirdKind, GameView } from '@birdle/shared';
 import { createWordCatalog, type WordCatalog } from '@birdle/shared/server';
 import { createApp, type AppDeps } from '../src/app';
 import type { DiscordClient, DiscordUser } from '../src/discord';
@@ -45,6 +45,31 @@ export const TALON = bird('TALON', {
   obscurity: 3,
 });
 export const FIXTURE_BIRDS: readonly BirdEntry[] = [ROBIN, KAKAPO, TALON];
+
+/** A valid fictional-bird fixture: a `source` and a non-Wikipedia `link` instead of `wiki`. */
+export function character(word: string, kind: Extract<BirdKind, 'pokemon' | 'game' | 'literature'>, overrides: Partial<BirdEntry> = {}): BirdEntry {
+  const { wiki: _wiki, ...base } = bird(word, { kind });
+  return { ...base, source: 'Fixture Adventures', link: `https://example.org/wiki/${base.name}`, ...overrides };
+}
+
+/** Practice-only fictional birds (ROBIN stays the only daily answer). */
+export const HOOH = character('HOOH', 'pokemon', {
+  name: 'Ho-Oh',
+  source: 'Pokémon Gold & Silver',
+  hint: 'Rainbow-winged legendary of the Bell Tower',
+  fact: 'Its feathers are said to shine in seven colours.',
+  link: 'https://bulbapedia.bulbagarden.net/wiki/Ho-Oh_(Pok%C3%A9mon)',
+  obscurity: 2,
+});
+export const HEDWIG = character('HEDWIG', 'literature', {
+  source: 'Harry Potter',
+  hint: 'Snowy owl who carries a young wizard’s letters',
+  fact: 'A gift for an eleventh birthday.',
+  link: 'https://harrypotter.fandom.com/wiki/Hedwig',
+  obscurity: 3,
+});
+/** The fixture list plus fictional birds, so every Free Flight category has answers. */
+export const CATEGORY_BIRDS: readonly BirdEntry[] = [...FIXTURE_BIRDS, HOOH, HEDWIG];
 
 /** Five-letter guesses that share no letters with ROBIN. */
 export const MISSES = ['slate', 'duvet', 'flask', 'gawky', 'whelp', 'cheat'] as const;
@@ -127,6 +152,7 @@ export function fakeDiscord() {
 export interface TestAppOptions extends Partial<Omit<AppDeps, 'config'>> {
   allowMockAuth?: boolean;
   clientDistDir?: string | null;
+  discordClientId?: string | null;
 }
 
 export function makeTestApp(options: TestAppOptions = {}) {
@@ -141,6 +167,7 @@ export function makeTestApp(options: TestAppOptions = {}) {
       allowMockAuth: options.allowMockAuth ?? true,
       puzzleSeed: 'test-seed',
       clientDistDir: options.clientDistDir ?? null,
+      discordClientId: options.discordClientId ?? null,
     },
     store,
     clock,

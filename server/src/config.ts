@@ -13,7 +13,7 @@ export interface Config {
   nodeEnv: string;
   isProduction: boolean;
   port: number;
-  /** Discord application id (VITE_DISCORD_CLIENT_ID); null when unset. */
+  /** Discord application id (DISCORD_CLIENT_ID, or its alias VITE_DISCORD_CLIENT_ID); null when unset. Public. */
   discordClientId: string | null;
   /** OAuth2 client secret; null when unset. Never log it. */
   discordClientSecret: string | null;
@@ -44,6 +44,15 @@ export class ConfigError extends Error {
 
 type Env = Readonly<Record<string, string | undefined>>;
 
+/** Placeholder used by the deploy templates for values the installer must fill in. */
+const PLACEHOLDER = 'CHANGE_ME';
+const PLACEHOLDER_CHECKED_VARIABLES = [
+  'DISCORD_CLIENT_ID',
+  'VITE_DISCORD_CLIENT_ID',
+  'DISCORD_CLIENT_SECRET',
+  'PUZZLE_SEED',
+] as const;
+
 /** Trimmed value, or undefined when unset or blank (e.g. `KEY=` copied from .env.example). */
 function read(env: Env, key: string): string | undefined {
   const value = env[key]?.trim();
@@ -68,6 +77,14 @@ export function loadConfig(env: Env, rootDir: string = ROOT_DIR): LoadedConfig {
   const nodeEnv = read(env, 'NODE_ENV') ?? 'development';
   const isProduction = nodeEnv === 'production';
 
+  // The deploy templates (deploy/truenas/*.yaml) ship CHANGE_ME placeholders; refuse to start with one left in,
+  // because a placeholder PUZZLE_SEED would silently make every daily answer guessable.
+  for (const key of PLACEHOLDER_CHECKED_VARIABLES) {
+    if (read(env, key)?.toUpperCase().includes(PLACEHOLDER)) {
+      problems.push(`${key} still contains the placeholder "${PLACEHOLDER}"; replace it with your real value`);
+    }
+  }
+
   let port = DEFAULT_PORT;
   const rawPort = read(env, 'PORT');
   if (rawPort !== undefined) {
@@ -76,9 +93,20 @@ export function loadConfig(env: Env, rootDir: string = ROOT_DIR): LoadedConfig {
     else problems.push(`PORT must be an integer from 1 to 65535 (got "${rawPort}")`);
   }
 
-  const discordClientId = read(env, 'VITE_DISCORD_CLIENT_ID') ?? null;
-  if (discordClientId !== null && !/^\d{15,25}$/.test(discordClientId)) {
-    problems.push('VITE_DISCORD_CLIENT_ID must be the numeric application id from the Discord Developer Portal');
+  // DISCORD_CLIENT_ID is read at runtime (and served to the client by GET /api/config),
+  // so one build works for any Discord application. VITE_DISCORD_CLIENT_ID, which
+  // older setups use and Vite can compile into the client, is accepted as an alias.
+  const primaryClientId = read(env, 'DISCORD_CLIENT_ID');
+  const aliasClientId = read(env, 'VITE_DISCORD_CLIENT_ID');
+  const clientIdVariable = primaryClientId !== undefined ? 'DISCORD_CLIENT_ID' : 'VITE_DISCORD_CLIENT_ID';
+  const discordClientId = primaryClientId ?? aliasClientId ?? null;
+  if (primaryClientId !== undefined && aliasClientId !== undefined && primaryClientId !== aliasClientId) {
+    problems.push(
+      'DISCORD_CLIENT_ID and VITE_DISCORD_CLIENT_ID are both set but differ; set only DISCORD_CLIENT_ID ' +
+        '(a client built with a different VITE_DISCORD_CLIENT_ID would sign in to the wrong application)',
+    );
+  } else if (discordClientId !== null && !/^\d{15,25}$/.test(discordClientId)) {
+    problems.push(`${clientIdVariable} must be the numeric application id from the Discord Developer Portal`);
   }
   const discordClientSecret = read(env, 'DISCORD_CLIENT_SECRET') ?? null;
 
@@ -92,7 +120,8 @@ export function loadConfig(env: Env, rootDir: string = ROOT_DIR): LoadedConfig {
 
   const discordConfigured = discordClientId !== null && discordClientSecret !== null;
   if (!discordConfigured) {
-    const message = 'VITE_DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET are not both set, so Discord sign-in (POST /api/token) is disabled';
+    const message =
+      'DISCORD_CLIENT_ID (or VITE_DISCORD_CLIENT_ID) and DISCORD_CLIENT_SECRET are not both set, so Discord sign-in (POST /api/token) is disabled';
     if (isProduction && !allowMockAuth) problems.push(`${message}; they are required in production`);
     else warnings.push(`${message}; only mock tokens will work.`);
   }

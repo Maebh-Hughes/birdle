@@ -1,16 +1,24 @@
 // Fails the build if the client bundle (client/dist) leaks server-only data:
-// bird hints or facts, the guess dictionary, the answer list, or the Discord
-// client secret. Run after `vite build` (npm run build does both).
+// bird hints or facts, the guess dictionary, the answer list (words, display
+// names such as "Farfetch'd", or the answers' "Learn more" links), or the
+// Discord client secret. Run after `vite build` (npm run build does both).
+//
+// Usage: node scripts/check-bundle.mjs [path/to/birds.json]
+// (default: shared/data/birds.json; pass a candidate file to check it as well).
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { extname, join, relative } from 'node:path';
+import { extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const distDir = join(root, 'client', 'dist');
 const TEXT_EXTENSIONS = new Set(['.html', '.js', '.mjs', '.cjs', '.css', '.json', '.map', '.txt', '.svg', '.webmanifest']);
-/** The UI may show a few example bird words (How to play); more than this looks like the answer list. */
-const MAX_BIRD_WORDS = 20;
+/**
+ * The UI shows no example answers, but a few short words can turn up as string
+ * literals by coincidence (in libraries, say); more than this looks like the
+ * answer list.
+ */
+const MAX_BIRD_WORDS = 10;
 
 /** @param {string} dir @returns {string[]} */
 function walk(dir) {
@@ -52,7 +60,11 @@ if (!existsSync(distDir)) {
 const files = walk(distDir).filter((file) => TEXT_EXTENSIONS.has(extname(file).toLowerCase()));
 const contents = files.map((file) => ({ file: relative(root, file), text: readFileSync(file, 'utf8') }));
 
-const birds = JSON.parse(readFileSync(join(root, 'shared', 'data', 'birds.json'), 'utf8'));
+// A relative path resolves against the directory npm was run from (as in check:words).
+const birdsPath = process.argv[2]
+  ? resolve(process.env.INIT_CWD ?? process.cwd(), process.argv[2])
+  : join(root, 'shared', 'data', 'birds.json');
+const birds = JSON.parse(readFileSync(birdsPath, 'utf8'));
 const dictionary = readFileSync(join(root, 'shared', 'data', 'guesses.txt'), 'utf8').split(/\r?\n/).filter(Boolean);
 
 /** @type {string[]} */
@@ -78,18 +90,48 @@ for (const start of samples) {
   if (hit) problems.push(`${hit.file} appears to contain the guess dictionary ("${a}" next to "${b}")`);
 }
 
-// 3. The answer list: birds.json keys or many bird words as string literals.
+// 3. The answer list: birds.json keys, or many answers as string literals. An
+//    answer counts when its word or its display name is quoted; names matter
+//    for Pokémon and other characters, whose name isn't just the word
+//    ("Farfetch'd" is FARFETCHD). A minifier may write non-ASCII letters as
+//    \uXXXX escapes, so names are looked for in that form too.
 const keyHit = contents.find(({ text }) => /["']?obscurity["']?\s*:\s*[123]\b/.test(text));
 if (keyHit) problems.push(`${keyHit.file} appears to contain birds.json entries ("obscurity" keys)`);
 const allText = contents.map(({ text }) => text).join('\n');
+/** @param {string} value */
+const isQuoted = (value) => new RegExp(`["'\`]${escapeRegExp(value)}["'\`]`).test(allText);
+/** @param {string} value @param {boolean} upper hex digits in upper case */
+const escapeNonAscii = (value, upper) =>
+  value.replace(/[^\x20-\x7e]/g, (ch) => {
+    const hex = ch.charCodeAt(0).toString(16).padStart(4, '0');
+    return `\\u${upper ? hex.toUpperCase() : hex}`;
+  });
 const quotedWords = birds
-  .map((bird) => String(bird.word))
-  .filter((word) => new RegExp(`["'\`]${escapeRegExp(word)}["'\`]`).test(allText));
+  .filter((bird) => {
+    const name = typeof bird.name === 'string' ? bird.name : '';
+    const names = name ? [name, escapeNonAscii(name, false), escapeNonAscii(name, true)] : [];
+    return [String(bird.word), ...names].some(isQuoted);
+  })
+  .map((bird) => String(bird.word));
 if (quotedWords.length > MAX_BIRD_WORDS) {
-  problems.push(`the bundle contains ${quotedWords.length} bird words as string literals (max ${MAX_BIRD_WORDS}); the answer list may be bundled`);
+  problems.push(
+    `the bundle contains ${quotedWords.length} bird words or names as string literals (max ${MAX_BIRD_WORDS}); the answer list may be bundled`,
+  );
 }
 
-// 4. The Discord client secret, if one is configured.
+// 4. "Learn more" links. A link to a non-Wikipedia page (Bulbapedia, a fandom
+//    wiki, ...) or a Wikipedia article URL names one answer, so any of them in
+//    the bundle is a leak. Article titles are encoded as in wikiUrl().
+/** @param {string} title */
+const wikiPath = (title) => encodeURIComponent(title.split('#')[0].trim().replace(/ /g, '_'));
+for (const bird of birds) {
+  const url = typeof bird.link === 'string' ? bird.link : typeof bird.wiki === 'string' ? `wikipedia.org/wiki/${wikiPath(bird.wiki)}` : '';
+  if (!url || url.endsWith('/wiki/')) continue;
+  const hit = contents.find(({ text }) => text.includes(url));
+  if (hit) problems.push(`${hit.file} contains the "Learn more" link of ${bird.word}: ${url}`);
+}
+
+// 5. The Discord client secret, if one is configured.
 const secret = readSecret();
 if (secret.length >= 8) {
   const hit = contents.find(({ text }) => text.includes(secret));
@@ -104,6 +146,7 @@ if (problems.length > 0) {
 
 const kb = Math.round(contents.reduce((sum, { text }) => sum + text.length, 0) / 1024);
 console.log(
-  `check:bundle OK: ${contents.length} files (${kb} KB) scanned; no hints, facts, dictionary or secret; ` +
-    `${quotedWords.length} bird word literal${quotedWords.length === 1 ? '' : 's'}${quotedWords.length ? ` (${quotedWords.join(', ')})` : ''}.`,
+  `check:bundle OK: ${contents.length} files (${kb} KB) scanned against ${birds.length} answers; no hints, facts, ` +
+    `links, dictionary or secret; ${quotedWords.length} bird word literal${quotedWords.length === 1 ? '' : 's'}` +
+    `${quotedWords.length ? ` (${quotedWords.join(', ')})` : ''}.`,
 );

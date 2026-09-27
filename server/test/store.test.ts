@@ -12,13 +12,14 @@ const daily: GameRecord = {
   mode: 'daily',
   puzzleNumber: 7,
   date: '2026-10-02',
+  category: null,
   answer: 'ROBIN',
   guesses: [{ word: 'RAINS', result: ['correct', 'absent', 'present', 'present', 'absent'] }],
   status: 'playing',
   hardMode: true,
   hintUsed: false,
 };
-const practice: GameRecord = { ...daily, mode: 'practice', puzzleNumber: null, date: null, answer: 'KAKAPO', guesses: [] };
+const practice: GameRecord = { ...daily, mode: 'practice', puzzleNumber: null, date: null, category: 'birds', answer: 'KAKAPO', guesses: [] };
 const stats = recordGameResult(emptyStats(), 6, true, 3);
 
 let dir: string;
@@ -34,6 +35,7 @@ async function fill(store: MemoryStore): Promise<void> {
   await store.saveStats('u1', stats);
   await store.saveDailyGame('u1', 7, daily);
   await store.savePracticeGame('u1', practice);
+  await store.pinDailyAnswer(7, 'ROBIN');
   await store.saveInstanceMember('i-1', { userId: 'u1', joinedAt: 1000, lastSeen: 2000 });
 }
 
@@ -42,6 +44,7 @@ async function expectFilled(store: MemoryStore): Promise<void> {
   expect(await store.getStats('u1')).toEqual(stats);
   expect(await store.getDailyGame('u1', 7)).toEqual(daily);
   expect(await store.getPracticeGame('u1')).toEqual(practice);
+  expect(await store.getDailyAnswer(7)).toBe('ROBIN');
   expect(await store.getInstanceMembers('i-1')).toEqual([{ userId: 'u1', joinedAt: 1000, lastSeen: 2000 }]);
 }
 
@@ -65,6 +68,25 @@ describe('MemoryStore', () => {
     expect(await store.getDailyGame('u1', 7)).toEqual(daily);
     expect(await store.getInstanceMembers('i-1')).toEqual([]);
     expect(await store.getMemberships('u1')).toEqual([]);
+  });
+
+  it('pins a daily answer once: the first pin wins', async () => {
+    const store = new MemoryStore();
+    expect(await store.getDailyAnswer(7)).toBeUndefined();
+    const results = await Promise.all([store.pinDailyAnswer(7, 'ROBIN'), store.pinDailyAnswer(7, 'EGRET')]);
+    expect(results).toEqual(['ROBIN', 'ROBIN']);
+    expect(await store.pinDailyAnswer(7, 'CRANE')).toBe('ROBIN');
+    expect(await store.getDailyAnswer(7)).toBe('ROBIN');
+    expect(await store.getDailyAnswer(8)).toBeUndefined();
+  });
+
+  it('prunes pinned answers with the old daily games', async () => {
+    const store = new MemoryStore();
+    await store.pinDailyAnswer(3, 'EGRET');
+    await store.pinDailyAnswer(7, 'ROBIN');
+    await store.prune({ dailyPuzzlesBefore: 5, membersSeenBefore: 0 });
+    expect(await store.getDailyAnswer(3)).toBeUndefined();
+    expect(await store.getDailyAnswer(7)).toBe('ROBIN');
   });
 
   it('lists and removes a player’s memberships across instances', async () => {
@@ -152,6 +174,42 @@ describe('JsonFileStore', () => {
     expect(await reopened.getProfile('u1')).toEqual(profile);
   });
 
+  it('loads files written before pins and categories: old practice games become "all", stored games pin their answer', async () => {
+    const path = join(dir, 'db.json');
+    const { category: _daily, ...oldDaily } = daily;
+    const { category: _practice, ...oldPractice } = practice;
+    const old = {
+      version: 1,
+      profiles: { u1: profile },
+      stats: {},
+      daily: {
+        u1: { '7': oldDaily, '8': { ...oldDaily, puzzleNumber: 8, answer: 'EGRET', guesses: [] } },
+        u2: { '8': { ...oldDaily, puzzleNumber: 8, answer: 'EGRET', guesses: [] } },
+        u3: { '8': { ...oldDaily, puzzleNumber: 8, answer: 'CRANE', guesses: [] } },
+      },
+      practice: { u1: oldPractice },
+      instances: {},
+    };
+    await writeFile(path, JSON.stringify(old), 'utf8');
+    const logger = new RecordingLogger();
+    const store = await JsonFileStore.open(path, { logger });
+    expect(logger.text).not.toMatch(/corrupt|malformed/);
+    expect(await store.getDailyGame('u1', 7)).toEqual(daily);
+    expect(await store.getPracticeGame('u1')).toEqual({ ...practice, category: 'all' });
+    expect(await store.getDailyAnswer(7)).toBe('ROBIN');
+    expect(await store.getDailyAnswer(8)).toBe('EGRET'); // what most of its players have
+  });
+
+  it('keeps a pinned answer over the answers of stored games', async () => {
+    const path = join(dir, 'db.json');
+    const first = await JsonFileStore.open(path, { logger: new RecordingLogger() });
+    await first.saveDailyGame('u1', 7, { ...daily, answer: 'EGRET' });
+    await first.pinDailyAnswer(7, 'ROBIN');
+    await first.flush();
+    const reopened = await JsonFileStore.open(path, { logger: new RecordingLogger() });
+    expect(await reopened.getDailyAnswer(7)).toBe('ROBIN');
+  });
+
   it('drops individually malformed records and keeps the rest', async () => {
     const path = join(dir, 'db.json');
     const good = await JsonFileStore.open(path, { logger: new RecordingLogger() });
@@ -161,13 +219,37 @@ describe('JsonFileStore', () => {
     data.profiles.u2 = { id: 'someone-else', username: 'x', displayName: 'x', avatarUrl: null };
     data.daily.u1['8'] = { ...daily, puzzleNumber: 8, answer: 'nope!' };
     data.stats.u3 = { played: -1 };
+    data.practice.u4 = { ...practice, category: 'movies' };
+    data.daily.u5 = { '7': { ...daily, category: 'birds' } };
+    data.dailyAnswers['0'] = 'ROBIN';
+    data.dailyAnswers['9'] = 'robin';
+    data.dailyAnswers.x = 'ROBIN';
     await writeFile(path, JSON.stringify(data), 'utf8');
 
     const logger = new RecordingLogger();
     const store = await JsonFileStore.open(path, { logger });
-    expect(logger.text).toMatch(/Ignored 3 malformed record/);
+    expect(logger.text).toMatch(/Ignored 8 malformed record/);
     await expectFilled(store);
     expect(await store.getProfile('u2')).toBeUndefined();
+    expect(await store.getPracticeGame('u4')).toBeUndefined();
+    expect(await store.getDailyAnswer(0)).toBeUndefined();
+    expect(await store.getDailyAnswer(9)).toBeUndefined();
+  });
+
+  it('drops a malformed pins section but keeps everything else', async () => {
+    const path = join(dir, 'db.json');
+    const good = await JsonFileStore.open(path, { logger: new RecordingLogger() });
+    await fill(good);
+    await good.flush();
+    const data = JSON.parse(await readFile(path, 'utf8'));
+    data.dailyAnswers = ['ROBIN'];
+    await writeFile(path, JSON.stringify(data), 'utf8');
+
+    const logger = new RecordingLogger();
+    const store = await JsonFileStore.open(path, { logger });
+    expect(logger.text).toMatch(/Ignored 1 malformed record/);
+    // The stored game for puzzle 7 pins its answer again.
+    await expectFilled(store);
   });
 });
 

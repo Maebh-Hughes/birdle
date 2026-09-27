@@ -37,7 +37,7 @@ export class DiscordApiError extends Error {
   }
 }
 
-/** The server has no VITE_DISCORD_CLIENT_ID / DISCORD_CLIENT_SECRET. */
+/** The server has no DISCORD_CLIENT_ID / DISCORD_CLIENT_SECRET. */
 export class DiscordNotConfiguredError extends Error {
   constructor() {
     super('Discord OAuth2 credentials are not configured');

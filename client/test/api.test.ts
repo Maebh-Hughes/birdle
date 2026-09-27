@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, createApi, exchangeCode } from '../src/api';
-import { errorMessage, isRejectedGuess, NETWORK_MESSAGE, UNKNOWN_MESSAGE } from '../src/game/errors';
+import { ApiError, createApi, exchangeCode, fetchConfig } from '../src/api';
+import { errorMessage, isRejectedGuess, NETWORK_MESSAGE, practiceStartMessage, UNKNOWN_MESSAGE } from '../src/game/errors';
 
 function jsonResponse(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -90,5 +90,41 @@ describe('api client', () => {
     expect(url).toBe('/api/token');
     expect(new Headers(init.headers).has('Authorization')).toBe(false);
     expect(JSON.parse(String(init.body))).toEqual({ code: 'code-1' });
+  });
+
+  it('starts a Free Flight round in the chosen category', async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => jsonResponse(200, { game: { status: 'playing' } }));
+    await createApi('t', { fetch }).practiceNew('pokemon');
+    const [url, init = {}] = fetch.mock.calls[0]!;
+    expect(url).toBe('/api/practice/new');
+    expect(JSON.parse(String(init.body))).toEqual({ category: 'pokemon' });
+  });
+
+  it("shows the server's reason when a Free Flight category can't start, and the usual text otherwise", () => {
+    const reason = 'There are no bird Pokémon in Free Flight yet. Pick another category.';
+    expect(practiceStartMessage(new ApiError('BAD_REQUEST', reason, 400))).toBe(reason);
+    expect(practiceStartMessage(new ApiError('NETWORK', 'Failed to fetch'))).toBe(NETWORK_MESSAGE);
+    expect(practiceStartMessage(new ApiError('BAD_REQUEST', 'Too many requests', 429))).toBe(errorMessage(new ApiError('BAD_REQUEST', 'x', 429)));
+  });
+});
+
+describe('fetchConfig', () => {
+  it('reads GET /api/config without a bearer token', async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => jsonResponse(200, { discordClientId: ' 123456789012345678 ' }));
+    await expect(fetchConfig({ fetch })).resolves.toEqual({ discordClientId: '123456789012345678' });
+    const [url, init = {}] = fetch.mock.calls[0]!;
+    expect(url).toBe('/api/config');
+    expect(init.method).toBe('GET');
+    expect(new Headers(init.headers).has('Authorization')).toBe(false);
+  });
+
+  it('accepts a server without a client id (null)', async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => jsonResponse(200, { discordClientId: null }));
+    await expect(fetchConfig({ fetch })).resolves.toEqual({ discordClientId: null });
+  });
+
+  it.each([{}, { discordClientId: '' }, { discordClientId: 42 }, null, 'nope'])('rejects a malformed config %j', async (body) => {
+    const fetch = vi.fn<typeof globalThis.fetch>(async () => jsonResponse(200, body));
+    await expect(fetchConfig({ fetch })).rejects.toMatchObject({ code: 'UNKNOWN' });
   });
 });

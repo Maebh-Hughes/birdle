@@ -1,10 +1,10 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, type Api } from '../src/api';
-import { NETWORK_MESSAGE } from '../src/game/errors';
+import { NETWORK_MESSAGE, UNKNOWN_MESSAGE } from '../src/game/errors';
 import { useGame, type UseGameOptions } from '../src/game/useGame';
 import { makeGame, makeStats, row } from './fixtures';
-import type { GameView } from '@birdle/shared';
+import type { GameView, PracticeCategory } from '@birdle/shared';
 
 const TODAY = '2026-10-02';
 
@@ -17,13 +17,17 @@ function fakeApi(overrides: Partial<Api> = {}): Api {
     dailyGuess: unexpected('dailyGuess'),
     dailyHint: unexpected('dailyHint'),
     practice: vi.fn(() => Promise.resolve({ game: null })),
-    practiceNew: vi.fn(() => Promise.resolve({ game: makeGame({ mode: 'practice', puzzleNumber: null, date: null, wordLength: 7 }) })),
+    practiceNew: vi.fn((category: PracticeCategory) => Promise.resolve({ game: practiceGame({ category, wordLength: 7 }) })),
     practiceGuess: unexpected('practiceGuess'),
     practiceHint: unexpected('practiceHint'),
     joinInstance: unexpected('joinInstance'),
     flock: unexpected('flock'),
     ...overrides,
   };
+}
+
+function practiceGame(patch: Partial<GameView> = {}): GameView {
+  return makeGame({ mode: 'practice', puzzleNumber: null, date: null, ...patch });
 }
 
 function setup(api: Api, options: Partial<UseGameOptions> = {}) {
@@ -259,7 +263,252 @@ describe('useGame', () => {
     await waitFor(() => expect(result.current.game?.mode).toBe('practice'));
     expect(api.practice).toHaveBeenCalled();
     expect(api.practiceNew).toHaveBeenCalledTimes(1);
+    expect(api.practiceNew).toHaveBeenCalledWith('all', expect.objectContaining({ signal: expect.any(AbortSignal) }));
     expect(result.current.game?.wordLength).toBe(7);
+  });
+});
+
+describe('useGame Free Flight categories', () => {
+  /** Renders useGame in Free Flight with a category that can be changed later. */
+  function setupPractice(api: Api, category: PracticeCategory) {
+    const hook = renderHook(
+      ({ practiceCategory }: { practiceCategory: PracticeCategory }) =>
+        useGame({ api, initialStats: makeStats(), hardMode: false, reducedMotion: true, today: () => TODAY, practiceCategory }),
+      { initialProps: { practiceCategory: category } },
+    );
+    act(() => hook.result.current.setMode('practice'));
+    return hook;
+  }
+
+  const inPractice = async (result: { current: ReturnType<typeof useGame> }) => {
+    await waitFor(() => expect(result.current.game?.mode).toBe('practice'));
+    await waitFor(() => expect(result.current.state.loading).toBe(false));
+  };
+
+  const settle = () => act(() => new Promise((resolve) => setTimeout(resolve, 30)));
+
+  it('starts new rounds in the chosen category', async () => {
+    const api = fakeApi();
+    const { result } = setupPractice(api, 'birds');
+    await inPractice(result);
+    expect(api.practiceNew).toHaveBeenCalledTimes(1);
+    expect(api.practiceNew).toHaveBeenCalledWith('birds', expect.anything());
+    expect(result.current.game?.category).toBe('birds');
+
+    await act(() => result.current.newPracticeGame());
+    expect(api.practiceNew).toHaveBeenCalledTimes(2);
+    expect(api.practiceNew).toHaveBeenLastCalledWith('birds', undefined);
+  });
+
+  it('resumes an untouched round of the chosen category instead of replacing it', async () => {
+    const api = fakeApi({ practice: vi.fn(() => Promise.resolve({ game: practiceGame({ category: 'pokemon', wordLength: 6 }) })) });
+    const { result } = setupPractice(api, 'pokemon');
+    await inPractice(result);
+    expect(result.current.game?.wordLength).toBe(6);
+    expect(api.practiceNew).not.toHaveBeenCalled();
+  });
+
+  it('replaces an untouched round of another category on entry, but resumes one under way', async () => {
+    const untouched = fakeApi({ practice: vi.fn(() => Promise.resolve({ game: practiceGame({ category: 'all', wordLength: 6 }) })) });
+    const first = setupPractice(untouched, 'birds');
+    await inPractice(first.result);
+    expect(untouched.practiceNew).toHaveBeenCalledTimes(1);
+    expect(untouched.practiceNew).toHaveBeenCalledWith('birds', expect.anything());
+    expect(first.result.current.game?.category).toBe('birds');
+    first.unmount();
+
+    const started = practiceGame({ category: 'all', wordLength: 5, guesses: [row('STORK', 'CRANE')] });
+    const underway = fakeApi({ practice: vi.fn(() => Promise.resolve({ game: started })) });
+    const second = setupPractice(underway, 'birds');
+    await inPractice(second.result);
+    expect(second.result.current.game).toEqual(started);
+    expect(underway.practiceNew).not.toHaveBeenCalled();
+  });
+
+  it('swaps an untouched round as soon as another category is chosen', async () => {
+    const api = fakeApi();
+    const { result, rerender } = setupPractice(api, 'all');
+    await inPractice(result);
+    act(() => result.current.pressKey('O'));
+
+    rerender({ practiceCategory: 'birds' });
+    await waitFor(() => expect(result.current.game?.category).toBe('birds'));
+    expect(api.practiceNew).toHaveBeenCalledTimes(2);
+    expect(api.practiceNew).toHaveBeenLastCalledWith('birds', undefined);
+    expect(result.current.state.current).toBe('');
+  });
+
+  it('keeps a round under way when the category changes; the next bird comes from the new one', async () => {
+    const started = practiceGame({ category: 'all', guesses: [row('STORK', 'CRANE')] });
+    const api = fakeApi({ practice: vi.fn(() => Promise.resolve({ game: started })) });
+    const { result, rerender } = setupPractice(api, 'all');
+    await inPractice(result);
+
+    rerender({ practiceCategory: 'birds' });
+    await settle();
+    expect(api.practiceNew).not.toHaveBeenCalled();
+    expect(result.current.game).toEqual(started);
+
+    await act(() => result.current.newPracticeGame());
+    expect(api.practiceNew).toHaveBeenCalledWith('birds', undefined);
+    expect(result.current.game?.category).toBe('birds');
+  });
+
+  it("shows the server's reason when a category can't start, and doesn't retry it by itself", async () => {
+    const reason = 'There are no bird Pokémon in Free Flight yet. Pick another category.';
+    const practiceNew = vi.fn((category: PracticeCategory) =>
+      category === 'pokemon'
+        ? Promise.reject(new ApiError('BAD_REQUEST', reason, 400))
+        : Promise.resolve({ game: practiceGame({ category }) }),
+    );
+    const api = fakeApi({ practiceNew });
+    const { result, rerender } = setupPractice(api, 'pokemon');
+    await waitFor(() => expect(result.current.state.loadError).toBe(reason));
+    await settle();
+    expect(practiceNew).toHaveBeenCalledTimes(1);
+
+    // Picking another category starts a round in it.
+    rerender({ practiceCategory: 'birds' });
+    await waitFor(() => expect(result.current.game?.category).toBe('birds'));
+    expect(result.current.state.loadError).toBeNull();
+
+    // Back to the empty one: the untouched round stays, and the reason shows as a toast.
+    rerender({ practiceCategory: 'pokemon' });
+    await waitFor(() => expect(result.current.state.toasts.at(-1)?.message).toBe(reason));
+    await settle();
+    expect(practiceNew).toHaveBeenCalledTimes(3);
+    expect(result.current.game?.category).toBe('birds');
+  });
+
+  it('never starts a round by itself when only reading the saved one failed; Try again resumes it', async () => {
+    const saved = practiceGame({ guesses: [row('STORK', 'CRANE'), row('HERON', 'CRANE'), row('EGRET', 'CRANE')] });
+    let readFails = true;
+    const practice = vi.fn(() =>
+      readFails ? Promise.reject(new ApiError('UNKNOWN', 'HTTP 502', 502)) : Promise.resolve({ game: saved }),
+    );
+    const api = fakeApi({ practice });
+    const { result, rerender } = setupPractice(api, 'all');
+    await waitFor(() => expect(result.current.state.loadError).toBe(UNKNOWN_MESSAGE));
+    await settle();
+    expect(api.practiceNew).not.toHaveBeenCalled();
+
+    // Not even for a newly chosen category: the server may hold a round under way.
+    rerender({ practiceCategory: 'birds' });
+    await settle();
+    expect(api.practiceNew).not.toHaveBeenCalled();
+
+    readFails = false;
+    act(() => result.current.reload());
+    await waitFor(() => expect(result.current.game).toEqual(saved));
+    expect(api.practiceNew).not.toHaveBeenCalled();
+  });
+
+  it('does not swap a round kept from earlier in the session when reading the saved one fails', async () => {
+    let readFails = false;
+    const kept = practiceGame({ wordLength: 6 });
+    const practice = vi.fn(() =>
+      readFails ? Promise.reject(new ApiError('NETWORK', 'Failed to fetch')) : Promise.resolve({ game: kept }),
+    );
+    const api = fakeApi({ practice });
+    const { result, rerender } = setupPractice(api, 'all');
+    await inPractice(result);
+
+    // Another category is chosen elsewhere (the bird card); back in Free Flight the read fails.
+    act(() => result.current.setMode('daily'));
+    readFails = true;
+    rerender({ practiceCategory: 'birds' });
+    act(() => result.current.setMode('practice'));
+    await waitFor(() => expect(result.current.state.toasts.at(-1)?.message).toBe(NETWORK_MESSAGE));
+    await settle();
+    expect(api.practiceNew).not.toHaveBeenCalled();
+    expect(result.current.game?.category).toBe('all');
+  });
+
+  it('waits for the reload after a first guess that may have been counted before following a new category', async () => {
+    let server = practiceGame({ category: 'all', wordLength: 5 });
+    let failGuess: (error: unknown) => void = () => undefined;
+    const api = fakeApi({
+      practice: vi.fn(() => Promise.resolve({ game: server })),
+      practiceGuess: vi.fn(() => {
+        // The server counts the guess, but its answer never arrives.
+        server = { ...server, guesses: [row('STORK', 'CRANE')] };
+        return new Promise<{ game: GameView }>((_, reject) => (failGuess = reject));
+      }),
+    });
+    const { result, rerender } = setupPractice(api, 'all');
+    await inPractice(result);
+    typeWord(result, 'STORK');
+    act(() => result.current.pressKey('ENTER'));
+    await waitFor(() => expect(api.practiceGuess).toHaveBeenCalled());
+
+    rerender({ practiceCategory: 'birds' });
+    await act(async () => failGuess(new ApiError('NETWORK', 'Failed to fetch')));
+    await waitFor(() => expect(result.current.game?.guesses).toHaveLength(1));
+    await settle();
+    expect(api.practiceNew).not.toHaveBeenCalled();
+    expect(result.current.game?.category).toBe('all');
+    expect(result.current.state.resync).toBeNull();
+  });
+
+  it('reloads, rather than follows a new category, when a first guess finds the round replaced elsewhere', async () => {
+    const elsewhere = practiceGame({ category: 'all', wordLength: 6, guesses: [row('PUFFIN', 'TOUCAN')] });
+    let server = practiceGame({ category: 'all', wordLength: 5 });
+    let failGuess: (error: unknown) => void = () => undefined;
+    const api = fakeApi({
+      practice: vi.fn(() => Promise.resolve({ game: server })),
+      practiceGuess: vi.fn(() => {
+        // Another tab starts (and plays) a round of another length meanwhile.
+        server = elsewhere;
+        return new Promise<{ game: GameView }>((_, reject) => (failGuess = reject));
+      }),
+    });
+    const { result, rerender } = setupPractice(api, 'all');
+    await inPractice(result);
+    typeWord(result, 'STORK');
+    act(() => result.current.pressKey('ENTER'));
+    await waitFor(() => expect(api.practiceGuess).toHaveBeenCalled());
+
+    rerender({ practiceCategory: 'birds' });
+    await act(async () => failGuess(new ApiError('INVALID_GUESS', 'Too few letters', 422)));
+    await waitFor(() => expect(result.current.game).toEqual(elsewhere));
+    await settle();
+    expect(api.practiceNew).not.toHaveBeenCalled();
+  });
+
+  it("offers a retry when an untouched round can't switch category, but doesn't retry by itself", async () => {
+    let offline = true;
+    const practiceNew = vi.fn((category: PracticeCategory) =>
+      offline
+        ? Promise.reject(new ApiError('NETWORK', 'Failed to fetch'))
+        : Promise.resolve({ game: practiceGame({ category, wordLength: 7 }) }),
+    );
+    const untouched = practiceGame({ category: 'all', wordLength: 6 });
+    const api = fakeApi({ practice: vi.fn(() => Promise.resolve({ game: untouched })), practiceNew });
+    const { result, rerender } = setupPractice(api, 'all');
+    await inPractice(result);
+    expect(result.current.categorySwitchFailed).toBe(false);
+
+    rerender({ practiceCategory: 'birds' });
+    await waitFor(() => expect(result.current.state.toasts.at(-1)?.message).toBe(NETWORK_MESSAGE));
+    await settle();
+    expect(practiceNew).toHaveBeenCalledTimes(1);
+    expect(result.current.game?.category).toBe('all');
+    expect(result.current.categorySwitchFailed).toBe(true);
+
+    offline = false;
+    await act(() => result.current.newPracticeGame());
+    expect(practiceNew).toHaveBeenLastCalledWith('birds', undefined);
+    expect(result.current.game?.category).toBe('birds');
+    expect(result.current.categorySwitchFailed).toBe(false);
+  });
+
+  it('does not loop when rounds come back without a category (an older server)', async () => {
+    const legacy = () => ({ ...practiceGame(), category: undefined }) as unknown as GameView;
+    const api = fakeApi({ practiceNew: vi.fn(() => Promise.resolve({ game: legacy() })) });
+    const { result } = setupPractice(api, 'birds');
+    await inPractice(result);
+    await settle();
+    expect(api.practiceNew).toHaveBeenCalledTimes(1);
   });
 });
 

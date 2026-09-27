@@ -4,6 +4,7 @@
 
 export * from './constants';
 export * from './types';
+export * from './kinds';
 export * from './words';
 export * from './evaluate';
 export * from './hardMode';

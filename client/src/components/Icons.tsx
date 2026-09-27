@@ -25,16 +25,6 @@ function Icon({ children, ...props }: IconProps & { children: ReactNode }) {
   );
 }
 
-export function HelpIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <circle cx="12" cy="12" r="9.5" />
-      <path d="M9.4 9.2a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 3.9" />
-      <circle cx="12" cy="17.3" r="0.4" fill="currentColor" />
-    </Icon>
-  );
-}
-
 export function StatsIcon(props: IconProps) {
   return (
     <Icon {...props}>

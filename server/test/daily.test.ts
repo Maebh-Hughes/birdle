@@ -42,6 +42,7 @@ describe('GET /api/daily', () => {
       mode: 'daily',
       puzzleNumber: TODAY_PUZZLE,
       date: TODAY,
+      category: null,
       wordLength: 5,
       guesses: [],
       status: 'playing',
@@ -196,8 +197,10 @@ describe('POST /api/daily/guess', () => {
       word: 'ROBIN',
       name: 'European robin',
       kind: 'bird',
+      source: null,
       fact: ROBIN.fact,
-      wikiUrl: 'https://en.wikipedia.org/wiki/European_robin',
+      infoUrl: 'https://en.wikipedia.org/wiki/European_robin',
+      infoSite: 'Wikipedia',
     });
     expect(game.hint).toBe(ROBIN.hint);
     expect(game.hintAvailable).toBe(false);
@@ -236,6 +239,7 @@ describe('POST /api/daily/guess', () => {
       mode: 'daily',
       puzzleNumber: TODAY_PUZZLE,
       date: TODAY,
+      category: null,
       answer: 'EGRET',
       guesses: [{ word: 'SLATE', result: ['absent', 'absent', 'absent', 'present', 'present'] }],
       status: 'playing',
@@ -247,7 +251,15 @@ describe('POST /api/daily/guess', () => {
     const res = await dailyGuess(app, 'alice', 'egret');
     const body = res.body as DailyGuessResponse;
     expect(body.game.status).toBe('won');
-    expect(body.game.answer).toMatchObject({ word: 'EGRET', name: 'Egret', fact: '' });
+    expect(body.game.answer).toEqual({
+      word: 'EGRET',
+      name: 'Egret',
+      kind: 'bird',
+      source: null,
+      fact: '',
+      infoUrl: 'https://en.wikipedia.org/wiki/Special:Search?search=Egret',
+      infoSite: 'Wikipedia',
+    });
   });
 
   it('serializes concurrent guesses from the same player', async () => {

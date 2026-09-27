@@ -2,7 +2,7 @@ import { Router } from 'express';
 import type { GameResponse, PracticeGameResponse } from '@birdle/shared';
 import { currentUser } from '../auth';
 import type { GameService } from '../game';
-import { bodyObject, optionalHardMode, requireGuess } from '../validate';
+import { bodyObject, optionalCategory, optionalHardMode, requireGuess } from '../validate';
 
 /** Free Flight: unlimited random games, never counted in stats or shown in the Flock. */
 export function practiceRoutes(games: GameService): Router {
@@ -14,10 +14,10 @@ export function practiceRoutes(games: GameService): Router {
     res.json(body);
   });
 
-  // POST /api/practice/new -> { game } (replaces any current practice game)
+  // POST /api/practice/new { category? } -> { game } (replaces any current practice game)
   router.post('/practice/new', async (req, res) => {
-    bodyObject(req); // no fields, but a non-object body is still a bad request
-    const body: GameResponse = { game: await games.newPractice(currentUser(res).id) };
+    const category = optionalCategory(bodyObject(req));
+    const body: GameResponse = { game: await games.newPractice(currentUser(res).id, category) };
     res.json(body);
   });
 
