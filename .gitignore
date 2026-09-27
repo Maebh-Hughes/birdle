@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+
+# Environment (real secrets live in .env; .env.example is committed)
+.env
+.env.*
+!.env.example
+
+# Server database files (JsonFileStore + its temp files)
+server/data/*.json
+server/data/*.json.tmp
+server/data/*.tmp
+
+# Logs and OS/editor clutter
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Local tooling / notes that aren't part of the project
+.claude/settings.local.json
+docs/build-notes/

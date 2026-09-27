@@ -1,0 +1,22 @@
+{
+  "name": "@birdle/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BIRDLE game rules, types and word data shared by the server and the client (TypeScript source, no build step)",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check:words": "tsx scripts/check-words.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}

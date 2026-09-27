@@ -1,0 +1,30 @@
+{
+  "name": "birdle",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BIRDLE: a Wordle-style bird word game that runs as a Discord Activity",
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "concurrently --names server,client --prefix-colors cyan,magenta --kill-others-on-fail \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build": "npm run build --workspace=client && npm run check:bundle",
+    "start": "npm run start --workspace=server",
+    "test": "npm run test --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "check:words": "npm run check:words --workspace=shared",
+    "check:bundle": "node scripts/check-bundle.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "typescript": "^7.0.2"
+  }
+}

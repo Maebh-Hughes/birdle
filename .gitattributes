@@ -1,0 +1,6 @@
+# Store and check out text files with LF endings on every OS (the app runs in Linux containers).
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.ico binary

@@ -1,0 +1,28 @@
+{
+  "name": "@birdle/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BIRDLE API server (Express 5, run from TypeScript source with tsx)",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "cross-env NODE_ENV=production tsx src/index.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@birdle/shared": "*",
+    "cross-env": "^10.1.0",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.20.4",
+    "@types/supertest": "^7.2.1",
+    "supertest": "^7.3.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  }
+}
